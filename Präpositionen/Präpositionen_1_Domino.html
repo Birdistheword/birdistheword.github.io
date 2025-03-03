@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutschlern-Dominospiel</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .game-container { position: relative; width: 600px; height: 400px; margin: auto; border: 1px solid black; }
+        .domino { display: flex; width: 100px; height: 50px; margin: 5px; border: 1px solid black; cursor: grab; background: white; align-items: center; justify-content: center; position: absolute; user-select: none; }
+        .half { width: 50px; height: 50px; line-height: 50px; text-align: center; border-right: 1px solid black; }
+        .half:last-child { border-right: none; border-bottom: none; }
+        .rotated { flex-direction: column; width: 50px; height: 100px; }
+        .rotated .half { border-right: none; border-bottom: 1px solid black; }
+        .rotate-button { position: absolute; width: 20px; height: 20px; background: gray; color: white; text-align: center; line-height: 20px; cursor: pointer; font-size: 12px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <h1>Verb-Präposition-Dominospiel</h1>
+    <p>Ziel: Ordne die Dominosteine so an, dass die Verben und Präpositionen richtig zusammenpassen!</p>
+    <div class="game-container" id="gameContainer"></div>
+    
+    <script>
+        const dominoes = [
+            { left: "über", right: "denken" },
+            { left: "mit", right: "lachen" },
+            { left: "auf", right: "sprechen" },
+            { left: "für", right: "glauben" },
+            { left: "an", right: "danken" }
+        ];
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function createDominoElement(domino, index) {
+            let dominoEl = document.createElement("div");
+            dominoEl.classList.add("domino");
+            dominoEl.innerHTML = `<span class='half'>${domino.left}</span><span class='half'>${domino.right}</span>`;
+            dominoEl.style.top = Math.random() * 300 + "px";
+            dominoEl.style.left = Math.random() * 500 + "px";
+            dominoEl.setAttribute("data-id", index);
+            
+            let rotateBtn = document.createElement("div");
+            rotateBtn.classList.add("rotate-button");
+            rotateBtn.innerText = "⟳";
+            rotateBtn.style.top = "-10px";
+            rotateBtn.style.right = "-10px";
+            rotateBtn.style.position = "absolute";
+            
+            rotateBtn.addEventListener("click", (e) => {
+                e.stopPropagation(); // Verhindert, dass ein Klick gleichzeitig andere Events triggert
+                dominoEl.classList.toggle("rotated");
+            });
+            
+            dominoEl.appendChild(rotateBtn);
+            
+            let offsetX, offsetY;
+            
+            dominoEl.addEventListener("mousedown", (e) => {
+                if (e.target === rotateBtn) return; // Verhindert Ziehen bei Klick auf Rotationsbutton
+                
+                offsetX = e.clientX - dominoEl.getBoundingClientRect().left;
+                offsetY = e.clientY - dominoEl.getBoundingClientRect().top;
+                
+                function onMouseMove(event) {
+                    let x = event.clientX - gameContainer.getBoundingClientRect().left - offsetX;
+                    let y = event.clientY - gameContainer.getBoundingClientRect().top - offsetY;
+                    dominoEl.style.left = `${x}px`;
+                    dominoEl.style.top = `${y}px`;
+                }
+                
+                function onMouseUp() {
+                    document.removeEventListener("mousemove", onMouseMove);
+                    document.removeEventListener("mouseup", onMouseUp);
+                }
+                
+                document.addEventListener("mousemove", onMouseMove);
+                document.addEventListener("mouseup", onMouseUp);
+            });
+            
+            return dominoEl;
+        }
+
+        function initGame() {
+            const shuffledDominoes = shuffle([...dominoes]);
+            const gameContainer = document.getElementById("gameContainer");
+            gameContainer.innerHTML = "";
+            
+            shuffledDominoes.forEach((domino, index) => {
+                let dominoEl = createDominoElement(domino, index);
+                gameContainer.appendChild(dominoEl);
+            });
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
