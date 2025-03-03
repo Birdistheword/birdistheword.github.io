@@ -1,0 +1,94 @@
+
+</html><!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporale Präpositionen - Karteikarten</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .card-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px; }
+        .card { 
+            width: 250px; 
+            height: 150px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #f0f0f0; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            border: 1px solid #ccc; 
+            transition: transform 0.6s; 
+            transform-style: preserve-3d; 
+            position: relative;
+        }
+        .card.flipped { transform: rotateY(180deg); }
+        .card div { 
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+        }
+        .front { background: #f0f0f0; }
+        .back { 
+            background: #d1e7dd; 
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>Temporale Präpositionen - Lückensätze</h1>
+    <div class="card-container" id="cardContainer"></div>
+    <script>
+        const cards = [
+            { front: "Ich habe ___ Montag Deutschunterricht.", back: "am" },
+            { front: "Wir treffen uns ___ zwei Stunden.", back: "in" },
+            { front: "Sie kommt ___ einer Woche zurück.", back: "in" },
+            { front: "Er wurde ___ 1990 geboren.", back: "im" },
+            { front: "___ Winter ist es kalt.", back: "Im" },
+            { front: "Das Konzert beginnt ___ 20 Uhr.", back: "um" },
+            { front: "Ich bleibe nur ___ das Wochenende.", back: "über" },
+            { front: "___ dem Essen putze ich mir die Zähne.", back: "Nach" },
+            { front: "Wir sehen uns ___ einer Stunde.", back: "in" },
+            { front: "Er arbeitet ___ einem Jahr in Berlin.", back: "seit" },
+            { front: "___ dem Urlaub erzählte sie viele Geschichten.", back: "Nach" },
+            { front: "Die Schule beginnt ___ September.", back: "im" },
+            { front: "___ Weihnachten fahren wir in die Berge.", back: "Zu" },
+            { front: "___ meinem Geburtstag bekam ich viele Geschenke.", back: "An" },
+            { front: "___ dem Abendessen schauen wir Fernsehen.", back: "Nach" },
+            { front: "Ich bin ___ dem 1. Januar wieder da.", back: "ab" },
+            { front: "Wir sind ___ Mitternacht nach Hause gegangen.", back: "um" },
+            { front: "___ dem Sommer fängt die Schule wieder an.", back: "Nach" },
+            { front: "Er ruft mich immer ___ der Arbeit an.", back: "nach" },
+            { front: "___ einer Woche war er wieder gesund.", back: "Nach" }
+        ];
+
+        const container = document.getElementById("cardContainer");
+        
+        cards.forEach((card, index) => {
+            const cardElement = document.createElement("div");
+            cardElement.classList.add("card");
+            
+            const frontText = document.createElement("div");
+            frontText.classList.add("front");
+            frontText.textContent = card.front;
+            
+            const backText = document.createElement("div");
+            backText.classList.add("back");
+            backText.textContent = card.back;
+            
+            cardElement.appendChild(frontText);
+            cardElement.appendChild(backText);
+            
+            cardElement.addEventListener("click", () => {
+                cardElement.classList.toggle("flipped");
+            });
+            
+            container.appendChild(cardElement);
+        });
+    </script>
+</body>
+</html>
