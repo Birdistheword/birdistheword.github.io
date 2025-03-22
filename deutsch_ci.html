@@ -21,21 +21,40 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        h1 {
+		.section-color {
+			width:100%;
+			background-color:#FFC1B4;
+		}
+		
+       h1, h2 {
             text-align: center;
             color: #333;
+            
+        }
+		h2 {
+			cursor: pointer;
+		}
+
+        h2:hover {
+            text-decoration: underline;
+			color: #C97165;
         }
         .link-list {
             list-style: none;
             padding: 0;
+			display: none;
         }
         .link-list li {
-            background: #007bff;
+            background: #F38C79;
             margin: 10px 0;
             padding: 15px;
             border-radius: 5px;
             text-align: center;
         }
+		.link-list li:hover {
+			background: #C97165;
+		
+		}
         .link-list a {
             color: white;
             text-decoration: none;
@@ -46,6 +65,17 @@
             text-decoration: underline;
         }
     </style>
+	
+	<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("h2").forEach(header => {
+                header.addEventListener("click", function() {
+                    const list = this.nextElementSibling;
+                    list.style.display = list.style.display === "block" ? "none" : "block";
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -53,9 +83,14 @@
 <h1>
     <strong>Deutsch Comprehensible Input</strong>
   </h1>
-<p>
-    <strong>All Levels with Playlists for Each:</strong>
+  <p style="text-align: center">
+    Klick auf eine Überschrift zum Aufklappen
   </p>
+
+<h2>
+    <strong>All Levels with Playlists for Each:</strong>
+  </h2>
+
 <ul class="link-list">
       <li>
     <p>
@@ -118,10 +153,13 @@
   </p>
   </li>
     </ul>
-	
-	<p>
+
+	<h1>
     <strong>Beginner (~A1-A2)</strong>
-  </p>
+  </h1>
+  <h2>
+    <strong>Beginner Videos</strong>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
@@ -326,9 +364,9 @@
   </li>
     </ul>
 	
-	<p>
+	<h2>
     Beginner Podcasts:
-  </p>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
@@ -383,9 +421,12 @@
   </li>
     </ul>
 	
-	<p>
+	<h1>
     <strong>Intermediate (~B1-B2)</strong>
-  </p>
+  </h1>
+  <h2>
+    <strong>Intermediate Videos</strong>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
@@ -790,9 +831,9 @@
   </li>
     </ul>
 	
-	<p>
+	<h2>
     Intermediate Podcasts:
-  </p>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
@@ -962,10 +1003,12 @@
   </p>
   </li>
     </ul>
-	
-	<p>
+	<h1>
+    Advanced (C1 - C2)
+  </h1>
+	<h2>
     Advanced Video:
-  </p>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
@@ -1369,9 +1412,9 @@
   </p>
   </li>
     </ul>
-	<p>
+	<h2>
     Advanced Podcasts:
-  </p>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
@@ -1466,9 +1509,9 @@
   </li>
     </ul>
 	
-	<p>
+	<h2>
     <strong>Reading</strong>
-  </p>
+  </h2>
   
   <ul class="link-list">
       <li>
@@ -1532,9 +1575,9 @@
   </p>
   </li>
     </ul>
-	<p>
+	<h2>
     <strong>Swiss German</strong>
-  </p>
+  </h2>
   <ul class="link-list">
       <li>
     <p>
