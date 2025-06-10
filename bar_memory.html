@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Memory-Spiel: Fragen und Beschreibungen in der Cocktailbar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      max-width: 1000px;
+      margin: 30px auto;
+    }
+    .card {
+      background: beige;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, transform 0.3s;
+      border: 2px solid transparent;
+    }
+    .card.revealed {
+      background: #ffffff;
+      color: #000;
+      cursor: default;
+    }
+    .card.matched {
+      background: #c8e6c9;
+      color: #000;
+      cursor: default;
+    }
+    .card.wrong {
+      background: #f44336 !important;
+      color: white;
+    }
+    .nav-buttons {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Memory: Servicekraft & Gast</h1>
+  <div class="nav-buttons">
+    <button onclick="loadPart(1)">Teil 1</button>
+    <button onclick="loadPart(2)">Teil 2</button>
+  </div>
+  <div class="grid" id="memory-grid"></div>
+
+  <script>
+    const pairs = [
+      {"front": "Braucht ihr noch was?", "back": "Um zu fragen, ob Gäste weitere Getränke, Speisen oder andere Anliegen haben. Häufig, wenn man am Tisch vorbeikommt."},
+      {"front": "Was kann ich euch bringen?", "back": "Um die Bestellung aufzunehmen oder zu fragen, was die Gäste gerne hätten. Etwas informeller als \"Was möchten Sie haben?\"."},
+      {"front": "Was darf’s sein?", "back": "Eine sehr gängige und direkte Frage, um nach der Bestellung zu fragen. Kurz und prägnant."},
+      {"front": "Was möchten Sie haben?", "back": "Eine höflichere und formellere Art zu fragen, was gewünscht ist."},
+      {"front": "Möchten Sie sonst noch was?", "back": "Um nach der Hauptbestellung zu fragen, ob die Gäste noch etwas möchten."},
+      {"front": "Bitteschön / Gerne", "back": "Standardantwort beim Servieren oder nach einem Dankeschön."},
+      {"front": "Was macht das?", "back": "Umgangssprachlich für: Wie viel muss ich bezahlen?"},
+      {"front": "Danke / dankeschön", "back": "Höflicher Ausdruck für Dank beim Erhalt von Speisen oder Getränken."},
+      {"front": "Guten Durst", "back": "Witziger Wunsch, ähnlich wie 'Prost', gesagt vor dem Trinken."},
+      {"front": "Guten Hunger", "back": "Wie 'Guten Appetit', wird vor dem Essen gesagt."},
+      {"front": "kann ich hier bestellen?", "back": "Frage, ob man an dieser Stelle (z. B. an der Bar) bestellen darf."},
+      {"front": "Soll ich hier bestellen?", "back": "Rückfrage, ob es erwünscht oder üblich ist, an diesem Ort zu bestellen."},
+      {"front": "Können wir nach oben gehen?", "back": "Frage, ob Gäste im oberen Bereich der Bar Platz nehmen dürfen."},
+      {"front": "Habt ihr oben auch noch Platz?", "back": "Frage, ob im oberen Stockwerk noch ein Tisch frei ist."},
+      {"front": "Ja klar, das geht nur bei mir", "back": "Hinweis, dass man nur bei dieser Person bestellen kann."},
+      {"front": "Ja, klar wir haben oben noch Platz", "back": "Bestätigung, dass oben noch Plätze frei sind."},
+      {"front": "Ihr könnt mal schauen", "back": "Einladung, selbst nach einem Platz zu suchen."},
+      {"front": "Ihr könnt es mal probieren", "back": "Vorschlag, es einfach zu versuchen (z. B. oben Platz finden)."},
+      {"front": "Ich glaube oben ist es voll, sorry", "back": "Unsichere Absage – kein Platz mehr oben."},
+      {"front": "ich weiß es gerade nicht genau", "back": "Wenn das Personal nicht sicher ist und evtl. nachsehen muss."},
+      {"front": "Ich bin mir nicht sicher", "back": "Allgemeine höfliche Aussage bei Unsicherheit."}
+    ];
+
+    let revealed = [];
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function loadPart(part) {
+      const start = (part - 1) * 10;
+      const selectedPairs = pairs.slice(start, start + 10);
+
+      let cards = [];
+      selectedPairs.forEach((pair, index) => {
+        const baseId = start + index;
+        cards.push({ id: baseId, text: pair.front, type: 'front' });
+        cards.push({ id: baseId, text: pair.back, type: 'back' });
+      });
+
+      shuffleArray(cards);
+
+      const grid = document.getElementById('memory-grid');
+      grid.innerHTML = '';
+
+      cards.forEach((card, idx) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.dataset.id = card.id;
+        div.dataset.type = card.type;
+        div.dataset.index = idx;
+        div.textContent = "";
+        div.addEventListener('click', () => revealCard(div, card));
+        grid.appendChild(div);
+      });
+
+      revealed = [];
+    }
+
+    function revealCard(div, card) {
+      if (div.classList.contains('revealed') || div.classList.contains('matched') || revealed.length >= 2) return;
+
+      div.textContent = card.text;
+      div.classList.add('revealed');
+      revealed.push({ div, card });
+
+      if (revealed.length === 2) {
+        const [first, second] = revealed;
+        if (first.card.id === second.card.id && first.card.type !== second.card.type) {
+          first.div.classList.add('matched');
+          second.div.classList.add('matched');
+        } else {
+          first.div.classList.add('wrong');
+          second.div.classList.add('wrong');
+          setTimeout(() => {
+            first.div.textContent = "";
+            second.div.textContent = "";
+            first.div.classList.remove('revealed', 'wrong');
+            second.div.classList.remove('revealed', 'wrong');
+          }, 1000);
+        }
+        revealed = [];
+      }
+    }
+
+    // Standardmäßig Teil 1 laden
+    loadPart(1);
+  </script>
+</body>
+</html>
