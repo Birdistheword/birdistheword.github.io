@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konjunktionen Spiel</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF8F0;
+    --aber: #FF6B6B;
+    --und: #4ECDC4;
+    --oder: #F9CA24;
+    --sondern: #A29BFE;
+    --denn: #FD9644;
+    --text: #2D3436;
+    --soft: #636e72;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 15%, #FFE3CC 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, #D4F1EE 0%, transparent 45%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px 40px;
+    color: var(--text);
+    user-select: none;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+    text-align: center;
+  }
+  .subtitle {
+    color: var(--soft);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .stat {
+    text-align: center;
+    background: white;
+    padding: 8px 18px;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .stat-num { font-family: 'Fredoka One', cursive; font-size: 1.7rem; line-height: 1; }
+  .stat-label { font-size: 0.7rem; color: var(--soft); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-num.green { color: #00b894; }
+  .stat-num.red   { color: var(--aber); }
+  .stat-num.blue  { color: #6c5ce7; }
+
+  .progress-bar {
+    width: 100%;
+    max-width: 540px;
+    height: 7px;
+    background: #e0e0e0;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ECDC4, #6c5ce7);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── CHIPS ── */
+  .chips-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+    min-height: 44px;
+  }
+
+  .chip {
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: white;
+    cursor: grab;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    touch-action: none;
+  }
+  .chip:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+  .chip.dragging { opacity: 0.3; transform: scale(0.95); cursor: grabbing; }
+  .chip[data-word="aber"]    { background: var(--aber); }
+  .chip[data-word="und"]     { background: var(--und); }
+  .chip[data-word="oder"]    { background: var(--oder); color: #333; }
+  .chip[data-word="sondern"] { background: var(--sondern); }
+  .chip[data-word="denn"]    { background: var(--denn); }
+
+  /* Ghost */
+  .chip-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.93;
+    transform: scale(1.12) rotate(-3deg);
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: white;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+    display: none;
+  }
+  .chip-ghost[data-word="aber"]    { background: var(--aber); }
+  .chip-ghost[data-word="und"]     { background: var(--und); }
+  .chip-ghost[data-word="oder"]    { background: var(--oder); color: #333; }
+  .chip-ghost[data-word="sondern"] { background: var(--sondern); }
+  .chip-ghost[data-word="denn"]    { background: var(--denn); }
+
+  .drag-hint {
+    font-size: 0.78rem;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* ── CARD ── */
+  .card-wrap {
+    width: 100%;
+    max-width: 540px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.09);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-height: 180px;
+  }
+
+  .card.anim { animation: cardIn 0.35s ease; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .prompt-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--soft);
+  }
+
+  .sentence {
+    font-size: 1.18rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .drop-zone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    height: 38px;
+    border-radius: 10px;
+    border: 2.5px dashed #bbb;
+    background: #f5f5f5;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: transparent;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    cursor: default;
+    padding: 0 10px;
+  }
+  .drop-zone.over {
+    border-color: #6c5ce7;
+    background: #ede9ff;
+    transform: scale(1.08);
+  }
+  .drop-zone.filled {
+    border-style: solid;
+    color: white;
+  }
+  .drop-zone.filled[data-filled="aber"]    { background: var(--aber); border-color: var(--aber); }
+  .drop-zone.filled[data-filled="und"]     { background: var(--und);  border-color: var(--und); }
+  .drop-zone.filled[data-filled="oder"]    { background: var(--oder); border-color: var(--oder); color: #333; }
+  .drop-zone.filled[data-filled="sondern"] { background: var(--sondern); border-color: var(--sondern); }
+  .drop-zone.filled[data-filled="denn"]    { background: var(--denn); border-color: var(--denn); }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .feedback.visible {
+    display: flex;
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .feedback-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    padding: 6px 24px;
+    border-radius: 14px;
+    color: white;
+  }
+  .feedback-badge.correct { background: #00b894; }
+  .feedback-badge.wrong   { background: var(--aber); }
+
+  .feedback-explanation {
+    font-size: 0.85rem;
+    color: var(--soft);
+    background: #f8f8f8;
+    padding: 8px 16px;
+    border-radius: 10px;
+    max-width: 400px;
+    line-height: 1.5;
+  }
+
+  /* ── NEXT BUTTON ── */
+  .btn-next-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  .btn-next {
+    padding: 13px 40px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, #6c5ce7, #4ECDC4);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: none;
+    box-shadow: 0 4px 16px rgba(108,92,231,0.3);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,92,231,0.4); }
+  .btn-next.visible { display: inline-block; }
+
+  /* Card flash */
+  @keyframes flashGreen {
+    0%,100% { background: white; }
+    40%      { background: #d4fce8; }
+  }
+  @keyframes flashRed {
+    0%,100% { background: white; }
+    40%      { background: #ffe5e5; }
+  }
+  .flash-correct { animation: flashGreen 0.45s ease !important; }
+  .flash-wrong   { animation: flashRed 0.45s ease !important; }
+
+  /* ── RESULT ── */
+  .result-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+  .result-screen.visible { display: flex; animation: popIn 0.4s ease; }
+  .result-emoji  { font-size: 4rem; line-height: 1; }
+  .result-title  { font-family: 'Fredoka One', cursive; font-size: 2.1rem; }
+  .result-sub    { color: var(--soft); font-size: 1rem; }
+  .btn-restart {
+    background: linear-gradient(135deg, #4ECDC4, #6c5ce7);
+    color: white;
+    padding: 14px 36px;
+    border-radius: 16px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(78,205,196,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(78,205,196,0.4); }
+</style>
+</head>
+<body>
+
+<h1>🃏 Konjunktionen!</h1>
+<p class="subtitle">Hobbys & Freizeit · Niveau A1</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num blue"  id="stat-total">0</div><div class="stat-label">Karten</div></div>
+  <div class="stat"><div class="stat-num green" id="stat-correct">0</div><div class="stat-label">Richtig ✓</div></div>
+  <div class="stat"><div class="stat-num red"   id="stat-wrong">0</div><div class="stat-label">Falsch ✗</div></div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<div class="chips-area" id="chips-area">
+  <div class="chip" data-word="aber"    draggable="true">aber</div>
+  <div class="chip" data-word="und"     draggable="true">und</div>
+  <div class="chip" data-word="oder"    draggable="true">oder</div>
+  <div class="chip" data-word="sondern" draggable="true">sondern</div>
+  <div class="chip" data-word="denn"    draggable="true">denn</div>
+</div>
+<p class="drag-hint">☝️ Zieh die richtige Konjunktion in die Lücke!</p>
+
+<div class="chip-ghost" id="ghost"></div>
+
+<div id="game">
+  <div class="card-wrap">
+    <div class="card anim" id="card">
+      <div class="prompt-label">Welche Konjunktion passt? 🤔</div>
+      <div class="sentence" id="sentence"></div>
+      <div class="feedback" id="feedback">
+        <div class="feedback-badge" id="feedback-badge"></div>
+        <div class="feedback-explanation" id="feedback-expl"></div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-next-wrap">
+    <button class="btn-next" id="btn-next" onclick="nextCard()">Weiter →</button>
+  </div>
+</div>
+
+<div class="result-screen" id="result">
+  <div class="result-emoji" id="result-emoji">🎉</div>
+  <div class="result-title" id="result-title"></div>
+  <div class="result-sub"   id="result-sub"></div>
+  <button class="btn-restart" onclick="restart()">🔄 Nochmal spielen</button>
+</div>
+
+<script>
+const CARDS = [
+  { p1:"Ich spiele Fußball",         p2:"ich schwimme gern.",          c:"und",     expl:"und = verbindet zwei positive Dinge zusammen" },
+  { p1:"Er liest ein Buch,",          p2:"er hört keine Musik.",         c:"aber",    expl:"aber = Kontrast / Gegensatz zwischen zwei Sätzen" },
+  { p1:"Spielst du Tennis",           p2:"spielst du Volleyball?",       c:"oder",    expl:"oder = eine von zwei Möglichkeiten" },
+  { p1:"Ich gehe nicht ins Kino,",    p2:"ich bleibe zu Hause.",         c:"sondern", expl:"sondern = nach 'nicht' – korrigiert etwas Negatives" },
+  { p1:"Sie tanzt gern,",             p2:"Tanzen macht Spaß.",           c:"denn",    expl:"denn = erklärt den Grund (warum?)" },
+  { p1:"Wir spielen Karten",          p2:"wir schauen einen Film.",      c:"oder",    expl:"oder = Auswahl zwischen zwei Aktivitäten" },
+  { p1:"Er macht Sport,",             p2:"er ist oft müde.",             c:"aber",    expl:"aber = überraschender Gegensatz" },
+  { p1:"Sie liest keine Bücher,",     p2:"sie schaut Videos.",           c:"sondern", expl:"sondern = korrigiert 'keine Bücher' mit der echten Antwort" },
+  { p1:"Ich gehe spazieren,",         p2:"das Wetter ist schön.",        c:"denn",    expl:"denn = gibt den Grund für den Spaziergang" },
+  { p1:"Mein Bruder malt",            p2:"spielt Gitarre.",              c:"und",     expl:"und = zwei Hobbys des Bruders zusammen" },
+  { p1:"Sie läuft nicht,",            p2:"sie fährt Fahrrad.",           c:"sondern", expl:"sondern = nach 'nicht' – zeigt die echte Alternative" },
+  { p1:"Er spielt gern Schach,",      p2:"er gewinnt selten.",           c:"aber",    expl:"aber = positiv (gern) vs. negativ (selten gewinnen)" },
+  { p1:"Wir kochen zusammen",         p2:"essen danach.",                c:"und",     expl:"und = zwei Aktionen in Reihenfolge" },
+  { p1:"Gehst du ins Schwimmbad",     p2:"bleibst du zu Hause?",         c:"oder",    expl:"oder = zwei Optionen zur Wahl" },
+  { p1:"Ich spiele kein Basketball,", p2:"ich spiele Handball.",         c:"sondern", expl:"sondern = nach 'kein' – die echte Information folgt" },
+  { p1:"Sie malt gern,",              p2:"Malen ist kreativ.",           c:"denn",    expl:"denn = Erklärung, warum sie gern malt" },
+];
+
+let deck=[], current=0, correctCount=0, wrongCount=0, answered=false;
+let draggingWord=null;
+
+const ghost=document.getElementById('ghost');
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+function restart(){
+  deck=shuffle(CARDS);
+  current=0; correctCount=0; wrongCount=0; answered=false;
+  document.getElementById('result').classList.remove('visible');
+  document.getElementById('game').style.display='';
+  updateStats();
+  showCard();
+}
+
+function showCard(){
+  answered=false;
+  const d=deck[current];
+  const card=document.getElementById('card');
+
+  // animate card in
+  card.classList.remove('anim','flash-correct','flash-wrong');
+  void card.offsetWidth;
+  card.classList.add('anim');
+
+  // sentence with drop zone
+  document.getElementById('sentence').innerHTML=
+    `<span>${d.p1}</span><span class="drop-zone" id="dz">____</span><span>${d.p2}</span>`;
+
+  // hide feedback & next button
+  document.getElementById('feedback').classList.remove('visible');
+  document.getElementById('btn-next').classList.remove('visible');
+
+  // wire up drop zone
+  const dz=document.getElementById('dz');
+  dz.addEventListener('dragover', e=>{ e.preventDefault(); if(!answered) dz.classList.add('over'); });
+  dz.addEventListener('dragleave', ()=>dz.classList.remove('over'));
+  dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('over'); handleDrop(draggingWord); });
+
+  updateProgress();
+}
+
+function handleDrop(word){
+  if(!word || answered) return;
+  answered=true;
+
+  const d=deck[current];
+  const correct=(word===d.c);
+  const dz=document.getElementById('dz');
+
+  dz.textContent=word;
+  dz.classList.add('filled');
+  dz.setAttribute('data-filled', word);
+
+  const badge=document.getElementById('feedback-badge');
+  badge.textContent = correct ? '✓ Richtig!' : `✗ Falsch – es ist: „${d.c}"`;
+  badge.className='feedback-badge '+(correct?'correct':'wrong');
+  document.getElementById('feedback-expl').textContent='💡 '+d.expl;
+  document.getElementById('feedback').classList.add('visible');
+
+  const card=document.getElementById('card');
+  card.classList.remove('flash-correct','flash-wrong');
+  void card.offsetWidth;
+  card.classList.add(correct?'flash-correct':'flash-wrong');
+  setTimeout(()=>card.classList.remove('flash-correct','flash-wrong'),460);
+
+  if(correct) correctCount++; else wrongCount++;
+  updateStats();
+
+  document.getElementById('btn-next').classList.add('visible');
+}
+
+function nextCard(){
+  current++;
+  if(current>=deck.length){ showResult(); return; }
+  showCard();
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent=current;
+  document.getElementById('stat-correct').textContent=correctCount;
+  document.getElementById('stat-wrong').textContent=wrongCount;
+}
+function updateProgress(){
+  document.getElementById('progress').style.width=(current/deck.length*100)+'%';
+}
+
+function showResult(){
+  document.getElementById('game').style.display='none';
+  document.getElementById('progress').style.width='100%';
+  const pct=Math.round(correctCount/deck.length*100);
+  let emoji,title,sub;
+  if(pct===100){ emoji='🏆'; title='Perfekt!'; sub=`Alle ${deck.length} Karten richtig! Wunderbar! 🌟`; }
+  else if(pct>=75){ emoji='😊'; title='Sehr gut!'; sub=`${correctCount} von ${deck.length} richtig (${pct}%) – Super gemacht!`; }
+  else if(pct>=50){ emoji='💪'; title='Gut gemacht!'; sub=`${correctCount} von ${deck.length} richtig (${pct}%) – Weiter üben!`; }
+  else{ emoji='📚'; title='Nochmal üben!'; sub=`${correctCount} von ${deck.length} richtig (${pct}%) – Du schaffst das!`; }
+  document.getElementById('result-emoji').textContent=emoji;
+  document.getElementById('result-title').textContent=title;
+  document.getElementById('result-sub').textContent=sub;
+  document.getElementById('result').classList.add('visible');
+}
+
+// ── MOUSE DRAG ──
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('dragstart', e=>{
+    draggingWord=chip.dataset.word;
+    chip.classList.add('dragging');
+    e.dataTransfer.effectAllowed='copy';
+    e.dataTransfer.setData('text/plain', chip.dataset.word);
+  });
+  chip.addEventListener('dragend', ()=>{
+    draggingWord=null;
+    chip.classList.remove('dragging');
+  });
+});
+
+// ── TOUCH DRAG ──
+let touchChip=null;
+
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('touchstart', e=>{
+    if(answered) return;
+    touchChip=chip;
+    draggingWord=chip.dataset.word;
+    chip.classList.add('dragging');
+
+    ghost.textContent=chip.dataset.word;
+    ghost.setAttribute('data-word', chip.dataset.word);
+    ghost.style.display='block';
+    const t=e.touches[0];
+    ghost.style.left=(t.clientX - ghost.offsetWidth/2)+'px';
+    ghost.style.top=(t.clientY - ghost.offsetHeight/2 - 20)+'px';
+    e.preventDefault();
+  },{passive:false});
+});
+
+document.addEventListener('touchmove', e=>{
+  if(!touchChip) return;
+  const t=e.touches[0];
+  ghost.style.left=(t.clientX - ghost.offsetWidth/2)+'px';
+  ghost.style.top=(t.clientY - ghost.offsetHeight/2 - 20)+'px';
+
+  const dz=document.getElementById('dz');
+  if(!dz) return;
+  const r=dz.getBoundingClientRect();
+  const over=t.clientX>=r.left && t.clientX<=r.right && t.clientY>=r.top && t.clientY<=r.bottom;
+  dz.classList.toggle('over', over && !answered);
+  e.preventDefault();
+},{passive:false});
+
+document.addEventListener('touchend', e=>{
+  if(!touchChip) return;
+  ghost.style.display='none';
+  touchChip.classList.remove('dragging');
+
+  const t=e.changedTouches[0];
+  const dz=document.getElementById('dz');
+  if(dz){
+    const r=dz.getBoundingClientRect();
+    if(t.clientX>=r.left && t.clientX<=r.right && t.clientY>=r.top && t.clientY<=r.bottom){
+      dz.classList.remove('over');
+      handleDrop(draggingWord);
+    }
+  }
+  touchChip=null;
+  draggingWord=null;
+});
+
+restart();
+</script>
+</body>
+</html>
