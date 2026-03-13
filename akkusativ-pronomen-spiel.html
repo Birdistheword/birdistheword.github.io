@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akkusativ Pronomen Spiel</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F0F4FF;
+    --mich:  #FF6B9D;
+    --dich:  #FD9644;
+    --ihn:   #4ECDC4;
+    --sie1:  #A29BFE;
+    --es:    #55EFC4;
+    --uns:   #6C5CE7;
+    --euch:  #FDCB6E;
+    --sie2:  #E17055;
+    --text: #2D3436;
+    --soft: #636e72;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 10%, #D6E4FF 0%, transparent 50%),
+      radial-gradient(circle at 90% 90%, #FFE0F0 0%, transparent 50%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px 40px;
+    color: var(--text);
+    user-select: none;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.1rem;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+    text-align: center;
+  }
+  .subtitle {
+    color: var(--soft);
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    max-width: 540px;
+    width: 100%;
+  }
+  .table-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--soft);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .pronoun-table {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+  .pt-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .pt-nom { color: var(--soft); min-width: 44px; text-align: right; }
+  .pt-arrow { color: #ccc; }
+  .pt-akk {
+    padding: 2px 10px;
+    border-radius: 999px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+  }
+
+  /* ── STATS ── */
+  .stats {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .stat {
+    text-align: center;
+    background: white;
+    padding: 7px 16px;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .stat-num { font-family: 'Fredoka One', cursive; font-size: 1.6rem; line-height: 1; }
+  .stat-label { font-size: 0.68rem; color: var(--soft); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-num.green { color: #00b894; }
+  .stat-num.red   { color: #d63031; }
+  .stat-num.blue  { color: #6c5ce7; }
+
+  .progress-bar {
+    width: 100%;
+    max-width: 540px;
+    height: 7px;
+    background: #dfe6e9;
+    border-radius: 999px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6C5CE7, #FF6B9D);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── CHIPS ── */
+  .chips-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    justify-content: center;
+    margin-bottom: 8px;
+    max-width: 540px;
+  }
+
+  .chip {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: white;
+    cursor: grab;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    touch-action: none;
+  }
+  .chip:hover { transform: scale(1.09) translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+  .chip.dragging { opacity: 0.28; transform: scale(0.95); cursor: grabbing; }
+  .chip[data-word="mich"] { background: var(--mich); }
+  .chip[data-word="dich"] { background: var(--dich); }
+  .chip[data-word="ihn"]  { background: var(--ihn);  }
+  .chip[data-word="sie"]  { background: var(--sie1); }
+  .chip[data-word="es"]   { background: var(--es); color: #2D3436; }
+  .chip[data-word="uns"]  { background: var(--uns); }
+  .chip[data-word="euch"] { background: var(--euch); color: #2D3436; }
+
+  /* Ghost */
+  .chip-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.93;
+    transform: scale(1.12) rotate(-3deg);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: white;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+    display: none;
+  }
+  .chip-ghost[data-word="mich"] { background: var(--mich); }
+  .chip-ghost[data-word="dich"] { background: var(--dich); }
+  .chip-ghost[data-word="ihn"]  { background: var(--ihn);  }
+  .chip-ghost[data-word="sie"]  { background: var(--sie1); }
+  .chip-ghost[data-word="es"]   { background: var(--es); color: #2D3436; }
+  .chip-ghost[data-word="uns"]  { background: var(--uns); }
+  .chip-ghost[data-word="euch"] { background: var(--euch); color: #2D3436; }
+
+  .drag-hint {
+    font-size: 0.76rem;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  /* ── CARD ── */
+  .card-wrap {
+    width: 100%;
+    max-width: 540px;
+    margin-bottom: 18px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.09);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    min-height: 200px;
+  }
+  .card.anim { animation: cardIn 0.35s ease; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .prompt-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--soft);
+  }
+
+  /* Two sentences stacked */
+  .sentences {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .sentence-row {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.8;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  /* Bold nominative hint */
+  .nom-hint {
+    display: inline-block;
+    font-weight: 800;
+    padding: 1px 8px;
+    border-radius: 6px;
+    background: #F0F4FF;
+    color: #6c5ce7;
+    font-size: 1.05rem;
+  }
+
+  .drop-zone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 36px;
+    border-radius: 10px;
+    border: 2.5px dashed #bbb;
+    background: #f5f5f5;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: transparent;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    padding: 0 10px;
+  }
+  .drop-zone.over {
+    border-color: #6c5ce7;
+    background: #ede9ff;
+    transform: scale(1.09);
+  }
+  .drop-zone.filled {
+    border-style: solid;
+    color: white;
+  }
+  .drop-zone.filled[data-filled="mich"] { background: var(--mich); border-color: var(--mich); }
+  .drop-zone.filled[data-filled="dich"] { background: var(--dich); border-color: var(--dich); }
+  .drop-zone.filled[data-filled="ihn"]  { background: var(--ihn);  border-color: var(--ihn); }
+  .drop-zone.filled[data-filled="sie"]  { background: var(--sie1); border-color: var(--sie1); }
+  .drop-zone.filled[data-filled="es"]   { background: var(--es);   border-color: var(--es); color: #2D3436; }
+  .drop-zone.filled[data-filled="uns"]  { background: var(--uns);  border-color: var(--uns); }
+  .drop-zone.filled[data-filled="euch"] { background: var(--euch); border-color: var(--euch); color: #2D3436; }
+
+  /* divider between sentences */
+  .sent-divider {
+    width: 60%;
+    height: 1px;
+    background: #f0f0f0;
+  }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+  .feedback.visible { display: flex; animation: popIn 0.3s ease; }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .feedback-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    padding: 5px 22px;
+    border-radius: 14px;
+    color: white;
+  }
+  .feedback-badge.correct { background: #00b894; }
+  .feedback-badge.wrong   { background: #d63031; }
+
+  .feedback-explanation {
+    font-size: 0.83rem;
+    color: var(--soft);
+    background: #f8f8f8;
+    padding: 7px 14px;
+    border-radius: 10px;
+    max-width: 420px;
+    line-height: 1.5;
+  }
+
+  /* ── NEXT BUTTON ── */
+  .btn-next-wrap { display: flex; justify-content: center; }
+  .btn-next {
+    padding: 12px 38px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, #6C5CE7, #FF6B9D);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: none;
+    box-shadow: 0 4px 16px rgba(108,92,231,0.3);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,92,231,0.4); }
+  .btn-next.visible { display: inline-block; }
+
+  @keyframes flashGreen {
+    0%,100% { background: white; }
+    40% { background: #d4fce8; }
+  }
+  @keyframes flashRed {
+    0%,100% { background: white; }
+    40% { background: #ffe5e5; }
+  }
+  .flash-correct { animation: flashGreen 0.45s ease !important; }
+  .flash-wrong   { animation: flashRed 0.45s ease !important; }
+
+  /* ── RESULT ── */
+  .result-screen { display: none; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+  .result-screen.visible { display: flex; animation: popIn 0.4s ease; }
+  .result-emoji  { font-size: 4rem; line-height: 1; }
+  .result-title  { font-family: 'Fredoka One', cursive; font-size: 2.1rem; }
+  .result-sub    { color: var(--soft); font-size: 1rem; }
+  .btn-restart {
+    background: linear-gradient(135deg, #6C5CE7, #FF6B9D);
+    color: white;
+    padding: 13px 34px;
+    border-radius: 16px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(108,92,231,0.3);
+    transition: transform 0.15s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<h1>🎯 Akkusativ Pronomen</h1>
+<p class="subtitle">Personalpronomen im Akkusativ · Niveau A1</p>
+
+<!-- Mini reference table -->
+<div class="table-wrap">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+    <div class="table-title" style="margin-bottom:0">📋 Übersicht</div>
+    <button id="toggle-btn" onclick="toggleTable()" style="
+      border: none; background: #ede9ff; color: #6c5ce7;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.75rem;
+      padding: 4px 12px; border-radius: 999px; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    ">ausblenden 🙈</button>
+  </div>
+  <div class="pronoun-table" id="pronoun-table">
+    <div class="pt-row"><span class="pt-nom">ich</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--mich)">mich</span></div>
+    <div class="pt-row"><span class="pt-nom">du</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--dich)">dich</span></div>
+    <div class="pt-row"><span class="pt-nom">er</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--ihn)">ihn</span></div>
+    <div class="pt-row"><span class="pt-nom">sie</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--sie1)">sie</span></div>
+    <div class="pt-row"><span class="pt-nom">es</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--es);color:#333">es</span></div>
+    <div class="pt-row"><span class="pt-nom">wir</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--uns)">uns</span></div>
+    <div class="pt-row"><span class="pt-nom">ihr</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--euch);color:#333">euch</span></div>
+    <div class="pt-row"><span class="pt-nom">sie (Pl.)</span><span class="pt-arrow">→</span><span class="pt-akk" style="background:var(--sie1)">sie</span></div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num blue"  id="stat-total">0</div><div class="stat-label">Karten</div></div>
+  <div class="stat"><div class="stat-num green" id="stat-correct">0</div><div class="stat-label">Richtig ✓</div></div>
+  <div class="stat"><div class="stat-num red"   id="stat-wrong">0</div><div class="stat-label">Falsch ✗</div></div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<div class="chips-area" id="chips-area">
+  <div class="chip" data-word="mich" draggable="true">mich</div>
+  <div class="chip" data-word="dich" draggable="true">dich</div>
+  <div class="chip" data-word="ihn"  draggable="true">ihn</div>
+  <div class="chip" data-word="sie"  draggable="true">sie</div>
+  <div class="chip" data-word="es"   draggable="true">es</div>
+  <div class="chip" data-word="uns"  draggable="true">uns</div>
+  <div class="chip" data-word="euch" draggable="true">euch</div>
+</div>
+<p class="drag-hint">☝️ Zieh das richtige Pronomen in die Lücke!</p>
+
+<div class="chip-ghost" id="ghost"></div>
+
+<div id="game">
+  <div class="card-wrap">
+    <div class="card anim" id="card">
+      <div class="prompt-label">Welches Pronomen passt? 🤔</div>
+      <div class="sentences" id="sentences"></div>
+      <div class="feedback" id="feedback">
+        <div class="feedback-badge" id="feedback-badge"></div>
+        <div class="feedback-explanation" id="feedback-expl"></div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-next-wrap">
+    <button class="btn-next" id="btn-next" onclick="nextCard()">Weiter →</button>
+  </div>
+</div>
+
+<div class="result-screen" id="result">
+  <div class="result-emoji" id="result-emoji">🎉</div>
+  <div class="result-title" id="result-title"></div>
+  <div class="result-sub"   id="result-sub"></div>
+  <button class="btn-restart" onclick="restart()">🔄 Nochmal spielen</button>
+</div>
+
+<script>
+// Each card:
+// nom = the subject in sentence 1 (shown bold/highlighted)
+// s1  = sentence 1 text (uses {NOM} as placeholder for the highlighted word)
+// s2  = sentence 2 – {BLANK} marks the drop zone
+// c   = correct answer
+// expl = explanation shown after
+const CARDS = [
+  // ── MICH ──
+  { nom:"Ich", s1:"{NOM} warte am Bahnhof.", s2:"Kannst du {BLANK} bitte abholen?", c:"mich", expl:"ich → mich  |  Ich (Subjekt S1) werde zum Objekt in S2." },
+  { nom:"Ich", s1:"{NOM} stehe vor der Tür.", s2:"Siehst du {BLANK} nicht?", c:"mich", expl:"ich → mich  |  Sehen + Akkusativ." },
+
+  // ── DICH ──
+  { nom:"Du", s1:"{NOM} hast Geburtstag!", s2:"Ich besuche {BLANK} heute Abend.", c:"dich", expl:"du → dich  |  Du bist das Ziel der Aktion." },
+  { nom:"Du", s1:"{NOM} spielst sehr gut.", s2:"Der Trainer lobt {BLANK} oft.", c:"dich", expl:"du → dich  |  Du (Subjekt S1) wirst zum Objekt in S2." },
+
+  // ── IHN ──
+  { nom:"Er", s1:"{NOM} ist neu in der Klasse.", s2:"Wir kennen {BLANK} nicht.", c:"ihn", expl:"er → ihn  |  er (maskulin) wird zu ihn im Akkusativ." },
+  { nom:"Er", s1:"{NOM} ist mein Bruder.", s2:"Ich liebe {BLANK}.", c:"ihn", expl:"er → ihn  |  Lieben braucht Akkusativ." },
+  { nom:"Er", s1:"{NOM} wartet draußen.", s2:"Bitte ruf {BLANK} herein!", c:"ihn", expl:"er → ihn  |  Hereinrufen + Akkusativ." },
+
+  // ── SIE (Singular) ──
+  { nom:"Sie", s1:"{NOM} (Anna) wohnt in Berlin.", s2:"Ich besuche {BLANK} nächste Woche.", c:"sie", expl:"sie → sie  |  sie bleibt 'sie' im Akkusativ!" },
+  { nom:"Sie", s1:"{NOM} singt sehr schön.", s2:"Wir hören {BLANK} gern.", c:"sie", expl:"sie (sg.) → sie  |  Hören + Akkusativ." },
+  { nom:"Sie", s1:"{NOM} ist meine Lehrerin.", s2:"Ich mag {BLANK} sehr.", c:"sie", expl:"sie → sie  |  Mögen + Akkusativ." },
+
+  // ── ES ──
+  { nom:"Es", s1:"{NOM} (das Kind) schläft.", s2:"Die Mutter trägt {BLANK} ins Bett.", c:"es", expl:"es → es  |  Neutrum bleibt 'es' im Akkusativ." },
+  { nom:"Es", s1:"{NOM} (das Buch) ist toll.", s2:"Ich lese {BLANK} jeden Abend.", c:"es", expl:"es → es  |  Das Buch (neutral) = es." },
+  { nom:"Er", s1:"{NOM} (der Hund) ist niedlich.", s2:"Wir lieben {BLANK}.", c:"ihn", expl:"der Hund → er → ihn  |  Der Hund ist maskulin, also ihn im Akkusativ." },
+
+  // ── UNS ──
+  { nom:"Wir", s1:"{NOM} kommen nicht zur Party.", s2:"Frank hat {BLANK} nicht eingeladen.", c:"uns", expl:"wir → uns  |  Wir als Objekt = uns." },
+  { nom:"Wir", s1:"{NOM} sind deine Freunde.", s2:"Du kennst {BLANK} gut.", c:"uns", expl:"wir → uns  |  Kennen + Akkusativ." },
+  { nom:"Wir", s1:"{NOM} warten schon eine Stunde.", s2:"Der Kellner hat {BLANK} vergessen!", c:"uns", expl:"wir → uns  |  Wir (Subjekt S1) werden zum Objekt in S2." },
+
+  // ── EUCH ──
+  { nom:"Ihr", s1:"{NOM} seid meine besten Freunde.", s2:"Ich vermisse {BLANK} sehr.", c:"euch", expl:"ihr → euch  |  Ihr als Objekt = euch." },
+  { nom:"Ihr", s1:"{NOM} macht viel Lärm.", s2:"Niemand hört {BLANK}.", c:"euch", expl:"ihr → euch  |  Hören + Akkusativ." },
+
+  // ── SIE (Plural) ──
+  { nom:"Sie", s1:"{NOM} (Plural) arbeiten hier.", s2:"Der Chef kennt {BLANK} gut.", c:"sie", expl:"sie (Plural) → sie  |  Kennen + Akkusativ." },
+  { nom:"Sie", s1:"{NOM} (die Kinder) spielen im Garten.", s2:"Ich sehe {BLANK} jeden Tag.", c:"sie", expl:"sie (Pl.) → sie  |  Sehen + Akkusativ." },
+];
+
+let deck=[], current=0, correctCount=0, wrongCount=0, answered=false;
+let draggingWord=null;
+const ghost=document.getElementById('ghost');
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+function restart(){
+  deck=shuffle(CARDS);
+  current=0; correctCount=0; wrongCount=0; answered=false;
+  document.getElementById('result').classList.remove('visible');
+  document.getElementById('game').style.display='';
+  updateStats();
+  showCard();
+}
+
+function showCard(){
+  answered=false;
+  const d=deck[current];
+  const card=document.getElementById('card');
+  card.className='card';
+  void card.offsetWidth;
+  card.classList.add('anim');
+
+  // Build s1 with highlighted nominative
+  const s1html = d.s1.replace('{NOM}', `<span class="nom-hint">${d.nom}</span>`);
+  // Build s2 with drop zone
+  const s2html = d.s2.replace('{BLANK}', `<span class="drop-zone" id="dz">____</span>`);
+
+  document.getElementById('sentences').innerHTML = `
+    <div class="sentence-row">${s1html}</div>
+    <div class="sent-divider"></div>
+    <div class="sentence-row">${s2html}</div>
+  `;
+
+  document.getElementById('feedback').classList.remove('visible');
+  document.getElementById('btn-next').classList.remove('visible');
+
+  const dz=document.getElementById('dz');
+  dz.addEventListener('dragover', e=>{ e.preventDefault(); if(!answered) dz.classList.add('over'); });
+  dz.addEventListener('dragleave', ()=>dz.classList.remove('over'));
+  dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('over'); handleDrop(draggingWord); });
+
+  updateProgress();
+}
+
+function handleDrop(word){
+  if(!word || answered) return;
+  answered=true;
+
+  const d=deck[current];
+  const correct=(word===d.c);
+  const dz=document.getElementById('dz');
+
+  dz.textContent=word;
+  dz.classList.add('filled');
+  dz.setAttribute('data-filled', word);
+
+  const badge=document.getElementById('feedback-badge');
+  badge.textContent = correct ? '✓ Richtig!' : `✗ Falsch – es ist: „${d.c}"`;
+  badge.className='feedback-badge '+(correct?'correct':'wrong');
+  document.getElementById('feedback-expl').textContent='💡 '+d.expl;
+  document.getElementById('feedback').classList.add('visible');
+
+  const card=document.getElementById('card');
+  card.classList.remove('flash-correct','flash-wrong');
+  void card.offsetWidth;
+  card.classList.add(correct?'flash-correct':'flash-wrong');
+  setTimeout(()=>card.classList.remove('flash-correct','flash-wrong'),460);
+
+  if(correct) correctCount++; else wrongCount++;
+  updateStats();
+  document.getElementById('btn-next').classList.add('visible');
+}
+
+function nextCard(){
+  current++;
+  if(current>=deck.length){ showResult(); return; }
+  showCard();
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent=current;
+  document.getElementById('stat-correct').textContent=correctCount;
+  document.getElementById('stat-wrong').textContent=wrongCount;
+}
+function updateProgress(){
+  document.getElementById('progress').style.width=(current/deck.length*100)+'%';
+}
+
+function showResult(){
+  document.getElementById('game').style.display='none';
+  document.getElementById('progress').style.width='100%';
+  const pct=Math.round(correctCount/deck.length*100);
+  let emoji,title,sub;
+  if(pct===100){ emoji='🏆'; title='Perfekt!'; sub=`Alle ${deck.length} Karten richtig! Ausgezeichnet! 🌟`; }
+  else if(pct>=75){ emoji='😊'; title='Sehr gut!'; sub=`${correctCount} von ${deck.length} richtig (${pct}%) – Super gemacht!`; }
+  else if(pct>=50){ emoji='💪'; title='Gut gemacht!'; sub=`${correctCount} von ${deck.length} richtig (${pct}%) – Weiter üben!`; }
+  else{ emoji='📚'; title='Nochmal üben!'; sub=`${correctCount} von ${deck.length} richtig (${pct}%) – Du schaffst das!`; }
+  document.getElementById('result-emoji').textContent=emoji;
+  document.getElementById('result-title').textContent=title;
+  document.getElementById('result-sub').textContent=sub;
+  document.getElementById('result').classList.add('visible');
+}
+
+// ── MOUSE DRAG ──
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('dragstart', e=>{
+    draggingWord=chip.dataset.word;
+    chip.classList.add('dragging');
+    e.dataTransfer.effectAllowed='copy';
+  });
+  chip.addEventListener('dragend', ()=>{
+    draggingWord=null;
+    chip.classList.remove('dragging');
+  });
+});
+
+// ── TOUCH DRAG ──
+let touchChip=null;
+
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('touchstart', e=>{
+    if(answered) return;
+    touchChip=chip;
+    draggingWord=chip.dataset.word;
+    chip.classList.add('dragging');
+    ghost.textContent=chip.dataset.word;
+    ghost.setAttribute('data-word', chip.dataset.word);
+    ghost.style.display='block';
+    const t=e.touches[0];
+    ghost.style.left=(t.clientX-ghost.offsetWidth/2)+'px';
+    ghost.style.top=(t.clientY-ghost.offsetHeight/2-20)+'px';
+    e.preventDefault();
+  },{passive:false});
+});
+
+document.addEventListener('touchmove', e=>{
+  if(!touchChip) return;
+  const t=e.touches[0];
+  ghost.style.left=(t.clientX-ghost.offsetWidth/2)+'px';
+  ghost.style.top=(t.clientY-ghost.offsetHeight/2-20)+'px';
+  const dz=document.getElementById('dz');
+  if(!dz) return;
+  const r=dz.getBoundingClientRect();
+  const over=t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom;
+  dz.classList.toggle('over', over&&!answered);
+  e.preventDefault();
+},{passive:false});
+
+document.addEventListener('touchend', e=>{
+  if(!touchChip) return;
+  ghost.style.display='none';
+  touchChip.classList.remove('dragging');
+  const t=e.changedTouches[0];
+  const dz=document.getElementById('dz');
+  if(dz){
+    const r=dz.getBoundingClientRect();
+    if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom){
+      dz.classList.remove('over');
+      handleDrop(draggingWord);
+    }
+  }
+  touchChip=null; draggingWord=null;
+});
+
+function toggleTable(){
+  const table=document.getElementById('pronoun-table');
+  const btn=document.getElementById('toggle-btn');
+  if(table.style.display==='none'){
+    table.style.display='';
+    btn.textContent='ausblenden 🙈';
+    btn.style.background='#ede9ff'; btn.style.color='#6c5ce7';
+  } else {
+    table.style.display='none';
+    btn.textContent='einblenden 👀';
+    btn.style.background='#f0f0f0'; btn.style.color='#636e72';
+  }
+}
+
+restart();
+</script>
+</body>
+</html>
