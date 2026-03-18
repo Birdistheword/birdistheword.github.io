@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ein bisschen oder oft? 🎮</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --card-bg: #16213e;
+    --card-border: #0f3460;
+    --oft-color: #e94560;
+    --bisschen-color: #0f9b8e;
+    --accent: #f5a623;
+    --text: #eaeaea;
+    --muted: #8892a4;
+    --radius: 24px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(233,69,96,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(15,155,142,0.15) 0%, transparent 50%);
+    min-height: 100vh;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 60px;
+  }
+  header { text-align: center; margin-bottom: 22px; animation: fadeDown 0.6s ease both; }
+  header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(1.7rem, 5vw, 2.6rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--oft-color), var(--accent), var(--bisschen-color));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1.1;
+  }
+  header p { margin-top: 8px; color: var(--muted); font-size: 0.95rem; }
+
+  /* legend */
+  .legend {
+    display: flex; gap: 14px; margin-bottom: 18px;
+    flex-wrap: wrap; justify-content: center;
+    animation: fadeDown 0.6s 0.05s ease both;
+  }
+  .legend-chip {
+    display: flex; align-items: flex-start; gap: 9px;
+    background: var(--card-bg); border: 2px solid var(--card-border);
+    border-radius: 14px; padding: 10px 16px;
+    font-size: 0.82rem; font-weight: 700; line-height: 1.4;
+    max-width: 220px;
+  }
+  .chip-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink:0; margin-top:3px; }
+  .chip-oft  { background: var(--oft-color); }
+  .chip-biss { background: var(--bisschen-color); }
+  .chip-label { color: var(--text); }
+  .chip-sub { color: var(--muted); font-weight: 400; font-size:0.78rem; }
+
+  /* progress */
+  .progress-wrap { width:100%; max-width:540px; margin-bottom:14px; animation: fadeDown 0.6s 0.1s ease both; }
+  .progress-label { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--muted); margin-bottom:7px; font-weight:700; }
+  .progress-bar-bg { background:var(--card-border); border-radius:99px; height:10px; overflow:hidden; }
+  .progress-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--oft-color),var(--accent)); transition:width 0.5s ease; }
+
+  /* score */
+  .score-display { display:flex; gap:16px; margin-bottom:20px; animation: fadeDown 0.6s 0.15s ease both; }
+  .score-pill { background:var(--card-bg); border:2px solid var(--card-border); border-radius:99px; padding:6px 18px; font-weight:900; font-size:0.9rem; display:flex; align-items:center; gap:7px; }
+  .dot { width:10px; height:10px; border-radius:50%; }
+  .dot-green { background:#2ecc71; }
+  .dot-red   { background:var(--oft-color); }
+
+  /* card */
+  .card-area { width:100%; max-width:540px; }
+  .card {
+    background:var(--card-bg); border:2px solid var(--card-border);
+    border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:36px 28px 28px;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    animation: cardIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+    position:relative; overflow:hidden;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:4px;
+    background:linear-gradient(90deg, var(--oft-color), var(--accent), var(--bisschen-color));
+  }
+  .card-number { position:absolute; top:14px; right:18px; font-size:0.75rem; color:var(--muted); font-weight:700; }
+
+  /* type badge */
+  .card-type-badge {
+    font-size:0.72rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase;
+    padding:4px 12px; border-radius:99px; align-self:flex-start;
+  }
+  .badge-gap  { background:rgba(245,166,35,0.18); color:var(--accent); border:1px solid rgba(245,166,35,0.4); }
+  .badge-full { background:rgba(136,146,164,0.15); color:var(--muted); border:1px solid rgba(136,146,164,0.35); }
+
+  .card-emoji {
+    font-size:4.5rem; line-height:1;
+    filter:drop-shadow(0 4px 16px rgba(0,0,0,0.35));
+    animation: emojiFloat 2.5s ease-in-out infinite;
+  }
+
+  /* sentence with gap */
+  .card-sentence {
+    font-size:1.18rem; font-weight:700; text-align:center;
+    color:var(--text); line-height:1.55;
+  }
+  .gap-box {
+    display:inline-block;
+    background: rgba(245,166,35,0.15);
+    border: 2px dashed var(--accent);
+    border-radius:8px;
+    min-width:110px; padding:2px 10px;
+    color:var(--accent);
+    font-style:italic;
+    font-size:1rem;
+    vertical-align:middle;
+  }
+
+  .card-hint {
+    font-size:0.84rem; color:var(--muted); text-align:center; font-style:italic;
+    background:rgba(255,255,255,0.04); border-radius:10px; padding:7px 14px; width:100%;
+  }
+
+  /* buttons */
+  .btn-row { display:flex; gap:14px; margin-top:6px; width:100%; }
+  .btn {
+    flex:1; padding:15px 8px; border:none; border-radius:16px;
+    font-family:'Baloo 2', cursive; font-size:1.05rem; font-weight:800;
+    cursor:pointer; transition:transform 0.15s ease, filter 0.15s ease;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .btn:hover { transform:translateY(-3px); filter:brightness(1.1); }
+  .btn:active { transform:scale(0.96); }
+  .btn-oft     { background:var(--oft-color);     color:white; box-shadow:0 6px 20px rgba(233,69,96,0.4); }
+  .btn-bisschen{ background:var(--bisschen-color); color:white; box-shadow:0 6px 20px rgba(15,155,142,0.4); }
+  .btn-icon { font-size:1.3rem; }
+
+  /* feedback overlay */
+  .feedback {
+    position:absolute; inset:0; border-radius:var(--radius);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; font-family:'Baloo 2', cursive; font-size:1.4rem; font-weight:800;
+    opacity:0; pointer-events:none; transition:opacity 0.22s ease; z-index:10;
+    text-align:center; padding:20px;
+  }
+  .feedback.show { opacity:1; pointer-events:all; }
+  .feedback.correct-fb { background:rgba(46,204,113,0.93); color:white; }
+  .feedback.wrong-fb   { background:rgba(233,69,96,0.93);  color:white; }
+  .feedback-icon { font-size:3.2rem; }
+  .feedback-answer { font-size:1rem; font-weight:700; opacity:0.92; }
+
+  /* end screen */
+  .end-screen { display:none; flex-direction:column; align-items:center; gap:18px; max-width:540px; width:100%; animation: cardIn 0.5s ease both; }
+  .end-screen.show { display:flex; }
+  .end-trophy { font-size:6rem; animation: emojiFloat 1.8s ease-in-out infinite; }
+  .end-title {
+    font-family:'Baloo 2', cursive; font-size:2rem; font-weight:800; text-align:center;
+    background:linear-gradient(135deg, var(--accent), var(--bisschen-color));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .end-score { font-size:2.6rem; font-weight:900; color:var(--accent); font-family:'Baloo 2', cursive; }
+  .end-message { color:var(--muted); text-align:center; font-size:1rem; max-width:340px; }
+
+  .results-list { width:100%; display:flex; flex-direction:column; gap:9px; max-height:340px; overflow-y:auto; padding-right:4px; }
+  .results-list::-webkit-scrollbar { width:5px; }
+  .results-list::-webkit-scrollbar-thumb { background:var(--card-border); border-radius:99px; }
+
+  .result-row { background:var(--card-bg); border:2px solid var(--card-border); border-radius:14px; padding:11px 14px; display:flex; align-items:center; gap:12px; font-size:0.87rem; }
+  .result-row.ok  { border-color:#2ecc71; }
+  .result-row.bad { border-color:var(--oft-color); }
+  .result-emoji { font-size:1.4rem; flex-shrink:0; }
+  .result-text  { flex:1; line-height:1.35; }
+  .result-correct { color:var(--muted); font-size:0.78rem; margin-top:2px; }
+  .result-icon  { font-size:1.2rem; flex-shrink:0; }
+
+  .btn-restart {
+    background:linear-gradient(135deg, var(--oft-color), var(--accent));
+    color:white; border:none; border-radius:16px; padding:16px 44px;
+    font-family:'Baloo 2', cursive; font-size:1.15rem; font-weight:800; cursor:pointer;
+    box-shadow:0 6px 24px rgba(233,69,96,0.35); transition:transform 0.15s ease, filter 0.15s ease;
+  }
+  .btn-restart:hover { transform:translateY(-3px); filter:brightness(1.08); }
+
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes cardIn   { from{opacity:0;transform:scale(0.88) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  @keyframes emojiFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Ein bisschen oder oft? 🎮</h1>
+  <p>Verstehst du den Unterschied?</p>
+</header>
+
+<div class="legend">
+  <div class="legend-chip">
+    <div class="chip-dot chip-oft"></div>
+    <div>
+      <div class="chip-label">oft = Häufigkeit</div>
+      <div class="chip-sub">Wie oft? → immer, manchmal, selten…</div>
+    </div>
+  </div>
+  <div class="legend-chip">
+    <div class="chip-dot chip-biss"></div>
+    <div>
+      <div class="chip-label">ein bisschen = Menge / Intensität</div>
+      <div class="chip-sub">Wie viel? Wie sehr? → ein bisschen müde, ein bisschen Hunger…</div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">Karte 1 von 15</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="score-display" id="scoreDisplay">
+  <div class="score-pill"><div class="dot dot-green"></div><span id="correctCount">0</span> richtig</div>
+  <div class="score-pill"><div class="dot dot-red"></div><span id="wrongCount">0</span> falsch</div>
+</div>
+
+<div class="card-area" id="cardArea">
+  <div class="card" id="gameCard">
+    <span class="card-number" id="cardNumber">1 / 15</span>
+    <div class="card-type-badge" id="typeBadge"></div>
+    <div class="card-emoji" id="cardEmoji"></div>
+    <div class="card-sentence" id="cardSentence"></div>
+    <div class="card-hint" id="cardHint"></div>
+    <div class="btn-row">
+      <button class="btn btn-oft" onclick="answer('oft')"><span class="btn-icon">🔁</span>oft</button>
+      <button class="btn btn-bisschen" onclick="answer('bisschen')"><span class="btn-icon">🤏</span>ein bisschen</button>
+    </div>
+    <div class="feedback" id="feedback">
+      <span class="feedback-icon" id="feedbackIcon"></span>
+      <span id="feedbackText"></span>
+      <span class="feedback-answer" id="feedbackAnswer"></span>
+    </div>
+  </div>
+</div>
+
+<div class="end-screen" id="endScreen">
+  <div class="end-trophy" id="endTrophy">🏆</div>
+  <div class="end-title">Fertig! Super gemacht!</div>
+  <div class="end-score" id="endScore"></div>
+  <div class="end-message" id="endMessage"></div>
+  <div class="results-list" id="resultsList"></div>
+  <button class="btn-restart" onclick="restart()">🔄 Nochmal spielen</button>
+</div>
+
+<script>
+// type: 'gap' = sentence with blank, 'full' = complete sentence to categorise
+// answer: 'oft' (frequency) | 'bisschen' (amount/intensity)
+const cards = [
+  // --- GAP cards (8) ---
+  {
+    type: 'gap',
+    emoji: '😴',
+    before: 'Ich bin', after: 'müde nach dem Sport.',
+    fullSentence: 'Ich bin ___ müde nach dem Sport.',
+    hint: 'Wie müde? → Menge/Intensität',
+    answer: 'bisschen'
+  },
+  {
+    type: 'gap',
+    emoji: '🎸',
+    before: 'Anna übt', after: 'Gitarre – fast jeden Tag!',
+    fullSentence: 'Anna übt ___ Gitarre – fast jeden Tag!',
+    hint: 'Wie oft übt sie? → Häufigkeit',
+    answer: 'oft'
+  },
+  {
+    type: 'gap',
+    emoji: '🍕',
+    before: 'Ich habe', after: 'Hunger, aber nicht viel.',
+    fullSentence: 'Ich habe ___ Hunger, aber nicht viel.',
+    hint: 'Wie viel Hunger? → Menge',
+    answer: 'bisschen'
+  },
+  {
+    type: 'gap',
+    emoji: '🚴',
+    before: 'Tom fährt', after: 'Fahrrad – dreimal pro Woche.',
+    fullSentence: 'Tom fährt ___ Fahrrad – dreimal pro Woche.',
+    hint: 'Wie oft fährt er? → Häufigkeit',
+    answer: 'oft'
+  },
+  {
+    type: 'gap',
+    emoji: '🎵',
+    before: 'Das Lied ist', after: 'zu laut für mich.',
+    fullSentence: 'Das Lied ist ___ zu laut für mich.',
+    hint: 'Wie laut? → Intensität',
+    answer: 'bisschen'
+  },
+  {
+    type: 'gap',
+    emoji: '🏊',
+    before: 'Wir schwimmen', after: 'im Sommer – jedes Wochenende.',
+    fullSentence: 'Wir schwimmen ___ im Sommer – jedes Wochenende.',
+    hint: 'Wie oft? → Häufigkeit',
+    answer: 'oft'
+  },
+  {
+    type: 'gap',
+    emoji: '😰',
+    before: 'Ich bin', after: 'nervös vor dem Test.',
+    fullSentence: 'Ich bin ___ nervös vor dem Test.',
+    hint: 'Wie nervös? → Intensität',
+    answer: 'bisschen'
+  },
+  {
+    type: 'gap',
+    emoji: '🎮',
+    before: 'Mia spielt', after: 'Videospiele – fast jeden Abend.',
+    fullSentence: 'Mia spielt ___ Videospiele – fast jeden Abend.',
+    hint: 'Wie oft spielt sie? → Häufigkeit',
+    answer: 'oft'
+  },
+
+  // --- FULL sentence cards (7) ---
+  {
+    type: 'full',
+    emoji: '☕',
+    fullSentence: 'Ich trinke morgens oft Kaffee.',
+    hint: 'Morgens, regelmäßig → Häufigkeit oder Menge?',
+    answer: 'oft'
+  },
+  {
+    type: 'full',
+    emoji: '🌧️',
+    fullSentence: 'Ich mag Regen ein bisschen – aber nicht zu viel!',
+    hint: 'Wie sehr mag sie Regen?',
+    answer: 'bisschen'
+  },
+  {
+    type: 'full',
+    emoji: '⚽',
+    fullSentence: 'Paul spielt oft Fußball mit seinen Freunden.',
+    hint: 'Spielt er regelmäßig?',
+    answer: 'oft'
+  },
+  {
+    type: 'full',
+    emoji: '😓',
+    fullSentence: 'Das Buch ist ein bisschen schwer für mich.',
+    hint: 'Wie schwer ist das Buch?',
+    answer: 'bisschen'
+  },
+  {
+    type: 'full',
+    emoji: '🏃',
+    fullSentence: 'Lukas geht oft joggen – jeden Morgen.',
+    hint: 'Wie oft geht er joggen?',
+    answer: 'oft'
+  },
+  {
+    type: 'full',
+    emoji: '🥶',
+    fullSentence: 'Mir ist ein bisschen kalt im Zimmer.',
+    hint: 'Wie kalt ist es? → Intensität',
+    answer: 'bisschen'
+  },
+  {
+    type: 'full',
+    emoji: '🎨',
+    fullSentence: 'Sie malt oft – fast jedes Wochenende.',
+    hint: 'Malt sie regelmäßig?',
+    answer: 'oft'
+  }
+];
+
+let current=0, correct=0, wrong=0, results=[], blocked=false;
+
+function buildSentenceHTML(card) {
+  if (card.type === 'gap') {
+    return card.before + ' <span class="gap-box">___?___</span> ' + card.after;
+  } else {
+    // highlight the key word in full sentences
+    let s = card.fullSentence;
+    s = s.replace('oft', '<span style="color:var(--oft-color);font-weight:900;">oft</span>');
+    s = s.replace('ein bisschen', '<span style="color:var(--bisschen-color);font-weight:900;">ein bisschen</span>');
+    return s;
+  }
+}
+
+function showCard(i) {
+  const c = cards[i];
+
+  const badge = document.getElementById('typeBadge');
+  if (c.type === 'gap') {
+    badge.textContent = '✏️ Lückentext – Was passt?';
+    badge.className = 'card-type-badge badge-gap';
+  } else {
+    badge.textContent = '👁 Ganzen Satz lesen – Was ist markiert?';
+    badge.className = 'card-type-badge badge-full';
+  }
+
+  document.getElementById('cardEmoji').textContent = c.emoji;
+  document.getElementById('cardSentence').innerHTML = buildSentenceHTML(c);
+  document.getElementById('cardHint').textContent   = '💡 ' + c.hint;
+  document.getElementById('cardNumber').textContent  = `${i+1} / 15`;
+
+  const pct = Math.round((i/15)*100);
+  document.getElementById('progressFill').style.width  = pct+'%';
+  document.getElementById('progressText').textContent   = `Karte ${i+1} von 15`;
+  document.getElementById('progressPct').textContent    = pct+'%';
+
+  const card = document.getElementById('gameCard');
+  card.style.animation='none'; void card.offsetWidth; card.style.animation='';
+
+  hideFeedback();
+  blocked=false;
+}
+
+function answer(chosen) {
+  if (blocked) return;
+  blocked=true;
+
+  const c=cards[current];
+  const isCorrect = chosen===c.answer;
+  const label = a => a==='oft' ? 'oft' : 'ein bisschen';
+
+  results.push({card:c, chosen, isCorrect});
+
+  if (isCorrect) { correct++; document.getElementById('correctCount').textContent=correct; }
+  else           { wrong++;   document.getElementById('wrongCount').textContent=wrong; }
+
+  showFeedback(isCorrect, label(c.answer));
+
+  setTimeout(()=>{
+    current++;
+    if (current<cards.length) showCard(current);
+    else showEnd();
+  }, 1800);
+}
+
+function showFeedback(ok, correctAnswer) {
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
+  document.getElementById('feedbackIcon').textContent = ok?'✅':'❌';
+  document.getElementById('feedbackText').textContent = ok?'Richtig! 🎉':'Nicht ganz...';
+  document.getElementById('feedbackAnswer').textContent = ok?'':(`Richtige Antwort: „${correctAnswer}"`);
+}
+
+function hideFeedback() { document.getElementById('feedback').className='feedback'; }
+
+function showEnd() {
+  document.getElementById('cardArea').style.display='none';
+  document.getElementById('progressWrap').style.display='none';
+  document.getElementById('scoreDisplay').style.display='none';
+
+  document.getElementById('endScreen').classList.add('show');
+  const pct=Math.round((correct/15)*100);
+  document.getElementById('endScore').textContent=`${correct} / 15 richtig`;
+
+  let trophy='💪', msg='Nicht schlimm! Probiere es nochmal!';
+  if (pct===100){trophy='🏆';msg='Perfekt! Du kennst den Unterschied genau! 🌟';}
+  else if(pct>=80){trophy='🥇';msg='Sehr gut! Du verstehst den Unterschied wirklich gut!';}
+  else if(pct>=60){trophy='👍';msg='Gut gemacht! Noch ein bisschen üben – du schaffst das!';}
+
+  document.getElementById('endTrophy').textContent=trophy;
+  document.getElementById('endMessage').textContent=msg;
+
+  const list=document.getElementById('resultsList');
+  list.innerHTML='';
+  results.forEach(r=>{
+    const row=document.createElement('div');
+    row.className='result-row '+(r.isCorrect?'ok':'bad');
+    const label=a=>a==='oft'?'oft':'ein bisschen';
+    row.innerHTML=`
+      <span class="result-emoji">${r.card.emoji}</span>
+      <div class="result-text">
+        <div style="font-weight:700;font-size:0.85rem">${r.card.fullSentence}</div>
+        ${!r.isCorrect?`<div class="result-correct">✔ Richtig: <strong>${label(r.card.answer)}</strong></div>`:''}
+      </div>
+      <span class="result-icon">${r.isCorrect?'✅':'❌'}</span>`;
+    list.appendChild(row);
+  });
+}
+
+function restart() {
+  current=0;correct=0;wrong=0;results=[];
+  document.getElementById('correctCount').textContent=0;
+  document.getElementById('wrongCount').textContent=0;
+  document.getElementById('endScreen').classList.remove('show');
+  document.getElementById('cardArea').style.display='';
+  document.getElementById('progressWrap').style.display='';
+  document.getElementById('scoreDisplay').style.display='';
+  showCard(0);
+}
+
+showCard(0);
+</script>
+</body>
+</html>
