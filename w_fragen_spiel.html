@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W-Fragen üben 🎮</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #263348;
+  --border: #334155;
+  --accent: #38bdf8;
+  --accent2: #f472b6;
+  --green: #34d399;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --radius: 18px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(56,189,248,0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 90% 100%, rgba(244,114,182,0.12) 0%, transparent 45%);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 24px 16px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Header ── */
+header { text-align: center; margin-bottom: 28px; }
+header h1 {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex; gap: 10px; margin-bottom: 28px;
+  background: var(--surface); border-radius: 99px; padding: 5px;
+  border: 2px solid var(--border);
+}
+.tab-btn {
+  padding: 10px 26px; border: none; border-radius: 99px; cursor: pointer;
+  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+  background: transparent; color: var(--muted);
+  transition: all 0.2s ease;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #0f172a;
+}
+
+/* ── W-Word chips (shared) ── */
+.w-chips {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center; margin-bottom: 20px;
+}
+.w-chip {
+  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 800;
+  padding: 8px 18px; border-radius: 12px; cursor: grab;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+  user-select: none;
+}
+.w-chip:active { cursor: grabbing; transform: scale(1.08); }
+.w-chip.used   { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
+
+/* colour per W-word */
+.wc-wer     { background: rgba(56,189,248,0.18); border-color: #38bdf8; color: #38bdf8; }
+.wc-was     { background: rgba(244,114,182,0.18); border-color: #f472b6; color: #f472b6; }
+.wc-wann    { background: rgba(251,191,36,0.18);  border-color: #fbbf24; color: #fbbf24; }
+.wc-warum   { background: rgba(52,211,153,0.18);  border-color: #34d399; color: #34d399; }
+.wc-welche  { background: rgba(167,139,250,0.18); border-color: #a78bfa; color: #a78bfa; }
+.wc-wo      { background: rgba(251,146,60,0.18);  border-color: #fb923c; color: #fb923c; }
+.wc-wie     { background: rgba(248,113,113,0.18); border-color: #f87171; color: #f87171; }
+.wc-wielange{ background: rgba(34,211,238,0.18);  border-color: #22d3ee; color: #22d3ee; }
+.wc-wieviel { background: rgba(163,230,53,0.18);  border-color: #a3e635; color: #a3e635; }
+
+/* ── Progress ── */
+.progress-wrap { width: 100%; max-width: 620px; margin-bottom: 14px; }
+.progress-label { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--muted); margin-bottom:6px; font-weight:700; }
+.progress-bar-bg { background:var(--border); border-radius:99px; height:9px; overflow:hidden; }
+.progress-fill   { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.45s ease; }
+.score-row { display:flex; gap:14px; justify-content:center; margin-bottom:18px; }
+.score-pill { background:var(--surface); border:2px solid var(--border); border-radius:99px; padding:5px 16px; font-weight:900; font-size:0.88rem; display:flex; align-items:center; gap:7px; }
+.dot { width:9px; height:9px; border-radius:50%; }
+.dot-g { background:var(--green); }
+.dot-r { background:var(--red); }
+
+/* ── Game panels ── */
+.game-panel { display:none; flex-direction:column; align-items:center; width:100%; max-width:620px; }
+.game-panel.active { display:flex; }
+
+/* ── GAME 1 card ── */
+.g1-card {
+  background: var(--surface); border:2px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 32px 26px 26px; width:100%;
+  display:flex; flex-direction:column; gap:16px;
+  position:relative; overflow:hidden;
+  animation: cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.g1-card::before {
+  content:''; position:absolute; top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.g1-qnum { font-size:0.75rem; color:var(--muted); font-weight:700; letter-spacing:.07em; }
+
+.answer-bubble {
+  background: var(--surface2); border-radius:12px; padding:12px 16px;
+  font-size:1rem; font-weight:700; color:var(--text); line-height:1.45;
+}
+.answer-bubble span { color:var(--accent); }
+
+.question-line {
+  display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+  font-size:1.15rem; font-weight:700; line-height:1.6;
+}
+
+/* drop zone */
+.drop-zone {
+  min-width:120px; height:38px; border:2px dashed var(--border);
+  border-radius:10px; display:inline-flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',cursive; font-size:1rem; font-weight:800;
+  color:var(--muted); padding:0 12px; cursor:pointer;
+  transition:border-color 0.2s, background 0.2s;
+  position:relative;
+}
+.drop-zone.drag-over { border-color:var(--accent); background:rgba(56,189,248,0.1); }
+.drop-zone.filled    { border-style:solid; color:var(--text); }
+.drop-zone .remove-btn {
+  position:absolute; right:4px; top:50%; transform:translateY(-50%);
+  background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;
+  line-height:1; padding:2px 3px;
+}
+
+.g1-hint { font-size:0.84rem; color:var(--muted); font-style:italic; }
+
+.check-btn {
+  align-self:flex-end; background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0f172a; border:none; border-radius:12px; padding:12px 28px;
+  font-family:'Baloo 2',cursive; font-size:1.05rem; font-weight:800; cursor:pointer;
+  transition:transform 0.15s, filter 0.15s;
+}
+.check-btn:hover { transform:translateY(-2px); filter:brightness(1.07); }
+.check-btn:disabled { opacity:0.35; cursor:not-allowed; transform:none; }
+
+/* inline feedback */
+.inline-fb {
+  display:none; align-items:center; gap:10px;
+  padding:12px 16px; border-radius:12px; font-weight:700; font-size:0.95rem;
+}
+.inline-fb.show { display:flex; }
+.inline-fb.ok  { background:rgba(52,211,153,0.15); border:2px solid var(--green); color:var(--green); }
+.inline-fb.bad { background:rgba(248,113,113,0.15); border:2px solid var(--red);   color:var(--red);   }
+
+.next-btn {
+  align-self:flex-end; background:var(--surface2); border:2px solid var(--border);
+  color:var(--text); border-radius:12px; padding:11px 24px;
+  font-family:'Baloo 2',cursive; font-size:1rem; font-weight:800; cursor:pointer;
+  transition:transform 0.15s, border-color 0.15s;
+  display:none;
+}
+.next-btn:hover { transform:translateY(-2px); border-color:var(--accent); }
+.next-btn.show  { display:block; }
+
+/* ── GAME 2 card ── */
+.g2-card {
+  background: var(--surface); border:2px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 32px 26px 26px; width:100%;
+  display:flex; flex-direction:column; gap:18px;
+  position:relative; overflow:hidden;
+  animation: cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.g2-card::before {
+  content:''; position:absolute; top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--accent2),var(--yellow));
+}
+.g2-qnum { font-size:0.75rem; color:var(--muted); font-weight:700; letter-spacing:.07em; }
+
+.dialog-box {
+  background:var(--surface2); border-radius:14px;
+  padding:18px; display:flex; flex-direction:column; gap:12px;
+}
+.dialog-line { display:flex; gap:12px; align-items:flex-start; }
+.speaker-badge {
+  font-size:0.7rem; font-weight:900; letter-spacing:.06em; text-transform:uppercase;
+  padding:3px 10px; border-radius:99px; flex-shrink:0; margin-top:2px;
+  white-space:nowrap;
+}
+.speaker-a { background:rgba(56,189,248,0.2); color:var(--accent); border:1px solid rgba(56,189,248,0.4); }
+.speaker-b { background:rgba(244,114,182,0.2); color:var(--accent2); border:1px solid rgba(244,114,182,0.4); }
+.dialog-text { font-size:1rem; font-weight:700; line-height:1.55; }
+
+/* gap in dialog */
+.d-gap {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:90px; height:30px; border:2px dashed var(--border);
+  border-radius:8px; color:var(--muted); font-size:0.92rem; font-weight:700;
+  padding:0 10px; vertical-align:middle; cursor:default;
+}
+.d-gap.answered { border-style:solid; }
+
+.g2-options {
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+}
+.g2-opt {
+  font-family:'Baloo 2',cursive; font-size:1rem; font-weight:800;
+  padding:9px 20px; border-radius:12px; cursor:pointer; border:2px solid transparent;
+  transition:transform 0.15s, filter 0.15s;
+}
+.g2-opt:hover:not(:disabled) { transform:translateY(-2px); filter:brightness(1.08); }
+.g2-opt:disabled { opacity:0.38; cursor:not-allowed; transform:none; }
+.g2-opt.chosen-ok  { background:rgba(52,211,153,0.2)!important; border-color:var(--green)!important; color:var(--green)!important; }
+.g2-opt.chosen-bad { background:rgba(248,113,113,0.2)!important; border-color:var(--red)!important;   color:var(--red)!important; }
+.g2-opt.reveal-ok  { background:rgba(52,211,153,0.12); border-color:var(--green); color:var(--green); }
+
+/* ── End screen ── */
+.end-screen {
+  display:none; flex-direction:column; align-items:center; gap:18px;
+  max-width:620px; width:100%; animation: cardIn 0.5s ease both;
+}
+.end-screen.show { display:flex; }
+.end-trophy { font-size:5.5rem; animation: floaty 2s ease-in-out infinite; }
+.end-title {
+  font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800; text-align:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.end-score { font-size:2.4rem; font-weight:900; color:var(--yellow); font-family:'Baloo 2',cursive; }
+.end-msg { color:var(--muted); text-align:center; font-size:1rem; max-width:340px; }
+
+.results-list { width:100%; display:flex; flex-direction:column; gap:9px; max-height:320px; overflow-y:auto; }
+.results-list::-webkit-scrollbar { width:5px; }
+.results-list::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
+.r-row { background:var(--surface); border:2px solid var(--border); border-radius:13px; padding:10px 14px; display:flex; align-items:center; gap:12px; font-size:0.86rem; }
+.r-row.ok  { border-color:var(--green); }
+.r-row.bad { border-color:var(--red); }
+.r-text { flex:1; line-height:1.35; }
+.r-sub  { color:var(--muted); font-size:0.78rem; margin-top:2px; }
+
+.btn-restart {
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0f172a; border:none; border-radius:14px; padding:15px 42px;
+  font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:800; cursor:pointer;
+  box-shadow:0 6px 24px rgba(56,189,248,0.3); transition:transform 0.15s, filter 0.15s;
+}
+.btn-restart:hover { transform:translateY(-2px); filter:brightness(1.07); }
+
+@keyframes cardIn   { from{opacity:0;transform:scale(0.9) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
+@keyframes floaty   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>W-Fragen üben 🎮</h1>
+  <p>Zwei Spiele – eine Grammatik!</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(1)">🎯 Spiel 1 – Drag & Drop</button>
+  <button class="tab-btn"       onclick="switchTab(2)">💬 Spiel 2 – Dialog</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SPIEL 1
+═══════════════════════════════════════════ -->
+<div class="game-panel active" id="panel1">
+
+  <div class="w-chips" id="g1Chips"></div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="g1ProgText">Frage 1 von 15</span>
+      <span id="g1ProgPct">0%</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g1Fill" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g1Correct">0</span> richtig</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g1Wrong">0</span> falsch</div>
+  </div>
+
+  <div id="g1CardWrap" style="width:100%"></div>
+  <div class="end-screen" id="g1End">
+    <div class="end-trophy" id="g1Trophy">🏆</div>
+    <div class="end-title">Spiel 1 geschafft!</div>
+    <div class="end-score" id="g1Score"></div>
+    <div class="end-msg"   id="g1Msg"></div>
+    <div class="results-list" id="g1Results"></div>
+    <button class="btn-restart" onclick="restartG1()">🔄 Nochmal</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SPIEL 2
+═══════════════════════════════════════════ -->
+<div class="game-panel" id="panel2">
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="g2ProgText">Frage 1 von 15</span>
+      <span id="g2ProgPct">0%</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g2Fill" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g2Correct">0</span> richtig</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g2Wrong">0</span> falsch</div>
+  </div>
+
+  <div id="g2CardWrap" style="width:100%"></div>
+  <div class="end-screen" id="g2End">
+    <div class="end-trophy" id="g2Trophy">🏆</div>
+    <div class="end-title">Spiel 2 geschafft!</div>
+    <div class="end-score" id="g2Score"></div>
+    <div class="end-msg"   id="g2Msg"></div>
+    <div class="results-list" id="g2Results"></div>
+    <button class="btn-restart" onclick="restartG2()">🔄 Nochmal</button>
+  </div>
+</div>
+
+<script>
+// ── W-word meta ────────────────────────────────
+const WWORDS = [
+  { id:'wer',      label:'Wer',       css:'wc-wer',      desc:'Person/Subjekt' },
+  { id:'was',      label:'Was',       css:'wc-was',      desc:'Sache/Objekt' },
+  { id:'wann',     label:'Wann',      css:'wc-wann',     desc:'Zeit' },
+  { id:'warum',    label:'Warum',     css:'wc-warum',    desc:'Grund' },
+  { id:'welche',   label:'Welche/r',  css:'wc-welche',   desc:'Auswahl' },
+  { id:'wo',       label:'Wo',        css:'wc-wo',       desc:'Ort' },
+  { id:'wie',      label:'Wie',       css:'wc-wie',      desc:'Art/Weise' },
+  { id:'wielange', label:'Wie lange', css:'wc-wielange', desc:'Dauer' },
+  { id:'wieviel',  label:'Wie viel',  css:'wc-wieviel',  desc:'Menge' },
+];
+
+function wMeta(id) { return WWORDS.find(w => w.id === id); }
+function wClass(id) { return wMeta(id)?.css ?? ''; }
+function wLabel(id) { return wMeta(id)?.label ?? id; }
+
+// ── GAME 1 DATA ───────────────────────────────
+// Each item: question sentence with ___ for drop zone, the correct w-word, the given answer, a hint
+const g1Data = [
+  { q:'___ spielst du heute Fußball?',         answer:'wann',     given:'Um 15 Uhr.',                hint:'→ Zeitangabe' },
+  { q:'___ macht die Party so viel Spaß?',     answer:'warum',    given:'Weil die Musik super ist.', hint:'→ Grund' },
+  { q:'___ kostet eine Kinokarte?',            answer:'wieviel',  given:'12 Euro.',                  hint:'→ Preis / Menge' },
+  { q:'___ wohnt dein Freund Leon?',           answer:'wo',       given:'In der Hauptstraße.',       hint:'→ Ort' },
+  { q:'___ ist dein Lieblingsfilm?',           answer:'was',      given:'"Der König der Löwen".',    hint:'→ Sache' },
+  { q:'___ lange dauert das Konzert?',         answer:'wielange', given:'Etwa zwei Stunden.',        hint:'→ Dauer' },
+  { q:'___ fährt ihr in den Urlaub?',          answer:'wer',      given:'Meine Familie und ich.',    hint:'→ Person(en)' },
+  { q:'___ ist dein Lieblingssport?',          answer:'welche',   given:'Fußball natürlich!',        hint:'→ Auswahl aus Möglichkeiten' },
+  { q:'___ kochst du so gut?',                 answer:'wie',      given:'Ich schaue viele Videos.',  hint:'→ Art und Weise' },
+  { q:'___ kommt morgen zur Party?',           answer:'wer',      given:'Anna, Tom und Lukas.',      hint:'→ Person(en)' },
+  { q:'___ Bücher liest du pro Monat?',        answer:'wieviel',  given:'Meistens zwei oder drei.',  hint:'→ Anzahl / Menge' },
+  { q:'___ hört ihr am liebsten Musik?',       answer:'wo',       given:'Im Park oder zu Hause.',    hint:'→ Ort' },
+  { q:'___ trainierst du jeden Tag?',          answer:'warum',    given:'Weil ich fitter werden will.',hint:'→ Grund' },
+  { q:'___ Sport machst du am liebsten?',      answer:'welche',   given:'Am liebsten Schwimmen.',    hint:'→ Auswahl' },
+  { q:'___ lange schläfst du am Wochenende?',  answer:'wielange', given:'Circa neun Stunden.',       hint:'→ Dauer' },
+];
+
+// ── GAME 2 DATA ───────────────────────────────
+// dialog: array of {speaker:'A'|'B', text: string, gap: bool}
+// options: 4 w-word ids, answer: correct id
+const g2Data = [
+  {
+    dialog:[
+      {sp:'A', text:'___ wohnst du eigentlich?', gap:true},
+      {sp:'B', text:'Ich wohne in der Nähe vom Park.'},
+    ],
+    options:['wo','wann','wer','was'], answer:'wo',
+    hint:'B nennt einen Ort – kein Bewegungsverb!'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ beginnt der Film?', gap:true},
+      {sp:'B', text:'Um 20 Uhr.'},
+    ],
+    options:['wie','wann','wo','warum'], answer:'wann',
+    hint:'B gibt eine Uhrzeit.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ kostet das Popcorn?', gap:true},
+      {sp:'B', text:'Fünf Euro.'},
+    ],
+    options:['wie','wieviel','wann','welche'], answer:'wieviel',
+    hint:'B nennt einen Preis.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ kommt noch mit zum Fußball?', gap:true},
+      {sp:'B', text:'Jonas und Mia kommen auch.'},
+    ],
+    options:['was','wann','wer','wo'], answer:'wer',
+    hint:'B nennt Personen.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ magst du Regenswetter nicht?', gap:true},
+      {sp:'B', text:'Weil ich dann nicht draußen spielen kann.'},
+    ],
+    options:['wie','warum','wann','wer'], answer:'warum',
+    hint:'B gibt einen Grund.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ lange dauert das Training?', gap:true},
+      {sp:'B', text:'Ungefähr eine Stunde.'},
+    ],
+    options:['wie','wieviel','welche','wielange'], answer:'wielange',
+    hint:'B gibt eine Zeitdauer.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ ist dein Lieblingsessen?', gap:true},
+      {sp:'B', text:'Pizza, ohne Frage!'},
+    ],
+    options:['wer','welche','was','wo'], answer:'was',
+    hint:'B nennt eine Sache.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ Sportart machst du am liebsten?', gap:true},
+      {sp:'B', text:'Am liebsten Volleyball.'},
+    ],
+    options:['welche','wie','was','wer'], answer:'welche',
+    hint:'B wählt aus Möglichkeiten.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ geht es dir heute?', gap:true},
+      {sp:'B', text:'Sehr gut, danke!'},
+    ],
+    options:['wo','wann','wie','wer'], answer:'wie',
+    hint:'B beschreibt Zustand / Art.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ findet das Konzert statt?', gap:true},
+      {sp:'B', text:'In der Stadthalle.'},
+    ],
+    options:['wann','wo','wie','warum'], answer:'wo',
+    hint:'B nennt einen Ort.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ Leute kommen zur Feier?', gap:true},
+      {sp:'B', text:'Etwa dreißig Personen.'},
+    ],
+    options:['wieviel','welche','wer','wie'], answer:'wieviel',
+    hint:'B nennt eine Anzahl.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ hast du so lange geschlafen?', gap:true},
+      {sp:'B', text:'Weil ich gestern sehr müde war.'},
+    ],
+    options:['wie','wann','warum','wo'], answer:'warum',
+    hint:'B erklärt den Grund.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ fährt ihr in den Urlaub?', gap:true},
+      {sp:'B', text:'Im Juli, für zwei Wochen.'},
+    ],
+    options:['wo','wann','wie','wer'], answer:'wann',
+    hint:'B nennt eine Zeit.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ lange bist du schon hier?', gap:true},
+      {sp:'B', text:'Seit ungefähr einer Stunde.'},
+    ],
+    options:['wieviel','wielange','wann','wie'], answer:'wielange',
+    hint:'B nennt eine Zeitdauer.'
+  },
+  {
+    dialog:[
+      {sp:'A', text:'___ hat dir das Buch empfohlen?', gap:true},
+      {sp:'B', text:'Meine Lehrerin, Frau Bauer.'},
+    ],
+    options:['was','wann','wer','wo'], answer:'wer',
+    hint:'B nennt eine Person.'
+  },
+];
+
+// ── State ─────────────────────────────────────
+let g1 = { cur:0, correct:0, wrong:0, results:[], dropValue:null };
+let g2 = { cur:0, correct:0, wrong:0, results:[] };
+let dragging = null;
+
+// ── Tab switching ─────────────────────────────
+function switchTab(n) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n-1));
+  document.getElementById('panel1').classList.toggle('active', n===1);
+  document.getElementById('panel2').classList.toggle('active', n===2);
+}
+
+// ══════════════════════════════════════════════
+// GAME 1
+// ══════════════════════════════════════════════
+function buildG1Chips() {
+  const wrap = document.getElementById('g1Chips');
+  wrap.innerHTML = '';
+  WWORDS.forEach(w => {
+    const chip = document.createElement('div');
+    chip.className = `w-chip ${w.css}`;
+    chip.textContent = w.label;
+    chip.draggable = true;
+    chip.dataset.wid = w.id;
+    chip.id = 'chip-' + w.id;
+    chip.addEventListener('dragstart', e => {
+      dragging = w.id;
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    chip.addEventListener('dragend', () => dragging = null);
+    // touch / click fallback
+    chip.addEventListener('click', () => chipClicked(w.id));
+    wrap.appendChild(chip);
+  });
+}
+
+function chipClicked(wid) {
+  const dz = document.querySelector('.drop-zone');
+  if (!dz) return;
+  if (dz.dataset.filled) return;
+  fillDrop(dz, wid);
+}
+
+function fillDrop(dz, wid) {
+  const meta = wMeta(wid);
+  dz.innerHTML = '';
+  dz.className = `drop-zone filled ${meta.css}`;
+  dz.dataset.filled = wid;
+  dz.textContent = meta.label;
+
+  const rb = document.createElement('button');
+  rb.className = 'remove-btn'; rb.textContent = '✕';
+  rb.title = 'Entfernen';
+  rb.onclick = (e) => { e.stopPropagation(); clearDrop(dz); };
+  dz.appendChild(rb);
+
+  document.getElementById('g1CheckBtn').disabled = false;
+  g1.dropValue = wid;
+}
+
+function clearDrop(dz) {
+  dz.innerHTML = '???';
+  dz.className = 'drop-zone';
+  delete dz.dataset.filled;
+  document.getElementById('g1CheckBtn').disabled = true;
+  g1.dropValue = null;
+}
+
+function renderG1() {
+  const wrap = document.getElementById('g1CardWrap');
+  if (g1.cur >= g1Data.length) { showG1End(); return; }
+  const q = g1Data[g1.cur];
+  const pct = Math.round((g1.cur / g1Data.length) * 100);
+  document.getElementById('g1Fill').style.width = pct + '%';
+  document.getElementById('g1ProgText').textContent = `Frage ${g1.cur+1} von 15`;
+  document.getElementById('g1ProgPct').textContent  = pct + '%';
+
+  // build question HTML with drop zone
+  const parts = q.q.split('___');
+  let qHTML = '';
+  parts.forEach((p, i) => {
+    qHTML += `<span>${p}</span>`;
+    if (i < parts.length - 1) qHTML += `<span class="drop-zone" id="g1Drop">???</span>`;
+  });
+
+  wrap.innerHTML = `
+    <div class="g1-card" id="g1Card">
+      <span class="g1-qnum">Frage ${g1.cur+1} / 15</span>
+      <div class="answer-bubble">💬 Antwort: <span>${q.given}</span></div>
+      <div style="font-size:0.8rem;color:var(--muted);font-weight:700;">📝 Ziehe das richtige W-Wort in die Lücke:</div>
+      <div class="question-line">${qHTML}</div>
+      <div class="g1-hint">💡 ${q.hint}</div>
+      <div class="inline-fb" id="g1Fb"></div>
+      <div style="display:flex;gap:12px;align-self:flex-end">
+        <button class="check-btn" id="g1CheckBtn" disabled onclick="checkG1()">Prüfen ✓</button>
+        <button class="next-btn"  id="g1NextBtn"           onclick="nextG1()">Weiter →</button>
+      </div>
+    </div>`;
+
+  // drop zone events
+  const dz = document.getElementById('g1Drop');
+  dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', ()  => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop',      e   => { e.preventDefault(); dz.classList.remove('drag-over'); if (dragging) fillDrop(dz, dragging); });
+  dz.addEventListener('click',     ()  => { if (dz.dataset.filled) clearDrop(dz); });
+  g1.dropValue = null;
+}
+
+function checkG1() {
+  const q = g1Data[g1.cur];
+  const chosen = g1.dropValue;
+  if (!chosen) return;
+
+  const isOk = chosen === q.answer;
+  g1.results.push({ q, chosen, isOk });
+
+  const fb = document.getElementById('g1Fb');
+  const dz = document.getElementById('g1Drop');
+
+  if (isOk) {
+    g1.correct++;
+    document.getElementById('g1Correct').textContent = g1.correct;
+    fb.className = 'inline-fb show ok';
+    fb.innerHTML = '✅ Richtig! Super!';
+  } else {
+    g1.wrong++;
+    document.getElementById('g1Wrong').textContent = g1.wrong;
+    fb.className = 'inline-fb show bad';
+    fb.innerHTML = `❌ Nicht ganz. Richtig: <strong style="margin-left:6px">${wLabel(q.answer)}</strong>`;
+    // show correct in drop zone
+    dz.innerHTML = '';
+    dz.className = `drop-zone filled ${wClass(q.answer)}`;
+    dz.textContent = wLabel(q.answer);
+  }
+
+  document.getElementById('g1CheckBtn').disabled = true;
+  document.getElementById('g1NextBtn').classList.add('show');
+}
+
+function nextG1() {
+  g1.cur++;
+  renderG1();
+}
+
+function showG1End() {
+  document.getElementById('g1CardWrap').innerHTML = '';
+  document.getElementById('g1Chips').style.display = 'none';
+  const end = document.getElementById('g1End');
+  end.classList.add('show');
+
+  const pct = Math.round((g1.correct / 15) * 100);
+  document.getElementById('g1Score').textContent = `${g1.correct} / 15 richtig`;
+
+  let trophy='💪', msg='Übung macht den Meister – probiere es nochmal!';
+  if (pct===100){trophy='🏆';msg='Perfekt! Alle W-Fragen sitzen!';}
+  else if(pct>=80){trophy='🥇';msg='Sehr gut! Du kennst die W-Fragen schon sehr gut.';}
+  else if(pct>=60){trophy='👍';msg='Gut gemacht! Noch ein bisschen üben!';}
+
+  document.getElementById('g1Trophy').textContent = trophy;
+  document.getElementById('g1Msg').textContent    = msg;
+  document.getElementById('g1Fill').style.width   = '100%';
+
+  const list = document.getElementById('g1Results');
+  list.innerHTML = '';
+  g1.results.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'r-row ' + (r.isOk ? 'ok' : 'bad');
+    row.innerHTML = `
+      <div class="r-text">
+        <div style="font-weight:700">${r.q.q.replace('___', `<strong style="color:${r.isOk?'var(--green)':'var(--red)'}">${wLabel(r.chosen)}</strong>`)}</div>
+        ${!r.isOk ? `<div class="r-sub">✔ Richtig: <strong>${wLabel(r.q.answer)}</strong></div>` : ''}
+      </div>
+      <span>${r.isOk?'✅':'❌'}</span>`;
+    list.appendChild(row);
+  });
+}
+
+function restartG1() {
+  g1 = { cur:0, correct:0, wrong:0, results:[], dropValue:null };
+  document.getElementById('g1Correct').textContent = 0;
+  document.getElementById('g1Wrong').textContent   = 0;
+  document.getElementById('g1End').classList.remove('show');
+  document.getElementById('g1Chips').style.display = '';
+  renderG1();
+}
+
+// ══════════════════════════════════════════════
+// GAME 2
+// ══════════════════════════════════════════════
+function renderG2() {
+  const wrap = document.getElementById('g2CardWrap');
+  if (g2.cur >= g2Data.length) { showG2End(); return; }
+  const q = g2Data[g2.cur];
+  const pct = Math.round((g2.cur / g2Data.length) * 100);
+  document.getElementById('g2Fill').style.width   = pct + '%';
+  document.getElementById('g2ProgText').textContent = `Frage ${g2.cur+1} von 15`;
+  document.getElementById('g2ProgPct').textContent  = pct + '%';
+
+  // build dialog HTML
+  let dialogHTML = q.dialog.map(line => {
+    const cls = line.sp === 'A' ? 'speaker-a' : 'speaker-b';
+    const name = line.sp === 'A' ? 'Person A' : 'Person B';
+    let text = line.text;
+    if (line.gap) {
+      text = text.replace('___', '<span class="d-gap" id="g2Gap">___?___</span>');
+    }
+    return `<div class="dialog-line">
+      <span class="speaker-badge ${cls}">${name}</span>
+      <span class="dialog-text">${text}</span>
+    </div>`;
+  }).join('');
+
+  // build options
+  let optHTML = q.options.map(wid => {
+    const m = wMeta(wid);
+    return `<button class="g2-opt ${m.css}" data-wid="${wid}" onclick="answerG2('${wid}')">${m.label}</button>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="g2-card">
+      <span class="g2-qnum">Frage ${g2.cur+1} / 15</span>
+      <div style="font-size:0.82rem;color:var(--muted);font-weight:700;">💬 Lies den Dialog – welches W-Wort fehlt?</div>
+      <div class="dialog-box">${dialogHTML}</div>
+      <div class="g1-hint">💡 ${q.hint}</div>
+      <div class="g2-options" id="g2Opts">${optHTML}</div>
+      <div class="inline-fb" id="g2Fb"></div>
+      <button class="next-btn" id="g2NextBtn" onclick="nextG2()">Weiter →</button>
+    </div>`;
+}
+
+function answerG2(chosen) {
+  const q = g2Data[g2.cur];
+  const isOk = chosen === q.answer;
+  g2.results.push({ q, chosen, isOk });
+
+  // disable all buttons
+  document.querySelectorAll('.g2-opt').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.wid === q.answer) btn.classList.add('reveal-ok');
+  });
+  // mark chosen
+  const chosenBtn = document.querySelector(`.g2-opt[data-wid="${chosen}"]`);
+  chosenBtn.classList.remove('reveal-ok');
+  chosenBtn.classList.add(isOk ? 'chosen-ok' : 'chosen-bad');
+
+  // fill gap
+  const gap = document.getElementById('g2Gap');
+  if (gap) {
+    gap.className = `d-gap answered ${wClass(q.answer)}`;
+    gap.textContent = wLabel(q.answer);
+  }
+
+  const fb = document.getElementById('g2Fb');
+  if (isOk) {
+    g2.correct++;
+    document.getElementById('g2Correct').textContent = g2.correct;
+    fb.className='inline-fb show ok'; fb.innerHTML='✅ Richtig!';
+  } else {
+    g2.wrong++;
+    document.getElementById('g2Wrong').textContent = g2.wrong;
+    fb.className='inline-fb show bad';
+    fb.innerHTML=`❌ Nicht ganz. Richtig: <strong style="margin-left:6px">${wLabel(q.answer)}</strong>`;
+  }
+
+  document.getElementById('g2NextBtn').classList.add('show');
+}
+
+function nextG2() { g2.cur++; renderG2(); }
+
+function showG2End() {
+  document.getElementById('g2CardWrap').innerHTML = '';
+  const end = document.getElementById('g2End');
+  end.classList.add('show');
+
+  const pct = Math.round((g2.correct / 15) * 100);
+  document.getElementById('g2Score').textContent = `${g2.correct} / 15 richtig`;
+
+  let trophy='💪', msg='Nochmal versuchen – du schaffst das!';
+  if (pct===100){trophy='🏆';msg='Perfekt! Alle Dialoge verstanden!';}
+  else if(pct>=80){trophy='🥇';msg='Sehr gut! Fast alles richtig!';}
+  else if(pct>=60){trophy='👍';msg='Gut gemacht! Bleib dran!';}
+
+  document.getElementById('g2Trophy').textContent = trophy;
+  document.getElementById('g2Msg').textContent    = msg;
+  document.getElementById('g2Fill').style.width   = '100%';
+
+  const list = document.getElementById('g2Results');
+  list.innerHTML = '';
+  g2.results.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'r-row ' + (r.isOk ? 'ok' : 'bad');
+    const preview = r.q.dialog.map(l=>l.text.replace('___', `"${wLabel(r.q.answer)}"`)).join(' / ');
+    row.innerHTML = `
+      <div class="r-text">
+        <div style="font-weight:700;font-size:0.84rem">${preview}</div>
+        ${!r.isOk?`<div class="r-sub">✔ Richtig: <strong>${wLabel(r.q.answer)}</strong> | Deine Antwort: ${wLabel(r.chosen)}</div>`:''}
+      </div>
+      <span>${r.isOk?'✅':'❌'}</span>`;
+    list.appendChild(row);
+  });
+}
+
+function restartG2() {
+  g2 = { cur:0, correct:0, wrong:0, results:[] };
+  document.getElementById('g2Correct').textContent = 0;
+  document.getElementById('g2Wrong').textContent   = 0;
+  document.getElementById('g2End').classList.remove('show');
+  renderG2();
+}
+
+// ── Init ──────────────────────────────────────
+buildG1Chips();
+renderG1();
+renderG2();
+</script>
+</body>
+</html>
