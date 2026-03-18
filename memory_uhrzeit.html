@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Uhrzeit-Memo</title>
+<style>
+  :root{
+    --bg: #0f1724;
+    --card-back: linear-gradient(135deg,#0b1220,#142033);
+    --card-front: linear-gradient(180deg,#ffffff,#f2f5f9);
+    --accent: #60a5fa;
+    --card-size: min(12vw,110px);
+  }
+  *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background: radial-gradient(1000px 600px at 10% 10%, rgba(250,250,250,0.06), transparent),
+                var(--bg);
+    color:#e6eef8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    gap:18px;
+    flex-direction:column;
+  }
+
+  h1{margin:0 0 8px 0;font-weight:600;font-size:clamp(18px,2.4vw,26px)}
+  .controls{
+    display:flex;gap:10px;align-items:center;
+    margin-bottom:8px;
+  }
+  button{
+    background:var(--accent);
+    color:#02214a;
+    border:none;padding:8px 12px;border-radius:10px;
+    cursor:pointer;font-weight:600;
+    box-shadow:0 6px 18px rgba(8,30,63,0.45);
+  }
+  button:active{transform:translateY(1px)}
+  .status{font-size:14px;opacity:0.9}
+
+  .board{
+    width: min(880px, 96vw);
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:12px;
+    justify-items:center;
+    align-items:center;
+  }
+
+  /* Card container */
+  .card{
+    perspective:1000px;
+    width:var(--card-size);
+    height:calc(var(--card-size) * 1);
+    position:relative;
+    cursor:pointer;
+  }
+
+  /* inner that flips */
+  .card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition: transform 450ms cubic-bezier(.2,.9,.3,1);
+    transform-style:preserve-3d;
+  }
+
+  /* flipped state */
+  .card.flipped .card-inner{ transform: rotateY(180deg); }
+
+  .face{
+    position:absolute;inset:0;
+    border-radius:12px;
+    backface-visibility:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 6px 16px rgba(2,8,23,0.6);
+    user-select:none;
+    padding:8px;
+    font-weight:700;
+    text-align:center;
+  }
+
+  .back{
+    background: var(--card-back);
+    color:#9fb7e6;
+    transform: rotateY(0deg);
+    font-size:calc(var(--card-size) * 0.18);
+    letter-spacing:1px;
+  }
+
+  .front{
+    background: var(--card-front);
+    color:#071428;
+    transform: rotateY(180deg);
+    font-size:calc(var(--card-size) * 0.17);
+    padding:10px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  /* animations for correct / wrong */
+  .card.match .card-inner{ /* keep flipped if matched */
+    transform: rotateY(180deg);
+  }
+  .card.match {
+    animation: glowGreen 1s linear;
+  }
+  @keyframes glowGreen{
+    0%{ box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50%{ box-shadow: 0 0 22px rgba(34,197,94,0.9); transform: scale(1.02); }
+    100%{ box-shadow: 0 0 0 rgba(0,0,0,0); }
+  }
+
+  .card.wrong{
+    animation: glowRed 1s linear;
+  }
+  @keyframes glowRed{
+    0%{ box-shadow: 0 0 0 rgba(0,0,0,0); transform: none; }
+    50%{ box-shadow: 0 0 18px rgba(239,68,68,0.95); transform: scale(1.02); }
+    100%{ box-shadow: 0 0 0 rgba(0,0,0,0); transform: none; }
+  }
+
+  /* hide removed cards */
+  .card.hidden{
+    visibility:hidden;
+    transform:scale(0.85);
+    transition: visibility 0.4s, transform 300ms;
+  }
+
+  /* small footer */
+  footer{font-size:12px;opacity:0.8;margin-top:12px}
+  @media (max-width:600px){
+    .board{grid-template-columns: repeat(4, 1fr);}
+  }
+</style>
+</head>
+<body>
+  <h1>Uhrzeit-Memo</h1>
+  <div class="controls">
+    <button id="restartBtn">Neu mischen</button>
+    <div class="status" id="status">Gefundene Paare: <span id="score">0</span> / 10</div>
+  </div>
+
+  <div class="board" id="board" aria-live="polite"></div>
+
+  <footer>Tippe/Klicke auf zwei Karten, um ein Paar zu finden. Richtige Paare leuchten grün und verschwinden, falsche Paare leuchten rot und werden umgedreht.</footer>
+
+<script>
+/*
+  Paare entnommen aus der hochgeladenen Vorlage.
+  Die numerische Darstellung (z.B. "16:10") passt zur geschriebenen Uhrzeit (z.B. "zehn nach vier").
+  Quelle: hochgeladene Kopiervorlage. (Datei in Konversation). 
+  Siehe Referenz in Chat: :contentReference[oaicite:1]{index=1}
+*/
+
+const pairs = [
+  // id, label (what's printed), type: 'num' or 'text'
+  {id:0, label:'16:10', type:'num'},
+  {id:1, label:'18:30', type:'num'},
+  {id:2, label:'03:50', type:'num'},
+  {id:3, label:'10:20', type:'num'},
+  {id:4, label:'17:45', type:'num'},
+  {id:5, label:'20:10', type:'num'},
+  {id:6, label:'16:45', type:'num'},
+  {id:7, label:'10:40', type:'num'},
+  {id:8, label:'05:15', type:'num'},
+  {id:9, label:'06:55', type:'num'},
+
+  // matching written times (same id)
+  {id:0, label:'zehn nach vier', type:'text'},
+  {id:1, label:'halb sieben', type:'text'},
+  {id:2, label:'zehn vor vier', type:'text'},
+  {id:3, label:'zwanzig nach zehn', type:'text'},
+  {id:4, label:'Viertel vor sechs', type:'text'},
+  {id:5, label:'zehn nach acht', type:'text'},
+  {id:6, label:'Viertel vor fünf', type:'text'},
+  {id:7, label:'zwanzig vor elf', type:'text'},
+  {id:8, label:'Viertel nach fünf', type:'text'},
+  {id:9, label:'fünf vor sieben', type:'text'}
+];
+
+const boardEl = document.getElementById('board');
+const restartBtn = document.getElementById('restartBtn');
+const scoreEl = document.getElementById('score');
+
+let cardElements = [];
+let firstCard = null;
+let secondCard = null;
+let busy = false;
+let score = 0;
+
+function shuffleArray(a){
+  // Fisher-Yates
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+}
+
+function buildBoard(){
+  boardEl.innerHTML = '';
+  score = 0;
+  scoreEl.textContent = score;
+  firstCard = null;
+  secondCard = null;
+  busy = false;
+
+  // create a shallow copy and shuffle
+  const deck = pairs.slice();
+  shuffleArray(deck);
+
+  cardElements = deck.map((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    card.dataset.pairId = item.id;
+    card.dataset.index = index;
+
+    const inner = document.createElement('div');
+    inner.className = 'card-inner';
+
+    const back = document.createElement('div');
+    back.className = 'face back';
+    back.textContent = ''; // could put a logo or pattern
+
+    const front = document.createElement('div');
+    front.className = 'face front';
+    front.innerHTML = `<div>${escapeHtml(item.label)}</div>`;
+
+    inner.appendChild(back);
+    inner.appendChild(front);
+    card.appendChild(inner);
+
+    // click & keyboard
+    card.addEventListener('click', onCardClicked);
+    card.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        card.click();
+      }
+    });
+
+    boardEl.appendChild(card);
+    return card;
+  });
+}
+
+function escapeHtml(s){
+  return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+}
+
+function onCardClicked(e){
+  const card = e.currentTarget;
+  if(busy) return;
+  if(card.classList.contains('flipped') || card.classList.contains('hidden')) return;
+  flipCard(card);
+
+  if(!firstCard){
+    firstCard = card;
+    return;
+  }
+  if(firstCard === card) return; // same card clicked twice
+
+  secondCard = card;
+  busy = true;
+
+  const id1 = firstCard.dataset.pairId;
+  const id2 = secondCard.dataset.pairId;
+
+  if(id1 === id2){
+    // match
+    firstCard.classList.add('match');
+    secondCard.classList.add('match');
+
+    // after 1s, hide them (simulate disappear)
+    setTimeout(()=>{
+      firstCard.classList.add('hidden');
+      secondCard.classList.add('hidden');
+      score++;
+      scoreEl.textContent = score;
+      resetSelection();
+      // check win
+      if(score === 10){
+        setTimeout(()=> alert('Super — alle Paare gefunden!'), 200);
+      }
+    }, 2000);
+  } else {
+    // mismatch: mark wrong, wait 1s, then unflip
+    firstCard.classList.add('wrong');
+    secondCard.classList.add('wrong');
+
+    setTimeout(()=>{
+      firstCard.classList.remove('wrong');
+      secondCard.classList.remove('wrong');
+      unflipCard(firstCard);
+      unflipCard(secondCard);
+      resetSelection();
+    }, 2000);
+  }
+}
+
+function flipCard(card){
+  card.classList.add('flipped');
+}
+
+function unflipCard(card){
+  card.classList.remove('flipped');
+}
+
+function resetSelection(){
+  firstCard = null;
+  secondCard = null;
+  busy = false;
+}
+
+restartBtn.addEventListener('click', ()=>{
+  buildBoard();
+});
+
+// build initial board
+buildBoard();
+
+</script>
+</body>
+</html>
