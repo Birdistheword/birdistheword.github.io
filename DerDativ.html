@@ -136,6 +136,39 @@
   .tip-box { background: #f0f7ff; border: 2px solid #b8d8f5; border-radius: var(--radius); padding: 14px 18px; font-size: 0.88rem; font-weight: 700; color: #1a5080; }
   .art-sub-title { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 
+  /* WANN DATIV */
+  .wann-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  @media(max-width:620px){ .wann-grid { grid-template-columns: 1fr; } }
+  .wann-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background: #fff; border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 24px 18px 20px;
+    gap: 12px;
+  }
+  .wann-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--dativ); color: #fff;
+    font-weight: 900; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .wann-card:nth-child(2) .wann-num { background: #ea6aab; }
+  .wann-card:nth-child(3) .wann-num { background: #f0a0cc; }
+  .wann-label {
+    font-size: 1rem; font-weight: 900; color: var(--dativ);
+  }
+  .wann-example {
+    font-size: 1rem; font-weight: 600; line-height: 1.7;
+    background: var(--surface); border-radius: 10px;
+    padding: 10px 14px; width: 100%;
+  }
+  .wann-chips {
+    font-size: 0.78rem; color: var(--muted); font-weight: 700;
+    line-height: 1.6;
+  }
+
   /* CLICK EXERCISE */
   .click-instr {
     background: #fffbe6; border: 2px solid #f0d060;
@@ -339,6 +372,39 @@
         <span><span class="ldot" style="background:var(--dativ)"></span>den Schülern = Dativ (Plural)</span>
         <span><span class="ldot" style="background:var(--akk)"></span>die Regel = Akkusativ</span>
       </div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- WANN DATIV -->
+  <div class="sec">
+    <div class="sec-title">Wann steht ein Wort im Dativ?</div>
+    <div class="sec-sub">Es gibt drei Gründe – von wichtigsten zum unwichtigsten.</div>
+
+    <div class="wann-grid">
+
+      <div class="wann-card">
+        <div class="wann-num">1</div>
+        <div class="wann-label">Präposition</div>
+        <div class="wann-example">Ich fahre mit <span class="dat-box">dem Bus</span>.</div>
+        <div class="wann-chips">mit · bei · aus · von · zu · nach · seit</div>
+      </div>
+
+      <div class="wann-card">
+        <div class="wann-num">2</div>
+        <div class="wann-label">Verb</div>
+        <div class="wann-example">Das gefällt <span class="dat-box">mir</span>.</div>
+        <div class="wann-chips">helfen · danken · gefallen · gehören</div>
+      </div>
+
+      <div class="wann-card">
+        <div class="wann-num">3</div>
+        <div class="wann-label">Indirektes Objekt</div>
+        <div class="wann-example">Ich gebe <span class="dat-box">dem Kind</span> <span class="ak">ein Eis</span>.</div>
+        <div class="wann-chips">Person → Dativ &nbsp;·&nbsp; Sache → Akkusativ</div>
+      </div>
+
     </div>
   </div>
 
