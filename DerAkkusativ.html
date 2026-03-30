@@ -51,7 +51,16 @@
   .nav-logo {
     font-weight: 900; font-size: 1.05rem;
     color: var(--akk); margin-right: auto;
+    display: flex; align-items: center; gap: 14px;
   }
+  .nav-dativ-link {
+    font-size: 0.78rem; font-weight: 800;
+    color: var(--dat); text-decoration: none;
+    border: 2px solid var(--dat); border-radius: 100px;
+    padding: 3px 12px; transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .nav-dativ-link:hover { background: var(--dat-bg); }
 
   .nav-btn {
     background: none; border: 2px solid var(--border);
@@ -293,7 +302,7 @@
 <body>
 
 <nav>
-  <div class="nav-logo">Der Akkusativ · A1</div>
+  <div class="nav-logo">Der Akkusativ · A1 <a class="nav-dativ-link" href="https://birdistheword.github.io/DerDativ.html" target="_blank">→ Der Dativ</a></div>
   <button class="nav-btn active" onclick="showPage('overview',this)">Übersicht</button>
   <button class="nav-btn" onclick="showPage('klick',this)">Akkusativobjekt finden</button>
   <button class="nav-btn" onclick="showPage('pronomen',this)">Pronomen</button>
