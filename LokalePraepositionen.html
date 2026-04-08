@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lokale Präpositionen – B1</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dativ:       #e91e8c;
+  --dativ-light: #fce4f3;
+  --dativ-mid:   #f48ec8;
+  --dativ-dark:  #c0176f;
+  --akk:         #f97316;
+  --akk-light:   #fff0e6;
+  --akk-mid:     #fdba74;
+  --akk-dark:    #c2530a;
+  --nom:         #2563eb;
+  --nom-light:   #dbeafe;
+
+  --bg:        #f5f4f0;
+  --white:     #ffffff;
+  --card:      #fafaf8;
+  --border:    #e4e0d8;
+  --border2:   #d0cbc0;
+  --text:      #1c1a16;
+  --text-mid:  #5a5650;
+  --text-light:#9a948a;
+
+  --success:       #16a34a;
+  --success-light: #dcfce7;
+  --error:         #dc2626;
+  --error-light:   #fee2e2;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+  --r: 14px; --r2: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+/* HEADER */
+header {
+  background: var(--white); border-bottom: 1.5px solid var(--border);
+  padding: 0 36px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200; box-shadow: var(--shadow-sm);
+}
+.logo { display: flex; align-items: baseline; gap: 10px; }
+.logo-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); }
+.logo-title em { font-style: normal; color: var(--dativ); }
+.logo-level { font-size: 11px; font-weight: 700; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase; }
+
+.panel-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 15px; border-radius: 24px;
+  border: 1.5px solid var(--border); background: var(--card);
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px;
+  color: var(--text-mid); cursor: pointer; transition: all 0.18s;
+}
+.panel-btn:hover, .panel-btn.active { border-color: var(--dativ); color: var(--dativ-dark); background: var(--dativ-light); }
+
+/* SIDE PANEL */
+.side-panel {
+  position: fixed; top: 64px; right: 0;
+  width: 390px; max-height: calc(100vh - 64px); overflow-y: auto;
+  background: var(--white); border-left: 2px solid var(--border);
+  box-shadow: var(--shadow-lg); z-index: 190;
+  transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  padding: 24px;
+}
+.side-panel.open { transform: translateX(0); }
+.panel-section { margin-bottom: 24px; }
+.panel-section h3 { font-family: 'DM Serif Display', serif; font-size: 15px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--border); }
+
+.praepo-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.praepo-table th { text-align: left; padding: 7px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); background: var(--bg); border-bottom: 1.5px solid var(--border); }
+.praepo-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.praepo-table tr:last-child td { border-bottom: none; }
+.praepo-table td:first-child { font-weight: 700; white-space: nowrap; }
+.tag-d { display: inline-block; background: var(--dativ-light); color: var(--dativ-dark); font-weight: 700; font-size: 10px; padding: 1px 6px; border-radius: 10px; }
+.tag-a { display: inline-block; background: var(--akk-light); color: var(--akk-dark); font-weight: 700; font-size: 10px; padding: 1px 6px; border-radius: 10px; }
+
+/* MAIN */
+main { max-width: 920px; margin: 36px auto 0; padding: 0 28px; }
+.page-intro { margin-bottom: 30px; }
+.page-intro h1 { font-family: 'DM Serif Display', serif; font-size: 34px; margin-bottom: 4px; }
+.page-intro p { font-size: 15px; color: var(--text-mid); font-weight: 500; }
+
+/* TABS */
+.tabs-nav { display: flex; gap: 2px; background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 4px; margin-bottom: 28px; box-shadow: var(--shadow-sm); }
+.tab-btn { flex: 1; padding: 11px 10px; border: none; background: transparent; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; color: var(--text-light); cursor: pointer; transition: all 0.18s; line-height: 1.3; text-align: center; }
+.tab-btn:hover { color: var(--text); background: var(--bg); }
+.tab-btn.active { background: var(--text); color: var(--white); }
+.tab-btn .tab-num { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 2px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* EXERCISE CARD */
+.ex-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r); padding: 30px 34px; box-shadow: var(--shadow-md); margin-bottom: 20px; }
+.ex-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1.5px solid var(--border); }
+.ex-num { width: 36px; height: 36px; background: var(--text); color: var(--white); font-family: 'DM Serif Display', serif; font-size: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ex-meta h2 { font-family: 'DM Serif Display', serif; font-size: 20px; }
+.ex-meta p { font-size: 13px; color: var(--text-mid); font-weight: 500; margin-top: 3px; }
+
+/* LEGEND */
+.legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.legend-chip { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.legend-chip.dativ { background: var(--dativ-light); color: var(--dativ-dark); border: 1.5px solid var(--dativ-mid); }
+.legend-chip.akk   { background: var(--akk-light);   color: var(--akk-dark);   border: 1.5px solid var(--akk-mid); }
+
+/* TAB 1: VERB ITEMS */
+.verb-item { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r2); padding: 16px 20px; margin-bottom: 12px; transition: border-color 0.2s; }
+.verb-item.correct { border-color: var(--success); background: var(--success-light); }
+.verb-item.wrong   { border-color: var(--error);   background: var(--error-light); animation: shake 0.3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+.verb-sentence { font-size: 16px; font-weight: 500; line-height: 1.7; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+.verb-input {
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+  padding: 4px 12px; border: 2px solid var(--border2); border-radius: 20px;
+  background: var(--white); color: var(--text); outline: none; width: 175px;
+  transition: border-color 0.18s;
+}
+.verb-input:focus { border-color: var(--dativ); }
+.verb-input.correct-input { border-color: var(--success); background: var(--success-light); color: var(--success); }
+.verb-input.wrong-input   { border-color: var(--error);   background: var(--error-light);   color: var(--error); }
+.verb-label { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 12px; }
+.verb-label.dativ { background: var(--dativ-light); color: var(--dativ-dark); }
+.verb-label.akk   { background: var(--akk-light);   color: var(--akk-dark); }
+.verb-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; font-style: italic; }
+.verb-hint.revealed { color: var(--akk-dark); font-style: normal; font-weight: 600; }
+
+/* TAB 2: SVG SZENEN */
+.szenen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.szene-card { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r2); padding: 18px; text-align: center; transition: border-color 0.2s; }
+.szene-card.correct { border-color: var(--success); background: var(--success-light); }
+.szene-card.wrong   { border-color: var(--error);   background: var(--error-light); animation: shake 0.3s; }
+.szene-question { font-size: 15px; font-weight: 600; color: var(--text-mid); margin-top: 10px; line-height: 1.6; }
+
+.drop-zone-praepo {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 100px; height: 34px; border: 2px dashed var(--dativ-mid);
+  border-radius: 20px; background: var(--dativ-light); color: var(--dativ-dark);
+  font-size: 15px; font-weight: 700; padding: 0 14px; transition: all 0.18s; cursor: default;
+}
+.drop-zone-praepo.drag-over { border-style: solid; border-color: var(--dativ); transform: scale(1.05); }
+.drop-zone-praepo.filled { background: var(--dativ); color: white; border-style: solid; border-color: var(--dativ); cursor: pointer; }
+.drop-zone-praepo.correct-filled { background: var(--success); border-color: var(--success); color: white; cursor: default; }
+.drop-zone-praepo.wrong-filled   { background: var(--error);   border-color: var(--error);   color: white; }
+
+.praepo-chip-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; padding: 14px 16px; background: var(--dativ-light); border: 2px dashed var(--dativ-mid); border-radius: var(--r2); min-height: 52px; }
+.praepo-chip { background: var(--white); border: 2px solid var(--dativ); color: var(--dativ-dark); font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; padding: 6px 16px; border-radius: 20px; cursor: grab; user-select: none; transition: all 0.15s; box-shadow: var(--shadow-sm); }
+.praepo-chip:hover { background: var(--dativ); color: white; transform: translateY(-1px); }
+
+/* TAB 3: LÜCKENSÄTZE */
+.luecke3-item { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r2); padding: 14px 18px; margin-bottom: 10px; font-size: 16px; font-weight: 500; line-height: 1.8; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.luecke3-item.correct { border-color: var(--success); background: var(--success-light); }
+.luecke3-item.wrong   { border-color: var(--error);   background: var(--error-light); animation: shake 0.3s; }
+.luecke3-input { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; padding: 3px 12px; border: 2px solid var(--border2); border-radius: 20px; background: var(--white); color: var(--text); outline: none; width: 120px; text-align: center; transition: border-color 0.18s; }
+.luecke3-input:focus { border-color: var(--dativ); }
+.luecke3-input.correct-input { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 700; }
+.luecke3-input.wrong-input   { border-color: var(--error);   background: var(--error-light);   color: var(--error); }
+
+/* INFO BOX */
+.info-box { background: linear-gradient(135deg, var(--dativ-light) 0%, var(--akk-light) 100%); border: 1.5px solid var(--border); border-radius: var(--r2); padding: 14px 18px; margin-bottom: 20px; font-size: 14px; font-weight: 500; color: var(--text-mid); line-height: 1.6; }
+.info-box strong { color: var(--text); }
+.d-pill { color: var(--dativ-dark); font-weight: 700; }
+.a-pill { color: var(--akk-dark); font-weight: 700; }
+
+/* BUTTONS */
+.row-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.btn-primary { background: var(--text); color: var(--white); border: none; border-radius: 24px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; padding: 11px 24px; cursor: pointer; transition: all 0.18s; display: inline-flex; align-items: center; gap: 7px; }
+.btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-secondary { background: transparent; color: var(--text-mid); border: 1.5px solid var(--border2); border-radius: 24px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; padding: 8px 18px; cursor: pointer; transition: all 0.18s; display: inline-flex; align-items: center; gap: 6px; }
+.btn-secondary:hover { border-color: var(--text-mid); color: var(--text); }
+.btn-new { background: var(--dativ-light); color: var(--dativ-dark); border: 1.5px solid var(--dativ-mid); border-radius: 24px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; padding: 8px 18px; cursor: pointer; transition: all 0.18s; display: inline-flex; align-items: center; gap: 6px; }
+.btn-new:hover { background: var(--dativ); color: white; border-color: var(--dativ); }
+.score-badge { background: var(--bg); border: 1.5px solid var(--border2); color: var(--text-mid); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-title">Lokale <em>Präpositionen</em></span>
+    <span class="logo-level">B1</span>
+  </div>
+  <button class="panel-btn" id="panel-btn" onclick="togglePanel()">📋 Übersicht</button>
+</header>
+
+<div class="side-panel" id="side-panel">
+  <div class="panel-section">
+    <h3>Wechselpräpositionen</h3>
+    <div style="font-size:12px;color:var(--text-mid);margin-bottom:10px;font-weight:600;letter-spacing:0.5px;">an · auf · hinter · in · neben · über · unter · vor · zwischen</div>
+    <div class="info-box" style="margin-bottom:12px;font-size:13px;">
+      <span class="d-pill">Dativ</span> → <strong>Wo?</strong> (Ort / Zustand, keine gerichtete Bewegung)<br>
+      <span class="a-pill">Akkusativ</span> → <strong>Wohin?</strong> (Bewegung zu einem Ziel)
+    </div>
+    <table class="praepo-table">
+      <thead><tr><th>Frage</th><th>Fall</th><th>Beispiel</th></tr></thead>
+      <tbody>
+        <tr><td>Wo?</td><td><span class="tag-d">Dativ</span></td><td>Das Buch liegt <em>auf dem</em> Tisch.</td></tr>
+        <tr><td>Wohin?</td><td><span class="tag-a">Akk.</span></td><td>Sie legt es <em>auf den</em> Tisch.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel-section">
+    <h3>setzen · stellen · legen → Wohin? (Akkusativ)</h3>
+    <table class="praepo-table">
+      <thead><tr><th>Bewegung <span class="tag-a">Akk.</span></th><th>Zustand <span class="tag-d">Dat.</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>setzen</strong> (wohin?)</td><td><strong>sitzen</strong> (wo?)</td></tr>
+        <tr><td><strong>stellen</strong> (wohin?)</td><td><strong>stehen</strong> (wo?)</td></tr>
+        <tr><td><strong>legen</strong> (wohin?)</td><td><strong>liegen</strong> (wo?)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel-section">
+    <h3>Nur-Dativ-Präpositionen</h3>
+    <table class="praepo-table">
+      <thead><tr><th>Präp.</th><th>Gebrauch + Beispiel</th></tr></thead>
+      <tbody>
+        <tr><td>aus</td><td>Herkunft / Material: <em>aus Berlin, aus Holz</em></td></tr>
+        <tr><td>bei</td><td>Ort (Person/Firma), gleichzeitig: <em>bei Maria, beim Essen</em></td></tr>
+        <tr><td>nach</td><td>Städte/Länder o. Artikel; zeitlich: <em>nach Wien, nach der Schule</em></td></tr>
+        <tr><td>seit</td><td>Zeitraum bis jetzt (Präsens!): <em>seit drei Jahren</em></td></tr>
+        <tr><td>von</td><td>Herkunft / Besitz: <em>von meiner Freundin</em></td></tr>
+        <tr><td>mit</td><td>Begleitung / Mittel: <em>mit dem Zug, mit Freunden</em></td></tr>
+        <tr><td>zu</td><td>Richtung zu Person/Ort: <em>zu Maria, zum Bahnhof</em></td></tr>
+        <tr><td>gegenüber</td><td>räumlich gegenüber: <em>der Post gegenüber</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<main>
+  <div class="page-intro">
+    <h1>Lokale Präpositionen</h1>
+    <p>Wo? Wohin? – Wechselpräpositionen, Dativ-Präpositionen und Verben der Lage üben.</p>
+  </div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span class="tab-num">Übung 1</span>
+      sitzen / setzen · liegen / legen · stehen / stellen
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span class="tab-num">Übung 2</span>
+      Wo ist was? – Präpositionen aus Bildern
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span class="tab-num">Übung 3</span>
+      aus · bei · zu · nach · von · mit · seit
+    </button>
+  </div>
+
+  <!-- TAB 1 -->
+  <div class="tab-panel active" id="tab-0">
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-num">1</div>
+        <div class="ex-meta">
+          <h2>Dativ oder Akkusativ?</h2>
+          <p>Schreibe den Artikel + das Nomen im richtigen Fall. Enter zum Prüfen.</p>
+        </div>
+      </div>
+      
+      <div id="verb-list"></div>
+      <div class="row-actions">
+        <button class="btn-primary" onclick="checkVerben()">✓ Alle auswerten</button>
+        <button class="btn-secondary" onclick="resetVerben()">↺ Zurücksetzen</button>
+        <button class="btn-new" onclick="neueVerben()">🔀 Neue Sätze</button>
+        <span class="score-badge" id="verb-score" style="display:none;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2 -->
+  <div class="tab-panel" id="tab-1">
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-num">2</div>
+        <div class="ex-meta">
+          <h2>Wo ist was?</h2>
+          <p>Ziehe die richtige Präposition in die Lücke. Klick auf eine gefüllte Lücke zum Leeren.</p>
+        </div>
+      </div>
+      <div class="praepo-chip-bank" id="praepo-bank"></div>
+      <div class="szenen-grid" id="szenen-grid"></div>
+      <div class="row-actions">
+        <button class="btn-primary" onclick="checkSzenen()">✓ Auswerten</button>
+        <button class="btn-secondary" onclick="resetSzenen()">↺ Zurücksetzen</button>
+        <span class="score-badge" id="szene-score" style="display:none;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3 -->
+  <div class="tab-panel" id="tab-2">
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-num">3</div>
+        <div class="ex-meta">
+          <h2>Die richtige Dativ-Präposition</h2>
+          <p>Ergänze die fehlende Präposition. Enter zum Prüfen. Tipp: Übersicht oben rechts.</p>
+        </div>
+      </div>
+      <div class="info-box">
+        💡 Alle Präpositionen in dieser Übung stehen mit <span class="d-pill">Dativ</span>: <strong>aus · bei · nach · seit · von · mit · zu · gegenüber</strong>
+      </div>
+      <div class="praepo-chip-bank" id="praepo-bank-3"></div>
+      <div id="luecke3-list"></div>
+      <div class="row-actions">
+        <button class="btn-primary" onclick="checkLuecke3()">✓ Alle auswerten</button>
+        <button class="btn-secondary" onclick="resetLuecke3()">↺ Zurücksetzen</button>
+        <button class="btn-new" onclick="neueLuecke3()">🔀 Neue Sätze</button>
+        <span class="score-badge" id="luecke3-score" style="display:none;"></span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function togglePanel() {
+  const p = document.getElementById('side-panel');
+  const b = document.getElementById('panel-btn');
+  p.classList.toggle('open'); b.classList.toggle('active');
+}
+function switchTab(i) {
+  document.querySelectorAll('.tab-panel').forEach((p,j) => p.classList.toggle('active', i===j));
+  document.querySelectorAll('.tab-btn').forEach((b,j) => b.classList.toggle('active', i===j));
+}
+function normalize(s) { return (s||'').trim().toLowerCase().replace(/\s+/g,' '); }
+
+// ══════════════════════════════
+// TAB 1
+// ══════════════════════════════
+const verbenPool = [
+  { pre:'Sie', verb:'legt',      post:'das Buch auf ___ Tisch.',       answer:'den Tisch',       bewegung:true  },
+  { pre:'Das Buch', verb:'liegt', post:'auf ___ Tisch.',                answer:'dem Tisch',       bewegung:false },
+  { pre:'Er', verb:'legt',       post:'den Stift neben ___ Heft.',     answer:'das Heft',        bewegung:true  },
+  { pre:'Der Stift', verb:'liegt', post:'neben ___ Heft.',             answer:'dem Heft',        bewegung:false },
+  { pre:'Sie', verb:'legt',      post:'die Zeitung auf ___ Sofa.',     answer:'das Sofa',        bewegung:true  },
+  { pre:'Die Zeitung', verb:'liegt', post:'auf ___ Sofa.',             answer:'dem Sofa',        bewegung:false },
+  { pre:'Er', verb:'legt',       post:'den Schlüssel in ___ Schublade.',answer:'die Schublade',   bewegung:true  },
+  { pre:'Der Schlüssel', verb:'liegt', post:'in ___ Schublade.',       answer:'der Schublade',   bewegung:false },
+  { pre:'Sie', verb:'legt',      post:'das Messer neben ___ Gabel.',   answer:'die Gabel',       bewegung:true  },
+  { pre:'Das Messer', verb:'liegt', post:'neben ___ Gabel.',           answer:'der Gabel',       bewegung:false },
+  { pre:'Er', verb:'legt',       post:'die Brille neben ___ Buch.',    answer:'das Buch',        bewegung:true  },
+  { pre:'Die Brille', verb:'liegt', post:'neben ___ Buch.',            answer:'dem Buch',        bewegung:false },
+  { pre:'Sie', verb:'stellt',    post:'die Vase auf ___ Tisch.',       answer:'den Tisch',       bewegung:true  },
+  { pre:'Die Vase', verb:'steht', post:'auf ___ Tisch.',               answer:'dem Tisch',       bewegung:false },
+  { pre:'Er', verb:'stellt',     post:'die Flasche neben ___ Kühlschrank.', answer:'den Kühlschrank', bewegung:true },
+  { pre:'Die Flasche', verb:'steht', post:'neben ___ Kühlschrank.',    answer:'dem Kühlschrank', bewegung:false },
+  { pre:'Mama', verb:'stellt',   post:'den Topf auf ___ Herd.',        answer:'den Herd',        bewegung:true  },
+  { pre:'Der Topf', verb:'steht', post:'auf ___ Herd.',                answer:'dem Herd',        bewegung:false },
+  { pre:'Sie', verb:'stellt',    post:'die Lampe hinter ___ Tür.',     answer:'die Tür',         bewegung:true  },
+  { pre:'Die Lampe', verb:'steht', post:'hinter ___ Tür.',             answer:'der Tür',         bewegung:false },
+  { pre:'Er', verb:'stellt',     post:'den Koffer vor ___ Bett.',      answer:'das Bett',        bewegung:true  },
+  { pre:'Der Koffer', verb:'steht', post:'vor ___ Bett.',              answer:'dem Bett',        bewegung:false },
+  { pre:'Sie', verb:'stellt',    post:'den Stuhl an ___ Fenster.',     answer:'das Fenster',     bewegung:true  },
+  { pre:'Der Stuhl', verb:'steht', post:'an ___ Fenster.',             answer:'dem Fenster',     bewegung:false },
+  { pre:'Er', verb:'setzt sich', post:'auf ___ Sofa.',                 answer:'das Sofa',        bewegung:true  },
+  { pre:'Er', verb:'sitzt',      post:'auf ___ Sofa.',                 answer:'dem Sofa',        bewegung:false },
+  { pre:'Die Katze', verb:'setzt sich', post:'auf ___ Stuhl.',         answer:'den Stuhl',       bewegung:true  },
+  { pre:'Die Katze', verb:'sitzt', post:'auf ___ Stuhl.',              answer:'dem Stuhl',       bewegung:false },
+  { pre:'Sie', verb:'setzt sich', post:'neben ___ Fenster.',           answer:'das Fenster',     bewegung:true  },
+  { pre:'Sie', verb:'sitzt',     post:'neben ___ Fenster.',            answer:'dem Fenster',     bewegung:false },
+  { pre:'Das Kind', verb:'setzt sich', post:'an ___ Tisch.',           answer:'den Tisch',       bewegung:true  },
+  { pre:'Das Kind', verb:'sitzt', post:'an ___ Tisch.',                answer:'dem Tisch',       bewegung:false },
+  { pre:'Sie', verb:'stellt',    post:'das Glas auf ___ Regal.',       answer:'das Regal',       bewegung:true  },
+  { pre:'Das Glas', verb:'steht', post:'auf ___ Regal.',               answer:'dem Regal',       bewegung:false },
+  { pre:'Er', verb:'legt',       post:'den Brief unter ___ Tasse.',    answer:'die Tasse',       bewegung:true  },
+  { pre:'Der Brief', verb:'liegt', post:'unter ___ Tasse.',            answer:'der Tasse',       bewegung:false },
+  { pre:'Sie', verb:'stellt',    post:'die Pflanze vor ___ Fenster.',  answer:'das Fenster',     bewegung:true  },
+  { pre:'Die Pflanze', verb:'steht', post:'vor ___ Fenster.',          answer:'dem Fenster',     bewegung:false },
+  { pre:'Er', verb:'setzt sich', post:'hinter ___ Schreibtisch.',      answer:'den Schreibtisch',bewegung:true  },
+  { pre:'Er', verb:'sitzt',      post:'hinter ___ Schreibtisch.',      answer:'dem Schreibtisch',bewegung:false },
+  { pre:'Sie', verb:'legt',      post:'das Heft zwischen ___ Bücher.', answer:'die Bücher',      bewegung:true  },
+  { pre:'Das Heft', verb:'liegt', post:'zwischen ___ Büchern.',        answer:'den Büchern',     bewegung:false },
+  { pre:'Er', verb:'stellt',     post:'die Tasche unter ___ Tisch.',   answer:'den Tisch',       bewegung:true  },
+  { pre:'Die Tasche', verb:'steht', post:'unter ___ Tisch.',           answer:'dem Tisch',       bewegung:false },
+  { pre:'Sie', verb:'legt',      post:'das Handy auf ___ Bett.',       answer:'das Bett',        bewegung:true  },
+  { pre:'Das Handy', verb:'liegt', post:'auf ___ Bett.',               answer:'dem Bett',        bewegung:false },
+  { pre:'Er', verb:'setzt sich', post:'zwischen ___ Eltern.',          answer:'seine Eltern',    bewegung:true  },
+  { pre:'Er', verb:'sitzt',      post:'zwischen ___ Eltern.',          answer:'seinen Eltern',   bewegung:false },
+  { pre:'Sie', verb:'stellt',    post:'die Schuhe vor ___ Tür.',       answer:'die Tür',         bewegung:true  },
+  { pre:'Die Schuhe', verb:'stehen', post:'vor ___ Tür.',              answer:'der Tür',         bewegung:false },
+];
+
+let verbenData = [];
+function pickVerben() { verbenData = [...verbenPool].sort(()=>Math.random()-0.5).slice(0,10); }
+
+function buildVerben() {
+  const list = document.getElementById('verb-list');
+  list.innerHTML = '';
+  verbenData.forEach((item,i) => {
+    const sentence = item.post.replace('___', `<input class="verb-input" type="text" id="vi-${i}" placeholder="Artikel + Nomen" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkOne(${i})">`);
+    const div = document.createElement('div');
+    div.className = 'verb-item'; div.dataset.index = i;
+    div.innerHTML = `
+      <div class="verb-sentence">
+        <span>${item.pre}</span>
+        <strong>${item.verb}</strong>
+        ${sentence}
+      </div>
+      <div class="verb-hint" id="vh-${i}"></div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function checkOne(i) {
+  const item = verbenData[i];
+  const input = document.getElementById(`vi-${i}`);
+  const hint  = document.getElementById(`vh-${i}`);
+  const div   = document.querySelector(`.verb-item[data-index="${i}"]`);
+  if (!input.value.trim()) return;
+  const ok = normalize(input.value) === normalize(item.answer);
+  div.classList.toggle('correct', ok); div.classList.toggle('wrong', !ok);
+  input.classList.toggle('correct-input', ok); input.classList.toggle('wrong-input', !ok);
+  if (ok) { input.disabled = true; hint.textContent = '✓ Richtig!'; hint.className = 'verb-hint'; }
+  else { setTimeout(()=>div.classList.remove('wrong'),400); hint.innerHTML = `✗ Lösung: <strong>${item.answer}</strong>`; hint.className='verb-hint revealed'; }
+}
+
+function checkVerben() {
+  let c=0;
+  verbenData.forEach((_,i)=>{ checkOne(i); if(document.getElementById(`vi-${i}`).classList.contains('correct-input'))c++; });
+  const s=document.getElementById('verb-score'); s.style.display='inline-flex'; s.textContent=`${c} / ${verbenData.length} richtig`;
+}
+function resetVerben() { buildVerben(); document.getElementById('verb-score').style.display='none'; }
+function neueVerben()  { pickVerben(); resetVerben(); }
+
+// ══════════════════════════════
+// TAB 2
+// ══════════════════════════════
+const szenenData = [
+  { answer:'auf', question:'Die Katze sitzt ___ dem Sofa.',
+    svg:`<svg width="210" height="135" viewBox="0 0 210 135" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="82" width="170" height="42" rx="8" fill="#7c6f5e"/>
+      <rect x="20" y="67" width="22" height="57" rx="7" fill="#6b5e4f"/>
+      <rect x="168" y="67" width="22" height="57" rx="7" fill="#6b5e4f"/>
+      <rect x="20" y="75" width="170" height="12" rx="4" fill="#8d7e6c"/>
+      <rect x="38" y="116" width="14" height="9" rx="3" fill="#4a3d30"/>
+      <rect x="158" y="116" width="14" height="9" rx="3" fill="#4a3d30"/>
+      <ellipse cx="105" cy="70" rx="24" ry="14" fill="#f4a261"/>
+      <circle cx="105" cy="56" r="13" fill="#f4a261"/>
+      <ellipse cx="99" cy="53" rx="2.2" ry="3" fill="#2c2c2c"/>
+      <ellipse cx="111" cy="53" rx="2.2" ry="3" fill="#2c2c2c"/>
+      <path d="M100 60 Q105 64 110 60" fill="none" stroke="#c05a2a" stroke-width="1.5" stroke-linecap="round"/>
+      <ellipse cx="95" cy="47" rx="5" ry="8" fill="#f4a261" transform="rotate(-15 95 47)"/>
+      <ellipse cx="115" cy="47" rx="5" ry="8" fill="#f4a261" transform="rotate(15 115 47)"/>
+    </svg>`},
+  { answer:'unter', question:'Der Hund liegt ___ dem Tisch.',
+    svg:`<svg width="210" height="135" viewBox="0 0 210 135" xmlns="http://www.w3.org/2000/svg">
+      <rect x="25" y="52" width="160" height="12" rx="4" fill="#8b6914"/>
+      <rect x="38" y="64" width="9" height="65" rx="3" fill="#6b5010"/>
+      <rect x="163" y="64" width="9" height="65" rx="3" fill="#6b5010"/>
+      <ellipse cx="105" cy="100" rx="32" ry="17" fill="#c8a870"/>
+      <circle cx="134" cy="94" r="15" fill="#c8a870"/>
+      <ellipse cx="138" cy="87" rx="5" ry="7" fill="#a07840" transform="rotate(-20 138 87)"/>
+      <ellipse cx="127" cy="85" rx="4" ry="6" fill="#a07840" transform="rotate(10 127 85)"/>
+      <ellipse cx="131" cy="95" rx="2.2" ry="2.8" fill="#333"/>
+      <ellipse cx="139" cy="95" rx="2" ry="2.5" fill="#333"/>
+      <ellipse cx="135" cy="101" rx="4" ry="2.5" fill="#e8b0a0"/>
+      <path d="M74 95 Q68 90 70 84" fill="none" stroke="#c8a870" stroke-width="3" stroke-linecap="round"/>
+    </svg>`},
+  { answer:'neben', question:'Die Lampe steht ___ dem Sessel.',
+    svg:`<svg width="210" height="145" viewBox="0 0 210 145" xmlns="http://www.w3.org/2000/svg">
+      <rect x="45" y="82" width="95" height="48" rx="8" fill="#5b7fa6"/>
+      <rect x="45" y="66" width="20" height="64" rx="7" fill="#4a6a8c"/>
+      <rect x="120" y="66" width="20" height="64" rx="7" fill="#4a6a8c"/>
+      <rect x="45" y="76" width="95" height="10" rx="4" fill="#6b90b6"/>
+      <rect x="60" y="122" width="12" height="8" rx="3" fill="#2c3e50"/>
+      <rect x="112" y="122" width="12" height="8" rx="3" fill="#2c3e50"/>
+      <rect x="152" y="62" width="5" height="72" rx="2" fill="#aaa"/>
+      <polygon points="149,62 157,62 163,36 143,36" fill="#f1c40f"/>
+      <ellipse cx="154" cy="62" rx="9" ry="3" fill="#e6b800"/>
+      <circle cx="154" cy="134" r="9" fill="#999"/>
+    </svg>`},
+  { answer:'über', question:'Das Bild hängt ___ dem Sofa.',
+    svg:`<svg width="210" height="145" viewBox="0 0 210 145" xmlns="http://www.w3.org/2000/svg">
+      <rect x="25" y="98" width="160" height="36" rx="8" fill="#9b7fba"/>
+      <rect x="25" y="84" width="20" height="50" rx="6" fill="#7a5f9a"/>
+      <rect x="165" y="84" width="20" height="50" rx="6" fill="#7a5f9a"/>
+      <rect x="25" y="90" width="160" height="12" rx="4" fill="#ac90cb"/>
+      <rect x="68" y="18" width="74" height="52" rx="4" fill="#e8d5b0" stroke="#8b6914" stroke-width="3"/>
+      <ellipse cx="105" cy="42" rx="24" ry="18" fill="#87ceeb"/>
+      <path d="M82 52 Q94 38 105 43 Q116 48 128 40" fill="none" stroke="#2c7a2c" stroke-width="2.5"/>
+      <circle cx="90" cy="36" r="7" fill="#f1c40f" opacity="0.8"/>
+      <line x1="105" y1="18" x2="105" y2="13" stroke="#555" stroke-width="2"/>
+      <circle cx="105" cy="11" r="3.5" fill="#555"/>
+    </svg>`},
+  { answer:'hinter', question:'Die Katze sitzt ___ dem Sessel.',
+    svg:`<svg width="210" height="145" viewBox="0 0 210 145" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="80" width="100" height="55" rx="8" fill="#7c6f5e"/>
+      <rect x="50" y="63" width="20" height="72" rx="7" fill="#6b5e4f"/>
+      <rect x="130" y="63" width="20" height="72" rx="7" fill="#6b5e4f"/>
+      <rect x="50" y="74" width="100" height="10" rx="4" fill="#8d7e6c"/>
+      <rect x="65" y="127" width="12" height="8" rx="3" fill="#4a3d30"/>
+      <rect x="122" y="127" width="12" height="8" rx="3" fill="#4a3d30"/>
+      <circle cx="100" cy="57" r="15" fill="#f4a261"/>
+      <ellipse cx="93" cy="54" rx="2.2" ry="3" fill="#2c2c2c"/>
+      <ellipse cx="107" cy="54" rx="2.2" ry="3" fill="#2c2c2c"/>
+      <path d="M95 61 Q100 65 105 61" fill="none" stroke="#c05a2a" stroke-width="1.5" stroke-linecap="round"/>
+      <ellipse cx="89" cy="47" rx="5" ry="8" fill="#f4a261" transform="rotate(-15 89 47)"/>
+      <ellipse cx="111" cy="47" rx="5" ry="8" fill="#f4a261" transform="rotate(15 111 47)"/>
+    </svg>`},
+  { answer:'vor', question:'Der Hund liegt ___ der Tür.',
+    svg:`<svg width="210" height="145" viewBox="0 0 210 145" xmlns="http://www.w3.org/2000/svg">
+      <rect x="65" y="8" width="80" height="125" rx="4" fill="#8b6914" stroke="#6b5010" stroke-width="2"/>
+      <rect x="69" y="12" width="72" height="117" rx="3" fill="#a07820"/>
+      <circle cx="76" cy="72" r="5.5" fill="#c8a820"/>
+      <ellipse cx="105" cy="122" rx="30" ry="14" fill="#c8a870"/>
+      <circle cx="132" cy="116" r="13" fill="#c8a870"/>
+      <ellipse cx="136" cy="109" rx="4.5" ry="6.5" fill="#a07840" transform="rotate(-15 136 109)"/>
+      <ellipse cx="126" cy="107" rx="3.5" ry="5.5" fill="#a07840"/>
+      <ellipse cx="130" cy="117" rx="2" ry="2.5" fill="#333"/>
+      <ellipse cx="136" cy="117" rx="1.8" ry="2.2" fill="#333"/>
+      <path d="M76 116 Q70 111 72 105" fill="none" stroke="#c8a870" stroke-width="3" stroke-linecap="round"/>
+    </svg>`},
+  { answer:'an', question:'Das Bild hängt ___ der Wand.',
+    svg:`<svg width="210" height="145" viewBox="0 0 210 145" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="210" height="145" fill="#f0ece4"/>
+      <rect x="58" y="22" width="94" height="68" rx="4" fill="#e0d0b0" stroke="#9b7914" stroke-width="2.5"/>
+      <rect x="62" y="26" width="86" height="60" rx="3" fill="#87ceeb"/>
+      <ellipse cx="105" cy="52" rx="26" ry="20" fill="#f39c12" opacity="0.7"/>
+      <path d="M68 68 Q84 52 105 57 Q126 62 142 54" fill="none" stroke="#27ae60" stroke-width="2.5"/>
+      <circle cx="80" cy="44" r="8" fill="#fff176" opacity="0.8"/>
+      <line x1="105" y1="22" x2="105" y2="16" stroke="#666" stroke-width="2"/>
+      <rect x="102" y="13" width="6" height="5" rx="1" fill="#888"/>
+    </svg>`},
+  { answer:'zwischen', question:'Die Flasche steht ___ den Gläsern.',
+    svg:`<svg width="210" height="145" viewBox="0 0 210 145" xmlns="http://www.w3.org/2000/svg">
+      <rect x="18" y="104" width="174" height="10" rx="3" fill="#8b6914"/>
+      <path d="M48 104 L54 60 L72 60 L78 104Z" fill="#b8dff0" opacity="0.75"/>
+      <rect x="54" y="60" width="18" height="3" rx="1.5" fill="#90c8e8"/>
+      <rect x="92" y="55" width="26" height="49" rx="5" fill="#27ae60"/>
+      <rect x="96" y="47" width="18" height="11" rx="4" fill="#27ae60"/>
+      <rect x="98" y="43" width="14" height="7" rx="2.5" fill="#1e8449"/>
+      <rect x="92" y="76" width="26" height="3" fill="#1e8449" opacity="0.5"/>
+      <path d="M132 104 L138 60 L156 60 L162 104Z" fill="#b8dff0" opacity="0.75"/>
+      <rect x="138" y="60" width="18" height="3" rx="1.5" fill="#90c8e8"/>
+    </svg>`},
+];
+
+let draggedPrep = null;
+
+function buildPraepoBank() {
+  const preps = ['auf','unter','neben','über','hinter','vor','an','zwischen','in','bei'];
+  const bank = document.getElementById('praepo-bank');
+  bank.innerHTML = '';
+  preps.forEach(p => {
+    const chip = document.createElement('div');
+    chip.className = 'praepo-chip'; chip.draggable = true;
+    chip.dataset.value = p; chip.textContent = p;
+    chip.addEventListener('dragstart', () => { draggedPrep = p; });
+    bank.appendChild(chip);
+  });
+}
+
+function buildSzenen() {
+  const grid = document.getElementById('szenen-grid');
+  grid.innerHTML = '';
+  szenenData.forEach((s,i) => {
+    const card = document.createElement('div');
+    card.className = 'szene-card'; card.dataset.index = i;
+    const q = s.question.replace('___',
+      `<span class="drop-zone-praepo" id="dz-s-${i}"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="dropPrep(event,${i})"
+        onclick="clearPrep(${i})">···</span>`);
+    card.innerHTML = `<div>${s.svg}</div><div class="szene-question">${q}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function dropPrep(e,i) {
+  e.preventDefault();
+  if (!draggedPrep) return;
+  const dz = document.getElementById(`dz-s-${i}`);
+  dz.classList.remove('drag-over','wrong-filled','correct-filled');
+  dz.textContent = draggedPrep; dz.dataset.filled = draggedPrep;
+  dz.classList.add('filled');
+  document.querySelector(`.szene-card[data-index="${i}"]`).classList.remove('correct','wrong');
+  draggedPrep = null;
+}
+function clearPrep(i) {
+  const dz = document.getElementById(`dz-s-${i}`);
+  if (dz.classList.contains('correct-filled')) return;
+  dz.textContent='···'; dz.dataset.filled='';
+  dz.classList.remove('filled','correct-filled','wrong-filled');
+  document.querySelector(`.szene-card[data-index="${i}"]`).classList.remove('correct','wrong');
+}
+function checkSzenen() {
+  let c=0;
+  szenenData.forEach((s,i) => {
+    const dz=document.getElementById(`dz-s-${i}`);
+    const card=document.querySelector(`.szene-card[data-index="${i}"]`);
+    const val=dz.dataset.filled;
+    if (val===s.answer) { c++; dz.classList.add('correct-filled'); dz.classList.remove('filled','wrong-filled'); card.classList.add('correct'); card.classList.remove('wrong'); }
+    else if (val) { dz.classList.add('wrong-filled'); card.classList.add('wrong'); setTimeout(()=>{card.classList.remove('wrong');dz.classList.remove('wrong-filled');},600); }
+  });
+  const s=document.getElementById('szene-score'); s.style.display='inline-flex'; s.textContent=`${c} / ${szenenData.length} richtig`;
+}
+function resetSzenen() { buildSzenen(); document.getElementById('szene-score').style.display='none'; }
+
+// ══════════════════════════════
+// TAB 3
+// ══════════════════════════════
+const luecke3Pool = [
+  {pre:'Sie kommt',             answer:'aus',        post:'Österreich.'},
+  {pre:'Das Regal ist',         answer:'aus',        post:'Holz.'},
+  {pre:'Er trinkt Kaffee',      answer:'aus',        post:'einer Tasse.'},
+  {pre:'Das Wort kommt',        answer:'aus',        post:'dem Lateinischen.'},
+  {pre:'Sie arbeitet',          answer:'bei',        post:'einer Firma in München.'},
+  {pre:'Ich war gestern',        answer:'bei',        post:'meiner Oma.'},
+  {pre:'Wir essen',             answer:'bei',        post:'ihr zu Hause.'},
+  {pre:'Er wohnt',              answer:'bei',        post:'seinen Eltern.'},
+  {pre:'Ich kaufe',             answer:'bei',        post:'dem Bäcker um die Ecke ein.'},
+  {pre:'Wir fahren morgen',     answer:'nach',       post:'Berlin.'},
+  {pre:'Sie kommen',            answer:'nach',       post:'dem Unterricht.'},
+  {pre:'Direkt',                answer:'nach',       post:'dem Essen schlafen sie.'},
+  {pre:'Das Konzert beginnt',   answer:'nach',       post:'der Pause.'},
+  {pre:'Ich lerne Deutsch',     answer:'seit',       post:'zwei Jahren.'},
+  {pre:'Sie wohnt',             answer:'seit',       post:'dem Sommer in Hamburg.'},
+  {pre:'Sie lernt Japanisch',   answer:'seit',       post:'einem halben Jahr.'},
+  {pre:'Er wohnt hier',         answer:'seit',       post:'seiner Kindheit.'},
+  {pre:'Ich habe das',          answer:'von',        post:'meiner Schwester.'},
+  {pre:'Das ist ein Geschenk',  answer:'von',        post:'meinem Chef.'},
+  {pre:'Wir kommen',            answer:'von',        post:'der Arbeit.'},
+  {pre:'Der Brief kam',         answer:'von',        post:'der Universität.'},
+  {pre:'Das Buch ist',          answer:'von',        post:'einem bekannten Autor.'},
+  {pre:'Wir kommen direkt',     answer:'von',        post:'dem Flughafen.'},
+  {pre:'Sie fährt täglich',     answer:'mit',        post:'dem Fahrrad.'},
+  {pre:'Wir gehen',             answer:'mit',        post:'unseren Freunden aus.'},
+  {pre:'Er bezahlt',            answer:'mit',        post:'einer Kreditkarte.'},
+  {pre:'Er schreibt',           answer:'mit',        post:'einem Bleistift.'},
+  {pre:'Wir sprechen',          answer:'mit',        post:'dem Lehrer darüber.'},
+  {pre:'Ich gehe jetzt',        answer:'zu',         post:'meiner Freundin.'},
+  {pre:'Wir fahren',            answer:'zu',         post:'dem Bahnhof.'},
+  {pre:'Geh bitte',             answer:'zu',         post:'dem Arzt!'},
+  {pre:'Wir gehen',             answer:'zu',         post:'einem Konzert heute Abend.'},
+  {pre:'Das Café liegt',        answer:'gegenüber',  post:'der Post.'},
+  {pre:'Sie sitzt mir',         answer:'gegenüber',  post:'im Zug.'},
+  {pre:'Das Restaurant ist',    answer:'gegenüber',  post:'dem Kino.'},
+  {pre:'Das Paket ist',         answer:'von',        post:'einem Freund aus Japan.'},
+  {pre:'Sie trinkt Tee',        answer:'aus',        post:'einem alten Glas.'},
+  {pre:'Ich komme',             answer:'aus',        post:'der Schweiz.'},
+  {pre:'Sie fährt',             answer:'mit',        post:'dem Bus in die Stadt.'},
+  {pre:'Wir fahren nach dem Essen', answer:'zu',     post:'ihr nach Hause.'},
+  {pre:'Ich arbeite schon lange', answer:'bei',      post:'dieser Firma.'},
+  {pre:'Das Wasser kommt',      answer:'aus',        post:'dem Hahn.'},
+  {pre:'Sie hat es',            answer:'nach',       post:'langem Nachdenken entschieden.'},
+  {pre:'Er hat eine Postkarte', answer:'von',        post:'seiner Reise geschickt.'},
+  {pre:'Sie fährt heute',       answer:'mit',        post:'dem Zug nach Köln.'},
+  {pre:'Ich lerne am liebsten', answer:'bei',        post:'ruhiger Musik.'},
+  {pre:'Sie bleibt noch',       answer:'bei',        post:'uns über Nacht.'},
+  {pre:'Wir kommen immer',      answer:'nach',       post:'dem Sport zusammen.'},
+  {pre:'Sie ist direkt',        answer:'gegenüber',  post:'dem Eingang.'},
+  {pre:'Er kauft Blumen',       answer:'bei',        post:'dem Markt.'},
+];
+
+let luecke3Data=[];
+function pickLuecke3(){ luecke3Data=[...luecke3Pool].sort(()=>Math.random()-0.5).slice(0,10); }
+
+function buildLuecke3() {
+  const list=document.getElementById('luecke3-list'); list.innerHTML='';
+  luecke3Data.forEach((item,i) => {
+    const div=document.createElement('div'); div.className='luecke3-item'; div.dataset.index=i;
+    div.innerHTML=`<span>${item.pre}</span>
+      <input class="luecke3-input" type="text" id="l3-${i}" placeholder="Präp." autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkL3(${i})">
+      <span>${item.post}</span>`;
+    list.appendChild(div);
+  });
+}
+function checkL3(i) {
+  const item=luecke3Data[i];
+  const input=document.getElementById(`l3-${i}`);
+  const div=document.querySelector(`.luecke3-item[data-index="${i}"]`);
+  if (!input.value.trim()) return;
+  const ok=normalize(input.value)===normalize(item.answer);
+  div.classList.toggle('correct',ok); div.classList.toggle('wrong',!ok);
+  input.classList.toggle('correct-input',ok); input.classList.toggle('wrong-input',!ok);
+  if (ok) input.disabled=true;
+  else { setTimeout(()=>div.classList.remove('wrong'),400); input.value=''; input.placeholder=`→ ${item.answer}`; }
+}
+function checkLuecke3() {
+  let c=0;
+  luecke3Data.forEach((_,i)=>{ checkL3(i); if(document.getElementById(`l3-${i}`).classList.contains('correct-input'))c++; });
+  const s=document.getElementById('luecke3-score'); s.style.display='inline-flex'; s.textContent=`${c} / ${luecke3Data.length} richtig`;
+}
+function resetLuecke3(){ buildLuecke3(); document.getElementById('luecke3-score').style.display='none'; }
+function neueLuecke3(){ pickLuecke3(); resetLuecke3(); }
+
+// INIT
+pickVerben(); buildVerben();
+buildPraepoBank(); buildSzenen();
+pickLuecke3(); buildLuecke3();
+</script>
+</body>
+</html>
