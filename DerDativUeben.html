@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dativ üben – A1</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #e91e8c;
+    --pink-light: #fce4f3;
+    --pink-mid: #f48ec8;
+    --pink-dark: #c0176f;
+    --pink-glow: rgba(233,30,140,0.15);
+    --bg: #fdf6fb;
+    --white: #ffffff;
+    --gray-100: #f8f0f6;
+    --gray-200: #eddde8;
+    --gray-400: #b09aaa;
+    --gray-700: #4a3344;
+    --gray-900: #2a1a24;
+    --success: #22c55e;
+    --success-light: #dcfce7;
+    --error: #ef4444;
+    --error-light: #fee2e2;
+    --shadow-sm: 0 1px 3px rgba(100,30,80,0.08);
+    --shadow-md: 0 4px 16px rgba(100,30,80,0.12);
+    --shadow-lg: 0 8px 32px rgba(100,30,80,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--gray-900);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--white);
+    border-bottom: 2px solid var(--pink-light);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-badge {
+    background: var(--pink);
+    color: white;
+    font-weight: 900;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .logo-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--gray-900);
+  }
+  .logo-title span { color: var(--pink); }
+
+  /* ─── TABLE TOGGLE BUTTON ─── */
+  #toggle-table-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pink-light);
+    border: 2px solid var(--pink-mid);
+    color: var(--pink-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #toggle-table-btn:hover {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: white;
+  }
+  #toggle-table-btn .icon { font-size: 16px; }
+
+  /* ─── PRONOMEN PANEL ─── */
+  #pronomen-panel {
+    position: fixed;
+    top: 68px;
+    right: 0;
+    width: 320px;
+    background: var(--white);
+    border-left: 3px solid var(--pink);
+    border-bottom: 3px solid var(--pink);
+    border-bottom-left-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 99;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    padding: 20px;
+  }
+  #pronomen-panel.open { transform: translateX(0); }
+
+  .panel-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--pink-dark);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pronomen-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+  }
+  .pronomen-table th {
+    padding: 8px 12px;
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border-bottom: 2px solid var(--pink-light);
+  }
+  .pronomen-table th:first-child { border-radius: 8px 0 0 0; }
+  .pronomen-table th:last-child { border-radius: 0 8px 0 0; }
+  .pronomen-table th.dativ-col {
+    background: var(--pink-light);
+    color: var(--pink-dark);
+  }
+
+  .pronomen-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--gray-700);
+    font-weight: 600;
+  }
+  .pronomen-table td.dativ-val {
+    background: var(--pink-light);
+    color: var(--pink-dark);
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .pronomen-table tr:last-child td { border-bottom: none; }
+  .pronomen-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .pronomen-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .arrow-col {
+    text-align: center;
+    color: var(--pink-mid);
+    font-size: 16px;
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  main {
+    max-width: 860px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+  }
+
+  .page-intro {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .page-intro h1 {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+  .page-intro h1 span { color: var(--pink); }
+  .page-intro p {
+    font-size: 15px;
+    color: var(--gray-400);
+    font-weight: 600;
+  }
+
+  /* ─── TABS ─── */
+  .tabs-nav {
+    display: flex;
+    gap: 4px;
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 5px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: none;
+    background: transparent;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--gray-400);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .tab-btn:hover { color: var(--pink); background: var(--pink-light); }
+  .tab-btn.active {
+    background: var(--pink);
+    color: white;
+    box-shadow: 0 2px 8px var(--pink-glow);
+  }
+  .tab-btn .tab-emoji { display: block; font-size: 18px; margin-bottom: 2px; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ─── EXERCISE CARD ─── */
+  .exercise-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+  }
+  .exercise-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--pink-light);
+  }
+  .exercise-number {
+    background: var(--pink);
+    color: white;
+    font-weight: 900;
+    font-size: 18px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .exercise-meta h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--gray-900);
+  }
+  .exercise-meta p {
+    font-size: 13px;
+    color: var(--gray-400);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* ─── ÜBUNG 1: DRAG PRONOMEN ─── */
+  .pronomen-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    background: var(--pink-light);
+    border-radius: var(--radius-sm);
+    border: 2px dashed var(--pink-mid);
+    min-height: 52px;
+  }
+  .pronomen-chip {
+    background: var(--white);
+    border: 2px solid var(--pink);
+    color: var(--pink-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 6px 16px;
+    border-radius: 24px;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-sm);
+  }
+  .pronomen-chip:hover {
+    background: var(--pink);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .pronomen-chip.dragging { opacity: 0.4; cursor: grabbing; }
+
+  .luecken-list { display: flex; flex-direction: column; gap: 14px; }
+  .luecke-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    transition: background 0.2s;
+  }
+  .luecke-item.correct { background: var(--success-light); border: 1.5px solid var(--success); }
+  .luecke-item.wrong { background: var(--error-light); border: 1.5px solid var(--error); animation: shake 0.3s; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .drop-zone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 36px;
+    border: 2px dashed var(--pink-mid);
+    border-radius: 20px;
+    background: var(--white);
+    color: var(--pink);
+    font-size: 15px;
+    font-weight: 800;
+    padding: 0 10px;
+    transition: all 0.2s;
+    vertical-align: middle;
+  }
+  .drop-zone.drag-over {
+    background: var(--pink-light);
+    border-color: var(--pink);
+    border-style: solid;
+    transform: scale(1.05);
+  }
+  .drop-zone.filled {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: white;
+    border-style: solid;
+    cursor: pointer;
+  }
+  .drop-zone.filled:hover { background: var(--pink-dark); }
+  .drop-zone.correct-filled {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+    border-style: solid;
+  }
+  .hint-label {
+    background: var(--gray-200);
+    color: var(--gray-700);
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+  }
+
+  /* ─── ÜBUNG 2: SATZ KLICKEN ─── */
+  .satz-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .satz-item {
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+  }
+  .satz-item.solved { background: var(--success-light); border: 1.5px solid var(--success); }
+  .satz-item.wrong-click { background: var(--error-light); border: 1.5px solid var(--error); animation: shake 0.3s; }
+
+  .satz-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .satz-part {
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid transparent;
+    background: var(--white);
+    transition: all 0.15s;
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+  }
+  .satz-part:hover {
+    border-color: var(--pink);
+    background: var(--pink-light);
+    color: var(--pink-dark);
+    transform: translateY(-1px);
+  }
+  .satz-part.selected { background: var(--pink); color: white; border-color: var(--pink); }
+  .satz-part.correct-part { background: var(--success); color: white; border-color: var(--success); cursor: default; }
+  .satz-part.correct-part:hover { transform: none; }
+  .satz-part.wrong-part { background: var(--error); color: white; border-color: var(--error); }
+  .satz-part.disabled { cursor: default; }
+  .satz-part.disabled:hover { transform: none; border-color: transparent; background: var(--white); color: inherit; }
+
+  .satz-feedback {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .satz-feedback.hint { color: var(--gray-700); }
+
+  /* ─── ÜBUNG 3: DRAG BILDER ─── */
+  .gehoeren-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .personen-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  .person-card {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+    border: 2px solid var(--gray-200);
+    transition: border-color 0.2s;
+  }
+  .person-card.drag-over-person {
+    border-color: var(--pink);
+    background: var(--pink-light);
+  }
+  .person-name {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--pink-dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+  .person-dativ {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 600;
+  }
+  .person-drop-zone {
+    min-height: 64px;
+    border: 2px dashed var(--pink-mid);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .person-drop-zone.drag-over {
+    background: var(--pink-light);
+    border-color: var(--pink);
+    border-style: solid;
+  }
+  .person-drop-zone .empty-hint {
+    font-size: 12px;
+    color: var(--pink-mid);
+    font-weight: 600;
+  }
+
+  .objekte-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+    background: var(--pink-light);
+    border-radius: var(--radius-sm);
+    border: 2px dashed var(--pink-mid);
+    min-height: 90px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .objekt-chip {
+    background: var(--white);
+    border: 2px solid var(--pink);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    cursor: grab;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+  }
+  .objekt-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--pink-dark);
+  }
+  .objekt-chip.dragging { opacity: 0.3; cursor: grabbing; }
+  .objekt-chip.placed {
+    cursor: grab;
+    border-color: var(--pink-mid);
+  }
+  .objekt-chip svg { display: block; margin: 0 auto 4px; }
+  .objekt-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--pink-dark);
+    text-align: center;
+  }
+
+  .mündlich-box {
+    background: linear-gradient(135deg, var(--pink-light), #fff0f9);
+    border: 2px solid var(--pink-mid);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pink-dark);
+    text-align: center;
+  }
+  .mündlich-box strong { color: var(--pink); }
+
+  /* ─── BUTTONS & FEEDBACK ─── */
+  .btn-check {
+    margin-top: 20px;
+    background: var(--pink);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-check:hover {
+    background: var(--pink-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-reset {
+    background: var(--gray-200);
+    color: var(--gray-700);
+    border: none;
+    border-radius: 24px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .btn-reset:hover { background: var(--gray-400); color: white; }
+
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--pink-light);
+    color: var(--pink-dark);
+    font-weight: 800;
+    font-size: 13px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--pink-mid);
+    margin-top: 12px;
+  }
+
+  .row-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <span class="logo-badge">A1</span>
+    <span class="logo-title">Dativ <span>üben</span></span>
+  </div>
+  <button id="toggle-table-btn" onclick="togglePanel()">
+    <span class="icon">📋</span>
+    Übersicht Pronomen
+    <span id="panel-arrow">▸</span>
+  </button>
+</header>
+
+<!-- PRONOMEN PANEL -->
+<div id="pronomen-panel">
+  <div class="panel-title">📌 Personalpronomen: Nominativ → Dativ</div>
+  <table class="pronomen-table">
+    <thead>
+      <tr>
+        <th>Nominativ</th>
+        <th class="arrow-col">→</th>
+        <th class="dativ-col">Dativ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>ich</td><td class="arrow-col">→</td><td class="dativ-val">mir</td></tr>
+      <tr><td>du</td><td class="arrow-col">→</td><td class="dativ-val">dir</td></tr>
+      <tr><td>er</td><td class="arrow-col">→</td><td class="dativ-val">ihm</td></tr>
+      <tr><td>sie (sg.)</td><td class="arrow-col">→</td><td class="dativ-val">ihr</td></tr>
+      <tr><td>es</td><td class="arrow-col">→</td><td class="dativ-val">ihm</td></tr>
+      <tr><td>wir</td><td class="arrow-col">→</td><td class="dativ-val">uns</td></tr>
+      <tr><td>ihr</td><td class="arrow-col">→</td><td class="dativ-val">euch</td></tr>
+      <tr><td>sie (pl.)</td><td class="arrow-col">→</td><td class="dativ-val">ihnen</td></tr>
+      <tr><td>Sie</td><td class="arrow-col">→</td><td class="dativ-val">Ihnen</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<main>
+  <div class="page-intro">
+    <h1>Der <span>Dativ</span> – Übungen</h1>
+    <p>Wähle eine Übung und klicke dich durch! 💪</p>
+  </div>
+
+  <!-- TABS NAV -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span class="tab-emoji">🎯</span>
+      Pronomen einsetzen
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span class="tab-emoji">🔍</span>
+      Dativobjekt finden
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span class="tab-emoji">🖼️</span>
+      Wem gehört das?
+    </button>
+  </div>
+
+  <!-- ═══ TAB 1: LÜCKENTEXT ═══ -->
+  <div class="tab-panel active" id="tab-0">
+    <div class="exercise-card">
+      <div class="exercise-header">
+        <div class="exercise-number">1</div>
+        <div class="exercise-meta">
+          <h2>Pronomen einsetzen</h2>
+          <p>Ziehe das richtige Dativpronomen in die Lücke. Das Nominativpronomen steht in Klammern.</p>
+        </div>
+      </div>
+
+      <!-- Chip Bank -->
+      <div class="pronomen-bank" id="chip-bank">
+        <div class="pronomen-chip" draggable="true" data-value="mir">mir</div>
+        <div class="pronomen-chip" draggable="true" data-value="dir">dir</div>
+        <div class="pronomen-chip" draggable="true" data-value="ihm">ihm</div>
+        <div class="pronomen-chip" draggable="true" data-value="ihr">ihr</div>
+        <div class="pronomen-chip" draggable="true" data-value="uns">uns</div>
+        <div class="pronomen-chip" draggable="true" data-value="euch">euch</div>
+        <div class="pronomen-chip" draggable="true" data-value="ihnen">ihnen</div>
+      </div>
+
+      <div class="luecken-list" id="luecken-list"></div>
+
+      <div class="row-actions">
+        <button class="btn-check" onclick="checkLuecken()">✅ Auswertung</button>
+        <button class="btn-reset" onclick="resetLuecken()">↺ Neu starten</button>
+        <button class="btn-reset" onclick="neueLuecken()" style="background:var(--pink-light);color:var(--pink-dark);border:2px solid var(--pink-mid);">🔀 Neue Sätze</button>
+        <span class="score-badge" id="luecken-score" style="display:none;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 2: SATZ KLICKEN ═══ -->
+  <div class="tab-panel" id="tab-1">
+    <div class="exercise-card">
+      <div class="exercise-header">
+        <div class="exercise-number">2</div>
+        <div class="exercise-meta">
+          <h2>Dativobjekt finden</h2>
+          <p>Klicke <strong>nur</strong> auf das Dativobjekt im Satz. Genau ein Satzteil ist richtig!</p>
+        </div>
+      </div>
+      <div class="satz-container" id="satz-container"></div>
+      <div class="row-actions">
+        <button class="btn-reset" onclick="neueSaetze()" style="background:var(--pink-light);color:var(--pink-dark);border:2px solid var(--pink-mid);margin-top:18px;">🔀 Neue Sätze</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 3: DRAG BILDER ═══ -->
+  <div class="tab-panel" id="tab-2">
+    <div class="exercise-card">
+      <div class="exercise-header">
+        <div class="exercise-number">3</div>
+        <div class="exercise-meta">
+          <h2>Wem gehört das?</h2>
+          <p>Ziehe die Gegenstände zu einer Person. Übt dann mündlich mit „gehören": <em>„Das Buch gehört <strong style="color:var(--pink)">…</strong>"</em></p>
+        </div>
+      </div>
+
+      <div class="gehoeren-layout">
+        <div class="mündlich-box">
+          🗣️ Sag es laut: <strong>„Das/Die/Der [Gegenstand] gehört [Dativpronomen]."</strong>
+        </div>
+
+        <div class="personen-row">
+          <div class="person-card" id="person-ich">
+            <svg width="80" height="100" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Ich: rotes Shirt, kurze blonde Haare -->
+              <circle cx="40" cy="22" r="16" fill="#fddcb5" stroke="#e8b87a" stroke-width="1.5"/>
+              <path d="M26 18 Q29 8 40 8 Q51 8 54 18 Q51 11 40 11 Q29 11 26 18Z" fill="#d4a82a"/>
+              <ellipse cx="35" cy="20" rx="2" ry="2.5" fill="#3a2800"/>
+              <ellipse cx="45" cy="20" rx="2" ry="2.5" fill="#3a2800"/>
+              <path d="M35 27 Q40 32 45 27" fill="none" stroke="#c07060" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="35" y="36" width="10" height="7" fill="#fddcb5"/>
+              <rect x="22" y="40" width="36" height="38" rx="10" fill="#c0392b"/>
+              <rect x="8" y="40" width="14" height="8" rx="4" fill="#c0392b"/>
+              <rect x="58" y="40" width="14" height="8" rx="4" fill="#c0392b"/>
+              <circle cx="10" cy="48" r="5" fill="#fddcb5"/>
+              <circle cx="70" cy="48" r="5" fill="#fddcb5"/>
+              <rect x="25" y="76" width="12" height="24" rx="5" fill="#2c3e50"/>
+              <rect x="43" y="76" width="12" height="24" rx="5" fill="#2c3e50"/>
+              <ellipse cx="31" cy="100" rx="10" ry="4" fill="#1a1a1a"/>
+              <ellipse cx="49" cy="100" rx="10" ry="4" fill="#1a1a1a"/>
+              <!-- Ich-Stern -->
+              <circle cx="58" cy="14" r="8" fill="#f1c40f"/>
+              <text x="58" y="18" text-anchor="middle" font-size="10" font-weight="900" fill="#7d6608">ich</text>
+            </svg>
+            <div class="person-name">Ich (Lena)</div>
+            <div class="person-drop-zone" id="drop-ich" ondragover="allowDrop(event)" ondrop="dropObjekt(event,'ich')">
+              <span class="empty-hint">Hierher ziehen</span>
+            </div>
+          </div>
+
+          <div class="person-card" id="person-du">
+            <svg width="80" height="100" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Du: grünes Shirt, dunkle Haare -->
+              <circle cx="40" cy="22" r="16" fill="#fddcb5" stroke="#e8b87a" stroke-width="1.5"/>
+              <path d="M26 19 Q30 9 40 9 Q50 9 54 19 Q51 12 40 12 Q29 12 26 19Z" fill="#2c2c2c"/>
+              <ellipse cx="35" cy="20" rx="2" ry="2.5" fill="#2c1800"/>
+              <ellipse cx="45" cy="20" rx="2" ry="2.5" fill="#2c1800"/>
+              <path d="M35 27 Q40 31 45 27" fill="none" stroke="#c07060" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="35" y="36" width="10" height="7" fill="#fddcb5"/>
+              <rect x="22" y="40" width="36" height="38" rx="10" fill="#27ae60"/>
+              <rect x="8" y="40" width="14" height="8" rx="4" fill="#27ae60"/>
+              <rect x="58" y="40" width="14" height="8" rx="4" fill="#27ae60"/>
+              <circle cx="10" cy="48" r="5" fill="#fddcb5"/>
+              <circle cx="70" cy="48" r="5" fill="#fddcb5"/>
+              <rect x="25" y="76" width="12" height="24" rx="5" fill="#1a3a2a"/>
+              <rect x="43" y="76" width="12" height="24" rx="5" fill="#1a3a2a"/>
+              <ellipse cx="31" cy="100" rx="10" ry="4" fill="#1a1a1a"/>
+              <ellipse cx="49" cy="100" rx="10" ry="4" fill="#1a1a1a"/>
+              <!-- Du-Pfeil -->
+              <circle cx="58" cy="14" r="8" fill="#3498db"/>
+              <text x="58" y="18" text-anchor="middle" font-size="9" font-weight="900" fill="white">du</text>
+            </svg>
+            <div class="person-name">Du (Tim)</div>
+            <div class="person-drop-zone" id="drop-du" ondragover="allowDrop(event)" ondrop="dropObjekt(event,'du')">
+              <span class="empty-hint">Hierher ziehen</span>
+            </div>
+          </div>
+
+          <div class="person-card" id="person-mann">
+            <svg width="80" height="100" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="22" r="16" fill="#fddcb5" stroke="#e8b87a" stroke-width="1.5"/>
+              <path d="M25 20 Q28 8 40 7 Q52 8 55 20 Q53 12 40 12 Q27 12 25 20Z" fill="#5c3d1e"/>
+              <ellipse cx="35" cy="20" rx="2" ry="2.5" fill="#4a3200"/>
+              <ellipse cx="45" cy="20" rx="2" ry="2.5" fill="#4a3200"/>
+              <path d="M35 27 Q40 31 45 27" fill="none" stroke="#c07060" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="22" y="40" width="36" height="38" rx="10" fill="#2c5f9e"/>
+              <path d="M36 40 L40 47 L44 40" fill="#1a3d6e"/>
+              <rect x="8" y="40" width="14" height="8" rx="4" fill="#2c5f9e"/>
+              <rect x="58" y="40" width="14" height="8" rx="4" fill="#2c5f9e"/>
+              <circle cx="10" cy="48" r="5" fill="#fddcb5"/>
+              <circle cx="70" cy="48" r="5" fill="#fddcb5"/>
+              <rect x="35" y="36" width="10" height="7" fill="#fddcb5"/>
+              <rect x="25" y="76" width="12" height="24" rx="5" fill="#1a1a3a"/>
+              <rect x="43" y="76" width="12" height="24" rx="5" fill="#1a1a3a"/>
+              <ellipse cx="31" cy="100" rx="10" ry="4" fill="#2a2a2a"/>
+              <ellipse cx="49" cy="100" rx="10" ry="4" fill="#2a2a2a"/>
+            </svg>
+            <div class="person-name">Thomas</div>
+            <div class="person-drop-zone" id="drop-mann" ondragover="allowDrop(event)" ondrop="dropObjekt(event,'mann')">
+              <span class="empty-hint">Hierher ziehen</span>
+            </div>
+          </div>
+
+          <div class="person-card" id="person-frau">
+            <svg width="80" height="100" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="40" cy="30" rx="22" ry="26" fill="#8b3a3a"/>
+              <circle cx="40" cy="22" r="16" fill="#fddcb5" stroke="#e8b87a" stroke-width="1.5"/>
+              <path d="M24 16 Q28 6 40 7 Q52 6 56 16 Q54 8 40 8 Q26 8 24 16Z" fill="#8b3a3a"/>
+              <ellipse cx="35" cy="20" rx="2" ry="2.5" fill="#4a3200"/>
+              <ellipse cx="45" cy="20" rx="2" ry="2.5" fill="#4a3200"/>
+              <path d="M33 18 Q35 16 37 18" fill="none" stroke="#4a3200" stroke-width="1" stroke-linecap="round"/>
+              <path d="M43 18 Q45 16 47 18" fill="none" stroke="#4a3200" stroke-width="1" stroke-linecap="round"/>
+              <path d="M35 27 Q40 31 45 27" fill="none" stroke="#e07080" stroke-width="1.5" stroke-linecap="round"/>
+              <ellipse cx="36" cy="24" rx="3" ry="1.5" fill="#f4a0a8" opacity="0.5"/>
+              <ellipse cx="44" cy="24" rx="3" ry="1.5" fill="#f4a0a8" opacity="0.5"/>
+              <rect x="35" y="36" width="10" height="7" fill="#fddcb5"/>
+              <path d="M22 42 Q40 46 58 42 L62 90 H18 Z" fill="#e91e8c"/>
+              <path d="M22 42 Q14 50 12 60" fill="none" stroke="#e91e8c" stroke-width="10" stroke-linecap="round"/>
+              <path d="M58 42 Q66 50 68 60" fill="none" stroke="#e91e8c" stroke-width="10" stroke-linecap="round"/>
+              <circle cx="11" cy="60" r="5" fill="#fddcb5"/>
+              <circle cx="69" cy="60" r="5" fill="#fddcb5"/>
+              <ellipse cx="30" cy="97" rx="9" ry="4" fill="#8b3a3a"/>
+              <ellipse cx="50" cy="97" rx="9" ry="4" fill="#8b3a3a"/>
+            </svg>
+            <div class="person-name">Maria</div>
+            <div class="person-drop-zone" id="drop-frau" ondragover="allowDrop(event)" ondrop="dropObjekt(event,'frau')">
+              <span class="empty-hint">Hierher ziehen</span>
+            </div>
+          </div>
+
+          <div class="person-card" id="person-gruppe">
+            <svg width="80" height="100" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18" cy="28" r="11" fill="#fddcb5" stroke="#e8b87a" stroke-width="1"/>
+              <path d="M10 26 Q13 18 18 18 Q23 18 26 26 Q24 20 18 20 Q12 20 10 26Z" fill="#5c3d1e"/>
+              <ellipse cx="15" cy="27" rx="1.5" ry="2" fill="#4a3200"/>
+              <ellipse cx="21" cy="27" rx="1.5" ry="2" fill="#4a3200"/>
+              <rect x="8" y="41" width="20" height="28" rx="7" fill="#4a90d9"/>
+              <rect x="12" y="37" width="6" height="7" fill="#fddcb5"/>
+              <circle cx="62" cy="28" r="11" fill="#fddcb5" stroke="#e8b87a" stroke-width="1"/>
+              <ellipse cx="62" cy="32" rx="14" ry="16" fill="#a03a6a" opacity="0.5"/>
+              <ellipse cx="59" cy="27" rx="1.5" ry="2" fill="#4a3200"/>
+              <ellipse cx="65" cy="27" rx="1.5" ry="2" fill="#4a3200"/>
+              <rect x="52" y="41" width="20" height="28" rx="7" fill="#e91e8c"/>
+              <rect x="59" y="37" width="6" height="7" fill="#fddcb5"/>
+              <circle cx="40" cy="22" r="13" fill="#fddcb5" stroke="#e8b87a" stroke-width="1.5"/>
+              <path d="M28 20 Q32 10 40 10 Q48 10 52 20 Q49 13 40 13 Q31 13 28 20Z" fill="#2c2c2c"/>
+              <ellipse cx="36" cy="21" rx="1.8" ry="2.2" fill="#4a3200"/>
+              <ellipse cx="44" cy="21" rx="1.8" ry="2.2" fill="#4a3200"/>
+              <path d="M36 28 Q40 32 44 28" fill="none" stroke="#c07060" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="28" y="37" width="24" height="32" rx="9" fill="#2d6a4f"/>
+              <rect x="35" y="33" width="10" height="7" fill="#fddcb5"/>
+              <rect x="13" y="67" width="7" height="20" rx="3" fill="#1a1a3a"/>
+              <rect x="22" y="67" width="7" height="20" rx="3" fill="#1a1a3a"/>
+              <rect x="33" y="67" width="7" height="20" rx="3" fill="#1a1a3a"/>
+              <rect x="42" y="67" width="7" height="20" rx="3" fill="#1a1a3a"/>
+              <rect x="55" y="67" width="7" height="20" rx="3" fill="#1a1a3a"/>
+              <rect x="64" y="67" width="7" height="20" rx="3" fill="#1a1a3a"/>
+            </svg>
+            <div class="person-name">Die Gruppe</div>
+            <div class="person-drop-zone" id="drop-gruppe" ondragover="allowDrop(event)" ondrop="dropObjekt(event,'gruppe')">
+              <span class="empty-hint">Hierher ziehen</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Objekte Bank -->
+        <div style="font-size:13px;font-weight:800;color:var(--gray-400);text-align:center;letter-spacing:1px;text-transform:uppercase;">Gegenstände – zum Ziehen</div>
+        <div class="objekte-bank" id="objekte-bank"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ══════════════════════════════════
+// PANEL TOGGLE
+// ══════════════════════════════════
+function togglePanel() {
+  const p = document.getElementById('pronomen-panel');
+  const arrow = document.getElementById('panel-arrow');
+  p.classList.toggle('open');
+  arrow.textContent = p.classList.contains('open') ? '◂' : '▸';
+}
+
+// ══════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════
+function switchTab(idx) {
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+// ══════════════════════════════════
+// ÜBUNG 1: LÜCKENTEXT
+// ══════════════════════════════════
+const lueckenPool = [
+  { pre: 'Du siehst müde aus! Komm, ich helfe', answer: 'dir', hint: 'du', post: 'gerne!' },
+  { pre: 'Das ist meine Mutter. Kannst du', answer: 'ihr', hint: 'sie', post: 'bitte helfen?' },
+  { pre: 'Wir haben Hunger. Kannst du', answer: 'uns', hint: 'wir', post: 'etwas zu essen geben?' },
+  { pre: 'Das Kind weint. Was fehlt', answer: 'ihm', hint: 'es', post: '?' },
+  { pre: 'Ich verstehe das nicht. Kannst du', answer: 'mir', hint: 'ich', post: 'das erklären?' },
+  { pre: 'Die Kinder spielen draußen. Ruf', answer: 'ihnen', hint: 'sie (pl.)', post: 'bitte!' },
+  { pre: 'Ihr seid super! Das Buch gehört', answer: 'euch', hint: 'ihr', post: '.' },
+  { pre: 'Jan ist krank. Es geht', answer: 'ihm', hint: 'er', post: 'nicht gut.' },
+  { pre: 'Meine Oma backt Kuchen. Ich bringe', answer: 'ihr', hint: 'sie', post: 'einen Kaffee.' },
+  { pre: 'Wir lernen Deutsch. Die Lehrerin erklärt', answer: 'uns', hint: 'wir', post: 'die Grammatik.' },
+  { pre: 'Der Hund ist hungrig. Gib', answer: 'ihm', hint: 'er', post: 'etwas zu fressen!' },
+  { pre: 'Mein Bruder hat Geburtstag. Ich schenke', answer: 'ihm', hint: 'er', post: 'ein Buch.' },
+  { pre: 'Lisa kann nicht schlafen. Erzähl', answer: 'ihr', hint: 'sie', post: 'eine Geschichte!' },
+  { pre: 'Du hast mein Heft! Gib', answer: 'mir', hint: 'ich', post: 'das bitte zurück.' },
+  { pre: 'Die Studenten verstehen die Aufgabe nicht. Der Lehrer hilft', answer: 'ihnen', hint: 'sie (pl.)', post: '.' },
+  { pre: 'Ihr habt gut gespielt! Das Eis gehört', answer: 'euch', hint: 'ihr', post: '– ihr habt es verdient!' },
+  { pre: 'Mein Vater arbeitet viel. Ich helfe', answer: 'ihm', hint: 'er', post: 'im Haushalt.' },
+  { pre: 'Das Baby schläft. Sprich nicht mit', answer: 'ihm', hint: 'es', post: 'so laut!' },
+  { pre: 'Wir haben Durst. Kannst du', answer: 'uns', hint: 'wir', post: 'Wasser bringen?' },
+  { pre: 'Meine Freundin ist neu hier. Ich zeige', answer: 'ihr', hint: 'sie', post: 'die Stadt.' },
+  { pre: 'Du hast eine Frage? Ich erkläre', answer: 'dir', hint: 'du', post: 'alles gerne.' },
+  { pre: 'Die Touristen suchen das Museum. Können wir', answer: 'ihnen', hint: 'sie (pl.)', post: 'helfen?' },
+  { pre: 'Ich habe Kopfschmerzen. Es geht', answer: 'mir', hint: 'ich', post: 'heute nicht so gut.' },
+  { pre: 'Euer Hund ist entkommen! Wir bringen', answer: 'euch', hint: 'ihr', post: 'ihn zurück.' },
+  { pre: 'Meine Schwester lernt Gitarre. Ich kaufe', answer: 'ihr', hint: 'sie', post: 'neue Saiten.' },
+  { pre: 'Der Mann steht allein da. Niemand hilft', answer: 'ihm', hint: 'er', post: '.' },
+  { pre: 'Wir kochen heute Abend. Komm und iss mit', answer: 'uns', hint: 'wir', post: '!' },
+  { pre: 'Du bist mein bester Freund. Ich vertraue', answer: 'dir', hint: 'du', post: 'total.' },
+  { pre: 'Das Paket ist für meine Eltern. Ich bringe', answer: 'ihnen', hint: 'sie (pl.)', post: 'das Paket.' },
+  { pre: 'Ich bin neu in der Klasse. Kannst du', answer: 'mir', hint: 'ich', post: 'zeigen, wo das Büro ist?' },
+  { pre: 'Mein Onkel ist Arzt. Die Patienten vertrauen', answer: 'ihm', hint: 'er', post: '.' },
+  { pre: 'Die Katze ist draußen. Hast du', answer: 'ihr', hint: 'sie', post: 'Futter gegeben?' },
+  { pre: 'Wir ziehen um. Könnt ihr', answer: 'uns', hint: 'wir', post: 'beim Tragen helfen?' },
+  { pre: 'Du siehst traurig aus. Kann ich', answer: 'dir', hint: 'du', post: 'irgendwie helfen?' },
+  { pre: 'Meine Großeltern sind alt. Ich besuche', answer: 'ihnen', hint: 'sie (pl.)', post: '– warte, ich besuche sie!' },
+  { pre: 'Das gehört nicht dir! Gib es', answer: 'mir', hint: 'ich', post: 'sofort zurück!' },
+  { pre: 'Ihr habt gewonnen! Ich gratuliere', answer: 'euch', hint: 'ihr', post: '!' },
+  { pre: 'Das Baby weint. Ich gebe', answer: 'ihm', hint: 'es', post: 'den Schnuller.' },
+  { pre: 'Meine Freundin liebt Blumen. Ich bringe', answer: 'ihr', hint: 'sie', post: 'Rosen mit.' },
+  { pre: 'Ich lerne heute. Bitte stör', answer: 'mich', hint: 'ich', post: '– Moment, ich stör nicht → ich stör dich nicht. Sag:' },
+  { pre: 'Du hast Hunger? Ich mache', answer: 'dir', hint: 'du', post: 'schnell ein Sandwich.' },
+  { pre: 'Die Schüler sind müde. Die Pause tut', answer: 'ihnen', hint: 'sie (pl.)', post: 'gut.' },
+  { pre: 'Wir feiern heute. Kommst du mit? Es fehlt nur noch', answer: 'uns', hint: 'wir', post: 'die Musik!' },
+  { pre: 'Mein Freund hat seinen Schlüssel verloren. Ich leihe', answer: 'ihm', hint: 'er', post: 'meinen.' },
+  { pre: 'Anna hat den Preis gewonnen. Ich gratuliere', answer: 'ihr', hint: 'sie', post: 'herzlich!' },
+  { pre: 'Ihr seid erkältet. Ich bringe', answer: 'euch', hint: 'ihr', post: 'Tee und Honig.' },
+  { pre: 'Das ist mein Fahrrad! Wer hat', answer: 'mir', hint: 'ich', post: 'das weggenommen?' },
+  { pre: 'Meine Nachbarin ist sehr nett. Ich helfe', answer: 'ihr', hint: 'sie', post: 'beim Einkaufen.' },
+  { pre: 'Der Chef erklärt den Plan. Es ist wichtig, dass alle', answer: 'ihm', hint: 'er', post: 'zuhören.' },
+  { pre: 'Ich habe dir ein Geheimnis gesagt. Bitte verrate es nicht! Vertrau', answer: 'mir', hint: 'ich', post: '!' },
+];
+
+let lueckenData = [];
+
+function pickLuecken() {
+  const shuffled = [...lueckenPool].sort(() => Math.random() - 0.5);
+  lueckenData = shuffled.slice(0, 10);
+}
+
+let draggedChipValue = null;
+
+function buildLuecken() {
+  // Rebuild chip bank with all needed answers (deduplicated)
+  const bank = document.getElementById('chip-bank');
+  bank.innerHTML = '';
+  const needed = [...new Set(lueckenData.map(d => d.answer))];
+  // Always show all standard dativ pronouns
+  ['mir','dir','ihm','ihr','uns','euch','ihnen'].forEach(v => {
+    const chip = document.createElement('div');
+    chip.className = 'pronomen-chip';
+    chip.draggable = true;
+    chip.dataset.value = v;
+    chip.textContent = v;
+    bank.appendChild(chip);
+  });
+  const list = document.getElementById('luecken-list');
+  list.innerHTML = '';
+  lueckenData.forEach((d, i) => {
+    const div = document.createElement('div');
+    div.className = 'luecke-item';
+    div.dataset.index = i;
+    div.innerHTML = `
+      <span>${d.pre}</span>
+      <span class="drop-zone" id="dz-${i}"
+        ondragover="dzDragOver(event,${i})"
+        ondragleave="dzDragLeave(event,${i})"
+        ondrop="dzDrop(event,${i})"
+        onclick="returnChip(${i})">
+        ···
+      </span>
+      <span>${d.post}</span>
+      <span class="hint-label">(${d.hint})</span>
+    `;
+    list.appendChild(div);
+  });
+  setupChipDrag();
+}
+
+function setupChipDrag() {
+  document.querySelectorAll('.pronomen-chip').forEach(chip => {
+    chip.addEventListener('dragstart', e => {
+      draggedChipValue = chip.dataset.value;
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+  });
+}
+
+function dzDragOver(e, i) {
+  e.preventDefault();
+  document.getElementById(`dz-${i}`).classList.add('drag-over');
+}
+function dzDragLeave(e, i) {
+  document.getElementById(`dz-${i}`).classList.remove('drag-over');
+}
+function dzDrop(e, i) {
+  e.preventDefault();
+  const dz = document.getElementById(`dz-${i}`);
+  dz.classList.remove('drag-over');
+  if (!draggedChipValue) return;
+  dz.textContent = draggedChipValue;
+  dz.dataset.filled = draggedChipValue;
+  dz.classList.add('filled');
+  dz.classList.remove('correct-filled');
+  const item = document.querySelector(`.luecke-item[data-index="${i}"]`);
+  item.classList.remove('correct', 'wrong');
+  draggedChipValue = null;
+}
+
+function returnChip(i) {
+  const dz = document.getElementById(`dz-${i}`);
+  if (!dz.dataset.filled || dz.classList.contains('correct-filled')) return;
+  dz.textContent = '···';
+  dz.dataset.filled = '';
+  dz.classList.remove('filled', 'correct-filled');
+  const item = document.querySelector(`.luecke-item[data-index="${i}"]`);
+  item.classList.remove('correct', 'wrong');
+}
+
+function checkLuecken() {
+  let correct = 0;
+  lueckenData.forEach((d, i) => {
+    const dz = document.getElementById(`dz-${i}`);
+    const item = document.querySelector(`.luecke-item[data-index="${i}"]`);
+    const val = dz.dataset.filled;
+    if (val === d.answer) {
+      item.classList.add('correct');
+      item.classList.remove('wrong');
+      dz.classList.add('correct-filled');
+      correct++;
+    } else if (val) {
+      item.classList.add('wrong');
+      item.classList.remove('correct');
+      setTimeout(() => item.classList.remove('wrong'), 600);
+    }
+  });
+  const score = document.getElementById('luecken-score');
+  score.style.display = 'inline-flex';
+  score.textContent = `${correct} / ${lueckenData.length} richtig`;
+}
+
+function resetLuecken() {
+  document.getElementById('luecken-score').style.display = 'none';
+  buildLuecken();
+}
+
+function neueLuecken() {
+  pickLuecken();
+  document.getElementById('luecken-score').style.display = 'none';
+  buildLuecken();
+}
+
+// ══════════════════════════════════
+// ÜBUNG 2: SATZ KLICKEN
+// ══════════════════════════════════
+const saetzePool = [
+  { parts: ['Meine Mutter', 'gibt', 'meiner Schwester', 'ein Buch', '.'], correct: 2, hint: 'Wem gibt sie das Buch?' },
+  { parts: ['Ich', 'helfe', 'meinem Freund', 'bei den Hausaufgaben', '.'], correct: 2, hint: 'Wem hilfst du?' },
+  { parts: ['Der Lehrer', 'erklärt', 'den Schülern', 'die Grammatik', '.'], correct: 2, hint: 'Wem erklärt er sie?' },
+  { parts: ['Maria', 'schreibt', 'ihrer Mutter', 'eine Nachricht', '.'], correct: 2, hint: 'Wem schreibt sie?' },
+  { parts: ['Er', 'kauft', 'seinem Bruder', 'ein Geschenk', '.'], correct: 2, hint: 'Wem kauft er es?' },
+  { parts: ['Ich', 'bringe', 'meiner Oma', 'Blumen', '.'], correct: 2, hint: 'Wem bringst du Blumen?' },
+  { parts: ['Wir', 'schenken', 'unserem Vater', 'eine Krawatte', '.'], correct: 2, hint: 'Wem schenkt ihr sie?' },
+  { parts: ['Sie', 'zeigt', 'dem Touristen', 'den Weg', '.'], correct: 2, hint: 'Wem zeigt sie den Weg?' },
+  { parts: ['Der Arzt', 'empfiehlt', 'dem Patienten', 'viel Ruhe', '.'], correct: 2, hint: 'Wem empfiehlt er es?' },
+  { parts: ['Ich', 'leihe', 'meinem Kollegen', 'mein Fahrrad', '.'], correct: 2, hint: 'Wem leihst du es?' },
+  { parts: ['Die Oma', 'erzählt', 'den Kindern', 'eine Geschichte', '.'], correct: 2, hint: 'Wem erzählt sie?' },
+  { parts: ['Er', 'schickt', 'seiner Freundin', 'eine Nachricht', '.'], correct: 2, hint: 'Wem schickt er sie?' },
+  { parts: ['Wir', 'helfen', 'unseren Eltern', 'im Garten', '.'], correct: 2, hint: 'Wem helft ihr?' },
+  { parts: ['Sie', 'gibt', 'ihrem Hund', 'Futter', '.'], correct: 2, hint: 'Wem gibt sie Futter?' },
+  { parts: ['Der Chef', 'erklärt', 'dem neuen Mitarbeiter', 'die Aufgabe', '.'], correct: 2, hint: 'Wem erklärt er sie?' },
+  { parts: ['Ich', 'zeige', 'meiner Schwester', 'mein Zimmer', '.'], correct: 2, hint: 'Wem zeigst du es?' },
+  { parts: ['Du', 'schenkst', 'deiner besten Freundin', 'Parfüm', '.'], correct: 2, hint: 'Wem schenkst du es?' },
+  { parts: ['Der Koch', 'bringt', 'dem Gast', 'die Speisekarte', '.'], correct: 2, hint: 'Wem bringt er sie?' },
+  { parts: ['Mama', 'liest', 'dem Baby', 'ein Buch vor', '.'], correct: 2, hint: 'Wem liest sie vor?' },
+  { parts: ['Ich', 'gebe', 'meinem Nachbarn', 'den Schlüssel', '.'], correct: 2, hint: 'Wem gibst du ihn?' },
+  { parts: ['Sie', 'erklärt', 'ihrem Sohn', 'die Hausaufgaben', '.'], correct: 2, hint: 'Wem erklärt sie sie?' },
+  { parts: ['Wir', 'bringen', 'den Gästen', 'Kaffee', '.'], correct: 2, hint: 'Wem bringt ihr Kaffee?' },
+  { parts: ['Er', 'kauft', 'seiner Tochter', 'ein Fahrrad', '.'], correct: 2, hint: 'Wem kauft er es?' },
+  { parts: ['Die Ärztin', 'gibt', 'dem Kind', 'ein Rezept', '.'], correct: 2, hint: 'Wem gibt sie es?' },
+  { parts: ['Ich', 'schreibe', 'meinem Freund', 'eine E-Mail', '.'], correct: 2, hint: 'Wem schreibst du?' },
+  { parts: ['Der Verkäufer', 'empfiehlt', 'der Kundin', 'einen Mantel', '.'], correct: 2, hint: 'Wem empfiehlt er ihn?' },
+  { parts: ['Wir', 'zeigen', 'unserem Lehrer', 'das Projekt', '.'], correct: 2, hint: 'Wem zeigt ihr es?' },
+  { parts: ['Sie', 'bringt', 'ihrem Vater', 'Medizin', '.'], correct: 2, hint: 'Wem bringt sie sie?' },
+  { parts: ['Er', 'leiht', 'seinem Bruder', 'Geld', '.'], correct: 2, hint: 'Wem leiht er es?' },
+  { parts: ['Die Lehrerin', 'gibt', 'den Schülerinnen', 'eine Aufgabe', '.'], correct: 2, hint: 'Wem gibt sie sie?' },
+  { parts: ['Ich', 'schenke', 'meiner Mutter', 'Blumen', '.'], correct: 2, hint: 'Wem schenkst du sie?' },
+  { parts: ['Der Vater', 'erklärt', 'seinem Kind', 'die Welt', '.'], correct: 2, hint: 'Wem erklärt er sie?' },
+  { parts: ['Wir', 'schicken', 'unseren Großeltern', 'eine Postkarte', '.'], correct: 2, hint: 'Wem schickt ihr sie?' },
+  { parts: ['Du', 'gibst', 'deinem Freund', 'einen Rat', '.'], correct: 2, hint: 'Wem gibst du ihn?' },
+  { parts: ['Die Mutter', 'kauft', 'ihrer Tochter', 'neue Schuhe', '.'], correct: 2, hint: 'Wem kauft sie sie?' },
+  { parts: ['Er', 'bringt', 'seinem Chef', 'den Bericht', '.'], correct: 2, hint: 'Wem bringt er ihn?' },
+  { parts: ['Ich', 'helfe', 'meiner Schwester', 'beim Lernen', '.'], correct: 2, hint: 'Wem hilfst du?' },
+  { parts: ['Sie', 'zeigt', 'ihren Eltern', 'das Zeugnis', '.'], correct: 2, hint: 'Wem zeigt sie es?' },
+  { parts: ['Wir', 'erklären', 'dem neuen Schüler', 'die Regeln', '.'], correct: 2, hint: 'Wem erklärt ihr sie?' },
+  { parts: ['Der Ober', 'bringt', 'dem Herrn', 'die Rechnung', '.'], correct: 2, hint: 'Wem bringt er sie?' },
+  { parts: ['Ich', 'gebe', 'meiner Katze', 'Milch', '.'], correct: 2, hint: 'Wem gibst du sie?' },
+  { parts: ['Sie', 'schreibt', 'ihrem Bruder', 'einen Brief', '.'], correct: 2, hint: 'Wem schreibt sie?' },
+  { parts: ['Du', 'leihst', 'deiner Kollegin', 'einen Stift', '.'], correct: 2, hint: 'Wem leihst du ihn?' },
+  { parts: ['Er', 'schickt', 'seinem Vater', 'ein Paket', '.'], correct: 2, hint: 'Wem schickt er es?' },
+  { parts: ['Wir', 'empfehlen', 'unseren Freunden', 'das Restaurant', '.'], correct: 2, hint: 'Wem empfehlt ihr es?' },
+  { parts: ['Die Oma', 'schenkt', 'ihrem Enkel', 'Geld', '.'], correct: 2, hint: 'Wem schenkt sie es?' },
+  { parts: ['Ich', 'bringe', 'meinem Bruder', 'Essen', '.'], correct: 2, hint: 'Wem bringst du es?' },
+  { parts: ['Sie', 'gibt', 'den Kindern', 'Bonbons', '.'], correct: 2, hint: 'Wem gibt sie sie?' },
+  { parts: ['Er', 'zeigt', 'seiner Freundin', 'das Foto', '.'], correct: 2, hint: 'Wem zeigt er es?' },
+  { parts: ['Der Hund', 'bringt', 'seinem Herrchen', 'den Ball', '.'], correct: 2, hint: 'Wem bringt er ihn?' },
+];
+
+let saetzeData = [];
+
+function pickSaetze() {
+  const shuffled = [...saetzePool].sort(() => Math.random() - 0.5);
+  saetzeData = shuffled.slice(0, 5);
+}
+
+function neueSaetze() {
+  pickSaetze();
+  buildSaetze();
+}
+
+function buildSaetze() {
+  const container = document.getElementById('satz-container');
+  container.innerHTML = '';
+  saetzeData.forEach((s, si) => {
+    const div = document.createElement('div');
+    div.className = 'satz-item';
+    div.dataset.solved = '0';
+    div.dataset.si = si;
+
+    const row = document.createElement('div');
+    row.className = 'satz-row';
+    s.parts.forEach((p, pi) => {
+      const span = document.createElement('span');
+      span.className = 'satz-part';
+      span.textContent = p;
+      span.dataset.pi = pi;
+      if (p === '.') {
+        span.style.cursor = 'default';
+        span.classList.add('disabled');
+      } else {
+        span.addEventListener('click', () => handleSatzClick(si, pi, span, div));
+      }
+      row.appendChild(span);
+    });
+
+    const fb = document.createElement('div');
+    fb.className = 'satz-feedback hint';
+    fb.textContent = `💡 ${s.hint}`;
+
+    div.appendChild(row);
+    div.appendChild(fb);
+    container.appendChild(div);
+  });
+}
+
+function handleSatzClick(si, pi, span, div) {
+  if (div.dataset.solved === '1') return;
+  const s = saetzeData[si];
+  if (pi === s.correct) {
+    span.classList.add('correct-part');
+    div.classList.add('solved');
+    div.dataset.solved = '1';
+    div.querySelector('.satz-feedback').textContent = '✅ Richtig! Das ist das Dativobjekt.';
+    div.querySelector('.satz-feedback').className = 'satz-feedback';
+    div.querySelectorAll('.satz-part').forEach(p => p.classList.add('disabled'));
+  } else {
+    span.classList.add('wrong-part');
+    div.classList.add('wrong-click');
+    setTimeout(() => {
+      div.classList.remove('wrong-click');
+      span.classList.remove('wrong-part');
+    }, 600);
+    div.querySelector('.satz-feedback').textContent = `❌ Nicht ganz. ${s.hint}`;
+    div.querySelector('.satz-feedback').className = 'satz-feedback hint';
+  }
+}
+
+// ══════════════════════════════════
+// ÜBUNG 3: DRAG BILDER
+// ══════════════════════════════════
+const objekteSVG = {
+  buch: { label: 'das Buch', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="4" width="30" height="36" rx="3" fill="#e91e8c"/><rect x="10" y="4" width="4" height="36" fill="#c0176f"/><rect x="14" y="10" width="18" height="2" rx="1" fill="white" opacity="0.6"/><rect x="14" y="14" width="14" height="2" rx="1" fill="white" opacity="0.4"/><rect x="14" y="18" width="16" height="2" rx="1" fill="white" opacity="0.4"/></svg>` },
+  handy: { label: 'das Handy', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="2" width="20" height="40" rx="4" fill="#333"/><rect x="14" y="6" width="16" height="26" rx="2" fill="#7ec8e3"/><circle cx="22" cy="37" r="2" fill="#555"/><rect x="19" y="4" width="6" height="1.5" rx="1" fill="#555"/></svg>` },
+  ball: { label: 'der Ball', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="22" r="18" fill="#ff6b35"/><path d="M10 16 Q22 12 34 16" fill="none" stroke="white" stroke-width="1.5" opacity="0.6"/><path d="M8 26 Q22 22 36 26" fill="none" stroke="white" stroke-width="1.5" opacity="0.6"/><path d="M22 4 Q18 22 22 40" fill="none" stroke="white" stroke-width="1.5" opacity="0.6"/></svg>` },
+  tasche: { label: 'die Tasche', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><path d="M8 16 Q6 38 6 40 H38 Q38 38 36 16 Z" fill="#7c4daf"/><path d="M14 16 Q14 8 22 8 Q30 8 30 16" fill="none" stroke="#7c4daf" stroke-width="3" stroke-linecap="round"/><rect x="18" y="24" width="8" height="6" rx="2" fill="#ffd700"/><rect x="20" y="22" width="4" height="3" rx="1" fill="#ffd700"/></svg>` },
+  gitarre: { label: 'die Gitarre', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><ellipse cx="22" cy="30" rx="10" ry="11" fill="#c8860a"/><ellipse cx="22" cy="14" rx="6" ry="7" fill="#c8860a"/><rect x="21" y="6" width="2" height="30" fill="#8b5e0a"/><rect x="17" y="6" width="10" height="3" rx="1" fill="#555"/><circle cx="22" cy="30" r="2" fill="#8b5e0a"/><line x1="15" y1="25" x2="29" y2="25" stroke="#8b5e0a" stroke-width="0.8"/><line x1="15" y1="28" x2="29" y2="28" stroke="#8b5e0a" stroke-width="0.8"/><line x1="15" y1="31" x2="29" y2="31" stroke="#8b5e0a" stroke-width="0.8"/></svg>` },
+  hund: { label: 'der Hund', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><ellipse cx="22" cy="28" rx="14" ry="10" fill="#c8a870"/><circle cx="32" cy="18" r="9" fill="#c8a870"/><ellipse cx="29" cy="13" rx="4" ry="6" fill="#a07840" transform="rotate(-15 29 13)"/><ellipse cx="37" cy="12" rx="3" ry="5" fill="#a07840" transform="rotate(15 37 12)"/><ellipse cx="30" cy="19" rx="2" ry="2.5" fill="#333"/><ellipse cx="36" cy="19" rx="1.5" ry="2" fill="#333"/><ellipse cx="33" cy="24" rx="3" ry="2" fill="#e8b0a0"/><path d="M30 26 Q33 29 36 26" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round"/><rect x="12" y="36" width="5" height="8" rx="2" fill="#a07840"/><rect x="20" y="36" width="5" height="8" rx="2" fill="#a07840"/><path d="M8 30 Q4 28 6 24" fill="none" stroke="#c8a870" stroke-width="3" stroke-linecap="round"/></svg>` },
+  fahrrad: { label: 'das Fahrrad', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="32" r="9" fill="none" stroke="#2c3e50" stroke-width="2.5"/><circle cx="32" cy="32" r="9" fill="none" stroke="#2c3e50" stroke-width="2.5"/><circle cx="12" cy="32" r="2" fill="#2c3e50"/><circle cx="32" cy="32" r="2" fill="#2c3e50"/><path d="M12 32 L22 16 L32 32" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 16 L28 16" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/><path d="M22 16 L22 22" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/><rect x="20" y="10" width="6" height="3" rx="1.5" fill="#2c3e50"/></svg>` },
+  kaffee: { label: 'der Kaffee', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="18" width="24" height="20" rx="4" fill="#7b3f00"/><path d="M32 22 Q40 22 40 28 Q40 34 32 34" fill="none" stroke="#7b3f00" stroke-width="3" stroke-linecap="round"/><ellipse cx="20" cy="38" rx="14" ry="3" fill="#5a2d00" opacity="0.4"/><ellipse cx="20" cy="20" rx="10" ry="4" fill="#c8860a" opacity="0.6"/><path d="M14 14 Q14 10 16 8" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/><path d="M20 12 Q20 8 22 6" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>` },
+  blumen: { label: 'die Blumen', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="24" width="4" height="16" rx="2" fill="#27ae60"/><path d="M22 28 Q16 24 14 18 Q20 16 22 22Z" fill="#27ae60"/><circle cx="22" cy="14" r="6" fill="#f1c40f"/><circle cx="22" cy="6" r="4" fill="#e91e8c"/><circle cx="30" cy="10" r="4" fill="#e74c3c"/><circle cx="14" cy="10" r="4" fill="#9b59b6"/><circle cx="28" cy="18" r="4" fill="#e67e22"/><circle cx="16" cy="18" r="4" fill="#3498db"/></svg>` },
+  schlüssel: { label: 'der Schlüssel', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="18" r="10" fill="none" stroke="#f39c12" stroke-width="3"/><circle cx="16" cy="18" r="4" fill="#f39c12" opacity="0.4"/><rect x="24" y="16" width="16" height="4" rx="2" fill="#f39c12"/><rect x="34" y="20" width="4" height="5" rx="1" fill="#f39c12"/><rect x="28" y="20" width="3" height="4" rx="1" fill="#f39c12"/></svg>` },
+  pizza: { label: 'die Pizza', svg: `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg"><path d="M22 4 L40 38 L4 38 Z" fill="#e67e22"/><path d="M22 4 L40 38 L4 38 Z" fill="none" stroke="#d35400" stroke-width="1"/><ellipse cx="22" cy="30" rx="15" ry="7" fill="#e74c3c" opacity="0.7"/><circle cx="16" cy="28" r="2.5" fill="#8b4513"/><circle cx="26" cy="32" r="2.5" fill="#8b4513"/><circle cx="22" cy="24" r="2" fill="#2ecc71"/><path d="M22 4 L22 38" fill="none" stroke="#d35400" stroke-width="0.5" opacity="0.4"/></svg>` },
+};
+
+let draggedObjektId = null;
+let draggedObjektSource = null;
+const placedObjekte = { ich: [], du: [], mann: [], frau: [], gruppe: [] };
+
+function buildObjekte() {
+  const bank = document.getElementById('objekte-bank');
+  bank.innerHTML = '';
+  Object.entries(objekteSVG).forEach(([id, obj]) => {
+    bank.appendChild(makeObjektChip(id, obj));
+  });
+}
+
+function makeObjektChip(id, obj) {
+  const div = document.createElement('div');
+  div.className = 'objekt-chip';
+  div.draggable = true;
+  div.dataset.objId = id;
+  div.innerHTML = `${obj.svg}<div class="objekt-label">${obj.label}</div>`;
+  div.addEventListener('dragstart', e => {
+    draggedObjektId = id;
+    draggedObjektSource = div.dataset.source || 'bank';
+    div.classList.add('dragging');
+  });
+  div.addEventListener('dragend', () => div.classList.remove('dragging'));
+  return div;
+}
+
+function allowDrop(e) { e.preventDefault(); }
+
+function dropObjekt(e, person) {
+  e.preventDefault();
+  if (!draggedObjektId) return;
+
+  // Remove from previous location
+  if (draggedObjektSource !== 'bank') {
+    const prev = draggedObjektSource;
+    placedObjekte[prev] = placedObjekte[prev].filter(x => x !== draggedObjektId);
+  } else {
+    // Remove from bank
+    const bankEl = document.querySelector(`#objekte-bank .objekt-chip[data-obj-id="${draggedObjektId}"]`);
+    if (bankEl) bankEl.remove();
+  }
+
+  placedObjekte[person].push(draggedObjektId);
+  renderPersonDrop(person);
+  draggedObjektId = null;
+  draggedObjektSource = null;
+}
+
+function renderPersonDrop(person) {
+  const dz = document.getElementById(`drop-${person}`);
+  dz.innerHTML = '';
+  if (placedObjekte[person].length === 0) {
+    dz.innerHTML = '<span class="empty-hint">Hierher ziehen</span>';
+    return;
+  }
+  placedObjekte[person].forEach(id => {
+    const chip = makeObjektChip(id, objekteSVG[id]);
+    chip.dataset.source = person;
+    chip.classList.add('placed');
+    // Double-click to return to bank
+    chip.addEventListener('dblclick', () => returnObjektToBank(id, person));
+    dz.appendChild(chip);
+  });
+}
+
+function returnObjektToBank(id, person) {
+  placedObjekte[person] = placedObjekte[person].filter(x => x !== id);
+  renderPersonDrop(person);
+  const bank = document.getElementById('objekte-bank');
+  const chip = makeObjektChip(id, objekteSVG[id]);
+  bank.appendChild(chip);
+}
+
+// Drag-over highlighting for person cards
+['ich','du','mann','frau','gruppe'].forEach(p => {
+  const dz = document.getElementById(`drop-${p}`);
+  dz.addEventListener('dragover', () => dz.classList.add('drag-over'));
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', () => dz.classList.remove('drag-over'));
+});
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+pickLuecken();
+buildLuecken();
+pickSaetze();
+buildSaetze();
+buildObjekte();
+</script>
+</body>
+</html>
