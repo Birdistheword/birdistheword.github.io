@@ -262,6 +262,32 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
 }
 .btn-restart:hover { transform:translateY(-2px); filter:brightness(1.07); }
 
+/* End-screen button row */
+.end-btn-row { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+/* Secondary "load more" button (end screen) */
+.btn-loadmore {
+  background:var(--surface); color:var(--text); border:2px solid var(--accent);
+  border-radius:14px; padding:14px 30px;
+  font-family:'Baloo 2',cursive; font-size:1.05rem; font-weight:800; cursor:pointer;
+  transition:transform 0.15s, background 0.15s;
+}
+.btn-loadmore:hover:not(:disabled) { transform:translateY(-2px); background:rgba(56,189,248,0.12); }
+.btn-loadmore:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+/* In-game "load more" pill (top, near scores) */
+.loadmore-row { display:flex; justify-content:center; margin-bottom:14px; }
+.btn-loadmore-pill {
+  background:var(--surface); color:var(--text);
+  border:2px solid var(--border); border-radius:99px;
+  padding:7px 18px; font-family:'Baloo 2',cursive; font-size:0.85rem; font-weight:800;
+  cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+  transition:transform 0.15s, border-color 0.15s, background 0.15s;
+}
+.btn-loadmore-pill:hover:not(:disabled) { transform:translateY(-1px); border-color:var(--accent); background:rgba(56,189,248,0.08); }
+.btn-loadmore-pill:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+.btn-loadmore-pill .lm-count { color:var(--muted); font-weight:700; font-size:0.78rem; }
+
 @keyframes cardIn   { from{opacity:0;transform:scale(0.9) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
 @keyframes floaty   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 @keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
@@ -297,15 +323,23 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
     <div class="score-pill"><div class="dot dot-g"></div><span id="g1Correct">0</span> richtig</div>
     <div class="score-pill"><div class="dot dot-r"></div><span id="g1Wrong">0</span> falsch</div>
   </div>
+  <div class="loadmore-row">
+    <button class="btn-loadmore-pill" id="g1LoadMorePill" onclick="loadMoreG1()">
+      ⏭️ Nächste 15 laden <span class="lm-count" id="g1LoadCount"></span>
+    </button>
+  </div>
 
   <div id="g1CardWrap" style="width:100%"></div>
   <div class="end-screen" id="g1End">
     <div class="end-trophy" id="g1Trophy">🏆</div>
-    <div class="end-title">Spiel 1 geschafft!</div>
+    <div class="end-title">Block geschafft!</div>
     <div class="end-score" id="g1Score"></div>
     <div class="end-msg"   id="g1Msg"></div>
     <div class="results-list" id="g1Results"></div>
-    <button class="btn-restart" onclick="restartG1()">🔄 Nochmal</button>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG1()">🔄 Block wiederholen</button>
+      <button class="btn-loadmore" id="g1EndLoadBtn" onclick="loadMoreG1()">⏭️ Weitere 15 laden</button>
+    </div>
   </div>
 </div>
 
@@ -325,15 +359,23 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
     <div class="score-pill"><div class="dot dot-g"></div><span id="g2Correct">0</span> richtig</div>
     <div class="score-pill"><div class="dot dot-r"></div><span id="g2Wrong">0</span> falsch</div>
   </div>
+  <div class="loadmore-row">
+    <button class="btn-loadmore-pill" id="g2LoadMorePill" onclick="loadMoreG2()">
+      ⏭️ Nächste 15 laden <span class="lm-count" id="g2LoadCount"></span>
+    </button>
+  </div>
 
   <div id="g2CardWrap" style="width:100%"></div>
   <div class="end-screen" id="g2End">
     <div class="end-trophy" id="g2Trophy">🏆</div>
-    <div class="end-title">Spiel 2 geschafft!</div>
+    <div class="end-title">Block geschafft!</div>
     <div class="end-score" id="g2Score"></div>
     <div class="end-msg"   id="g2Msg"></div>
     <div class="results-list" id="g2Results"></div>
-    <button class="btn-restart" onclick="restartG2()">🔄 Nochmal</button>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG2()">🔄 Block wiederholen</button>
+      <button class="btn-loadmore" id="g2EndLoadBtn" onclick="loadMoreG2()">⏭️ Weitere 15 laden</button>
+    </div>
   </div>
 </div>
 
@@ -358,153 +400,446 @@ function wLabel(id) { return wMeta(id)?.label ?? id; }
 // ── GAME 1 DATA ───────────────────────────────
 // Each item: question sentence with ___ for drop zone, the correct w-word, the given answer, a hint
 const g1Data = [
-  { q:'___ spielst du heute Fußball?',         answer:'wann',     given:'Um 15 Uhr.',                hint:'→ Zeitangabe' },
-  { q:'___ macht die Party so viel Spaß?',     answer:'warum',    given:'Weil die Musik super ist.', hint:'→ Grund' },
-  { q:'___ kostet eine Kinokarte?',            answer:'wieviel',  given:'12 Euro.',                  hint:'→ Preis / Menge' },
-  { q:'___ wohnt dein Freund Leon?',           answer:'wo',       given:'In der Hauptstraße.',       hint:'→ Ort' },
-  { q:'___ ist dein Lieblingsfilm?',           answer:'was',      given:'"Der König der Löwen".',    hint:'→ Sache' },
-  { q:'___ lange dauert das Konzert?',         answer:'wielange', given:'Etwa zwei Stunden.',        hint:'→ Dauer' },
-  { q:'___ fährt ihr in den Urlaub?',          answer:'wer',      given:'Meine Familie und ich.',    hint:'→ Person(en)' },
-  { q:'___ ist dein Lieblingssport?',          answer:'welche',   given:'Fußball natürlich!',        hint:'→ Auswahl aus Möglichkeiten' },
-  { q:'___ kochst du so gut?',                 answer:'wie',      given:'Ich schaue viele Videos.',  hint:'→ Art und Weise' },
-  { q:'___ kommt morgen zur Party?',           answer:'wer',      given:'Anna, Tom und Lukas.',      hint:'→ Person(en)' },
-  { q:'___ Bücher liest du pro Monat?',        answer:'wieviel',  given:'Meistens zwei oder drei.',  hint:'→ Anzahl / Menge' },
-  { q:'___ hört ihr am liebsten Musik?',       answer:'wo',       given:'Im Park oder zu Hause.',    hint:'→ Ort' },
-  { q:'___ trainierst du jeden Tag?',          answer:'warum',    given:'Weil ich fitter werden will.',hint:'→ Grund' },
-  { q:'___ Sport machst du am liebsten?',      answer:'welche',   given:'Am liebsten Schwimmen.',    hint:'→ Auswahl' },
-  { q:'___ lange schläfst du am Wochenende?',  answer:'wielange', given:'Circa neun Stunden.',       hint:'→ Dauer' },
+  // ── Block 1 (originale 15, korrigiert) ──
+  { q:'___ spielst du heute Fußball?',          answer:'wann',     given:'Um 15 Uhr.',                  hint:'→ Zeitangabe' },
+  { q:'___ macht die Party so viel Spaß?',      answer:'warum',    given:'Weil die Musik super ist.',   hint:'→ Grund' },
+  { q:'___ kostet eine Kinokarte?',             answer:'wieviel',  given:'12 Euro.',                    hint:'→ Preis / Menge' },
+  { q:'___ wohnt dein Freund Leon?',            answer:'wo',       given:'In der Hauptstraße.',         hint:'→ Ort' },
+  { q:'___ ist dein Lieblingsfilm?',            answer:'was',      given:'"Der König der Löwen".',      hint:'→ Sache' },
+  { q:'___ dauert das Konzert?',                answer:'wielange', given:'Etwa zwei Stunden.',          hint:'→ Dauer' },
+  { q:'___ fährt in den Urlaub?',               answer:'wer',      given:'Meine Familie und ich.',      hint:'→ Person(en)' },
+  { q:'___ Sportart magst du am liebsten?',     answer:'welche',   given:'Am liebsten mag ich Tennis.', hint:'→ Auswahl aus Möglichkeiten' },
+  { q:'___ kochst du so gut?',                  answer:'wie',      given:'Ich schaue viele Videos.',    hint:'→ Art und Weise' },
+  { q:'___ kommt morgen zur Party?',            answer:'wer',      given:'Anna, Tom und Lukas.',        hint:'→ Person(en)' },
+  { q:'___ Geld gibst du pro Monat aus?',       answer:'wieviel',  given:'Ungefähr 200 Euro.',          hint:'→ Menge' },
+  { q:'___ hört ihr am liebsten Musik?',        answer:'wo',       given:'Im Park oder zu Hause.',      hint:'→ Ort' },
+  { q:'___ trainierst du jeden Tag?',           answer:'warum',    given:'Weil ich fitter werden will.',hint:'→ Grund' },
+  { q:'___ Sportart machst du am liebsten?',    answer:'welche',   given:'Am liebsten Schwimmen.',      hint:'→ Auswahl' },
+  { q:'___ schläfst du am Wochenende?',         answer:'wielange', given:'Circa neun Stunden.',         hint:'→ Dauer' },
+
+  // ── Block 2: 15 neue Sätze ──
+  { q:'___ kocht heute das Abendessen?',        answer:'wer',      given:'Mein Vater kocht heute.',     hint:'→ Person' },
+  { q:'___ machst du am Wochenende?',           answer:'was',      given:'Ich fahre zum See.',          hint:'→ Aktivität / Sache' },
+  { q:'___ stehst du morgens auf?',             answer:'wann',     given:'Um sieben Uhr.',              hint:'→ Zeit' },
+  { q:'___ lernst du Deutsch?',                 answer:'warum',    given:'Weil ich in Deutschland studieren möchte.', hint:'→ Grund' },
+  { q:'___ Farbe magst du am liebsten?',        answer:'welche',   given:'Blau ist meine Lieblingsfarbe.', hint:'→ Auswahl' },
+  { q:'___ liegt dein Buch?',                   answer:'wo',       given:'Auf dem Tisch.',              hint:'→ Ort' },
+  { q:'___ heißt dein Bruder?',                 answer:'wie',      given:'Er heißt Felix.',             hint:'→ Name' },
+  { q:'___ wartest du schon?',                  answer:'wielange', given:'Schon zehn Minuten.',         hint:'→ Dauer' },
+  { q:'___ Geld hast du dabei?',                answer:'wieviel',  given:'Etwa 50 Euro.',               hint:'→ Menge' },
+  { q:'___ hilft dir bei den Hausaufgaben?',    answer:'wer',      given:'Meine Mutter hilft mir.',     hint:'→ Person' },
+  { q:'___ isst du gerne zum Frühstück?',       answer:'was',      given:'Müsli mit Obst.',             hint:'→ Sache' },
+  { q:'___ habt ihr Deutschunterricht?',        answer:'wann',     given:'Am Montag und Mittwoch.',     hint:'→ Zeit' },
+  { q:'___ bist du heute so müde?',             answer:'warum',    given:'Weil ich schlecht geschlafen habe.', hint:'→ Grund' },
+  { q:'___ Sprache sprichst du zu Hause?',      answer:'welche',   given:'Zu Hause spreche ich Italienisch.', hint:'→ Auswahl' },
+  { q:'___ steht dein Auto?',                   answer:'wo',       given:'Vor dem Haus.',               hint:'→ Ort' },
+
+  // ── Block 3: 15 neue Sätze ──
+  { q:'___ alt bist du?',                       answer:'wie',      given:'Ich bin 25 Jahre alt.',       hint:'→ Alter' },
+  { q:'___ bleibst du in Deutschland?',         answer:'wielange', given:'Drei Monate.',                hint:'→ Dauer' },
+  { q:'___ Zeit hast du noch?',                 answer:'wieviel',  given:'Noch zwanzig Minuten.',       hint:'→ Menge' },
+  { q:'___ singt am besten in deiner Klasse?',  answer:'wer',      given:'Lisa singt am besten.',       hint:'→ Person' },
+  { q:'___ hast du in deiner Tasche?',          answer:'was',      given:'Mein Handy und ein Buch.',    hint:'→ Sache' },
+  { q:'___ kommst du nach Hause?',              answer:'wann',     given:'Gegen 18 Uhr.',               hint:'→ Zeit' },
+  { q:'___ kommst du zu spät?',                 answer:'warum',    given:'Weil der Bus Verspätung hatte.', hint:'→ Grund' },
+  { q:'___ Jahreszeit magst du am liebsten?',   answer:'welche',   given:'Den Frühling, weil es warm wird.', hint:'→ Auswahl' },
+  { q:'___ trefft ihr euch heute?',             answer:'wo',       given:'Im Café am Markt.',           hint:'→ Ort' },
+  { q:'___ fühlst du dich heute?',              answer:'wie',      given:'Ich fühle mich super.',       hint:'→ Art / Zustand' },
+  { q:'___ dauert der Film?',                   answer:'wielange', given:'Etwa zwei Stunden.',          hint:'→ Dauer' },
+  { q:'___ Milch trinkst du am Tag?',           answer:'wieviel',  given:'Ungefähr einen Liter.',       hint:'→ Menge' },
+  { q:'___ hat heute Geburtstag?',              answer:'wer',      given:'Mein bester Freund Tim.',     hint:'→ Person' },
+  { q:'___ liest du gerade?',                   answer:'was',      given:'Einen spannenden Krimi.',     hint:'→ Sache' },
+  { q:'___ beginnt die Schule?',                answer:'wann',     given:'Um acht Uhr morgens.',        hint:'→ Zeit' },
+
+  // ── Block 4: 15 neue Sätze ──
+  { q:'___ isst du keinen Fisch?',              answer:'warum',    given:'Weil ich Fisch nicht mag.',   hint:'→ Grund' },
+  { q:'___ Stadt findest du schön?',            answer:'welche',   given:'Ich finde Berlin schön.',     hint:'→ Auswahl' },
+  { q:'___ bist du gestern gewesen?',           answer:'wo',       given:'Ich war zu Hause.',           hint:'→ Ort' },
+  { q:'___ schreibt man dieses Wort?',          answer:'wie',      given:'Mit zwei T.',                 hint:'→ Art und Weise' },
+  { q:'___ lernst du schon Deutsch?',           answer:'wielange', given:'Seit einem Jahr.',            hint:'→ Dauer' },
+  { q:'___ Wasser brauchst du?',                answer:'wieviel',  given:'Einen halben Liter.',         hint:'→ Menge' },
+  { q:'___ bringt den Kuchen mit?',             answer:'wer',      given:'Sarah bringt ihn mit.',       hint:'→ Person' },
+  { q:'___ trinkst du am liebsten?',            answer:'was',      given:'Ich trinke gerne Apfelsaft.', hint:'→ Sache' },
+  { q:'___ fährt der nächste Zug?',             answer:'wann',     given:'In zehn Minuten.',            hint:'→ Zeit' },
+  { q:'___ weinst du?',                         answer:'warum',    given:'Weil ich traurig bin.',       hint:'→ Grund' },
+  { q:'___ Musik hörst du am liebsten?',        answer:'welche',   given:'Am liebsten höre ich Pop.',   hint:'→ Auswahl' },
+  { q:'___ lernst du Deutsch?',                 answer:'wo',       given:'An der Volkshochschule.',     hint:'→ Ort' },
+  { q:'___ kommst du zur Arbeit?',              answer:'wie',      given:'Mit dem Fahrrad.',            hint:'→ Art (Verkehrsmittel)' },
+  { q:'___ arbeitest du jeden Tag?',            answer:'wielange', given:'Acht Stunden am Tag.',        hint:'→ Dauer' },
+  { q:'___ Zucker nimmst du in den Tee?',       answer:'wieviel',  given:'Zwei Löffel, bitte.',         hint:'→ Menge' },
+
+  // ── Block 5: 5 neue Sätze ──
+  { q:'___ ist deine beste Freundin?',          answer:'wer',      given:'Das ist Maria.',              hint:'→ Person' },
+  { q:'___ siehst du im Park?',                 answer:'was',      given:'Viele Kinder und Hunde.',     hint:'→ Sache' },
+  { q:'___ hast du Geburtstag?',                answer:'wann',     given:'Am 12. Mai.',                 hint:'→ Zeit' },
+  { q:'___ lacht ihr so laut?',                 answer:'warum',    given:'Weil der Witz lustig ist.',   hint:'→ Grund' },
+  { q:'___ wohnen deine Großeltern?',           answer:'wo',       given:'In einem kleinen Dorf.',      hint:'→ Ort' },
 ];
 
 // ── GAME 2 DATA ───────────────────────────────
 // dialog: array of {speaker:'A'|'B', text: string, gap: bool}
 // options: 4 w-word ids, answer: correct id
 const g2Data = [
-  {
-    dialog:[
-      {sp:'A', text:'___ wohnst du eigentlich?', gap:true},
-      {sp:'B', text:'Ich wohne in der Nähe vom Park.'},
-    ],
+  // ── Block 1 (originale 15, korrigiert) ──
+  { dialog:[{sp:'A', text:'___ wohnst du eigentlich?', gap:true},
+            {sp:'B', text:'Ich wohne in der Nähe vom Park.'}],
     options:['wo','wann','wer','was'], answer:'wo',
-    hint:'B nennt einen Ort – kein Bewegungsverb!'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ beginnt der Film?', gap:true},
-      {sp:'B', text:'Um 20 Uhr.'},
-    ],
+    hint:'B nennt einen Ort – kein Bewegungsverb!' },
+
+  { dialog:[{sp:'A', text:'___ beginnt der Film?', gap:true},
+            {sp:'B', text:'Um 20 Uhr.'}],
     options:['wie','wann','wo','warum'], answer:'wann',
-    hint:'B gibt eine Uhrzeit.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ kostet das Popcorn?', gap:true},
-      {sp:'B', text:'Fünf Euro.'},
-    ],
+    hint:'B gibt eine Uhrzeit.' },
+
+  { dialog:[{sp:'A', text:'___ kostet das Popcorn?', gap:true},
+            {sp:'B', text:'Fünf Euro.'}],
     options:['wie','wieviel','wann','welche'], answer:'wieviel',
-    hint:'B nennt einen Preis.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ kommt noch mit zum Fußball?', gap:true},
-      {sp:'B', text:'Jonas und Mia kommen auch.'},
-    ],
+    hint:'B nennt einen Preis.' },
+
+  { dialog:[{sp:'A', text:'___ kommt noch mit zum Fußball?', gap:true},
+            {sp:'B', text:'Jonas und Mia kommen auch.'}],
     options:['was','wann','wer','wo'], answer:'wer',
-    hint:'B nennt Personen.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ magst du Regenswetter nicht?', gap:true},
-      {sp:'B', text:'Weil ich dann nicht draußen spielen kann.'},
-    ],
+    hint:'B nennt Personen.' },
+
+  { dialog:[{sp:'A', text:'___ magst du Regenwetter nicht?', gap:true},
+            {sp:'B', text:'Weil ich dann nicht draußen spielen kann.'}],
     options:['wie','warum','wann','wer'], answer:'warum',
-    hint:'B gibt einen Grund.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ lange dauert das Training?', gap:true},
-      {sp:'B', text:'Ungefähr eine Stunde.'},
-    ],
+    hint:'B gibt einen Grund.' },
+
+  { dialog:[{sp:'A', text:'___ dauert das Training?', gap:true},
+            {sp:'B', text:'Ungefähr eine Stunde.'}],
     options:['wie','wieviel','welche','wielange'], answer:'wielange',
-    hint:'B gibt eine Zeitdauer.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ ist dein Lieblingsessen?', gap:true},
-      {sp:'B', text:'Pizza, ohne Frage!'},
-    ],
+    hint:'B gibt eine Zeitdauer.' },
+
+  { dialog:[{sp:'A', text:'___ ist dein Lieblingsessen?', gap:true},
+            {sp:'B', text:'Pizza, ohne Frage!'}],
     options:['wer','welche','was','wo'], answer:'was',
-    hint:'B nennt eine Sache.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ Sportart machst du am liebsten?', gap:true},
-      {sp:'B', text:'Am liebsten Volleyball.'},
-    ],
+    hint:'B nennt eine Sache.' },
+
+  { dialog:[{sp:'A', text:'___ Sportart machst du am liebsten?', gap:true},
+            {sp:'B', text:'Am liebsten Volleyball.'}],
     options:['welche','wie','was','wer'], answer:'welche',
-    hint:'B wählt aus Möglichkeiten.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ geht es dir heute?', gap:true},
-      {sp:'B', text:'Sehr gut, danke!'},
-    ],
+    hint:'B wählt aus Möglichkeiten.' },
+
+  { dialog:[{sp:'A', text:'___ geht es dir heute?', gap:true},
+            {sp:'B', text:'Sehr gut, danke!'}],
     options:['wo','wann','wie','wer'], answer:'wie',
-    hint:'B beschreibt Zustand / Art.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ findet das Konzert statt?', gap:true},
-      {sp:'B', text:'In der Stadthalle.'},
-    ],
+    hint:'B beschreibt Zustand / Art.' },
+
+  { dialog:[{sp:'A', text:'___ findet das Konzert statt?', gap:true},
+            {sp:'B', text:'In der Stadthalle.'}],
     options:['wann','wo','wie','warum'], answer:'wo',
-    hint:'B nennt einen Ort.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ Leute kommen zur Feier?', gap:true},
-      {sp:'B', text:'Etwa dreißig Personen.'},
-    ],
+    hint:'B nennt einen Ort.' },
+
+  { dialog:[{sp:'A', text:'___ Geld brauchst du für die Feier?', gap:true},
+            {sp:'B', text:'Ungefähr 100 Euro.'}],
     options:['wieviel','welche','wer','wie'], answer:'wieviel',
-    hint:'B nennt eine Anzahl.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ hast du so lange geschlafen?', gap:true},
-      {sp:'B', text:'Weil ich gestern sehr müde war.'},
-    ],
+    hint:'B nennt eine Menge Geld.' },
+
+  { dialog:[{sp:'A', text:'___ hast du so lange geschlafen?', gap:true},
+            {sp:'B', text:'Weil ich gestern sehr müde war.'}],
     options:['wie','wann','warum','wo'], answer:'warum',
-    hint:'B erklärt den Grund.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ fährt ihr in den Urlaub?', gap:true},
-      {sp:'B', text:'Im Juli, für zwei Wochen.'},
-    ],
+    hint:'B erklärt den Grund.' },
+
+  { dialog:[{sp:'A', text:'___ fahrt ihr in den Urlaub?', gap:true},
+            {sp:'B', text:'Im Juli, für zwei Wochen.'}],
     options:['wo','wann','wie','wer'], answer:'wann',
-    hint:'B nennt eine Zeit.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ lange bist du schon hier?', gap:true},
-      {sp:'B', text:'Seit ungefähr einer Stunde.'},
-    ],
+    hint:'B nennt eine Zeit.' },
+
+  { dialog:[{sp:'A', text:'___ bist du schon hier?', gap:true},
+            {sp:'B', text:'Seit ungefähr einer Stunde.'}],
     options:['wieviel','wielange','wann','wie'], answer:'wielange',
-    hint:'B nennt eine Zeitdauer.'
-  },
-  {
-    dialog:[
-      {sp:'A', text:'___ hat dir das Buch empfohlen?', gap:true},
-      {sp:'B', text:'Meine Lehrerin, Frau Bauer.'},
-    ],
+    hint:'B nennt eine Zeitdauer.' },
+
+  { dialog:[{sp:'A', text:'___ hat dir das Buch empfohlen?', gap:true},
+            {sp:'B', text:'Meine Lehrerin, Frau Bauer.'}],
     options:['was','wann','wer','wo'], answer:'wer',
-    hint:'B nennt eine Person.'
-  },
+    hint:'B nennt eine Person.' },
+
+  // ── Block 2: 15 neue Dialoge ──
+  { dialog:[{sp:'A', text:'___ macht das Frühstück bei euch?', gap:true},
+            {sp:'B', text:'Meistens meine Mutter.'}],
+    options:['wer','was','wann','wie'], answer:'wer',
+    hint:'B nennt eine Person.' },
+
+  { dialog:[{sp:'A', text:'___ machst du heute Abend?', gap:true},
+            {sp:'B', text:'Ich gehe ins Kino mit Anna.'}],
+    options:['wann','was','wer','wo'], answer:'was',
+    hint:'B nennt eine Aktivität.' },
+
+  { dialog:[{sp:'A', text:'___ machen wir Pause?', gap:true},
+            {sp:'B', text:'In zehn Minuten.'}],
+    options:['wo','wann','wie','warum'], answer:'wann',
+    hint:'B nennt eine Zeit.' },
+
+  { dialog:[{sp:'A', text:'___ lernst du so viel?', gap:true},
+            {sp:'B', text:'Weil ich morgen eine Prüfung habe.'}],
+    options:['warum','wann','wo','wie'], answer:'warum',
+    hint:'B nennt einen Grund.' },
+
+  { dialog:[{sp:'A', text:'___ Farbe hat dein Auto?', gap:true},
+            {sp:'B', text:'Mein Auto ist rot.'}],
+    options:['was','welche','wieviel','wie'], answer:'welche',
+    hint:'B beschreibt eine Eigenschaft.' },
+
+  { dialog:[{sp:'A', text:'___ ist die Bushaltestelle?', gap:true},
+            {sp:'B', text:'Direkt um die Ecke.'}],
+    options:['wo','wann','was','wer'], answer:'wo',
+    hint:'B nennt einen Ort.' },
+
+  { dialog:[{sp:'A', text:'___ heißt dein Hund?', gap:true},
+            {sp:'B', text:'Mein Hund heißt Bello.'}],
+    options:['was','wer','wie','welche'], answer:'wie',
+    hint:'B nennt einen Namen.' },
+
+  { dialog:[{sp:'A', text:'___ wohnst du schon in dieser Stadt?', gap:true},
+            {sp:'B', text:'Seit fünf Jahren.'}],
+    options:['wann','wie','wielange','wieviel'], answer:'wielange',
+    hint:'B nennt eine Dauer.' },
+
+  { dialog:[{sp:'A', text:'___ Geld kostet das T-Shirt?', gap:true},
+            {sp:'B', text:'Es kostet 20 Euro.'}],
+    options:['wieviel','was','welche','wie'], answer:'wieviel',
+    hint:'B nennt einen Preis.' },
+
+  { dialog:[{sp:'A', text:'___ hat dich heute angerufen?', gap:true},
+            {sp:'B', text:'Mein Onkel aus München.'}],
+    options:['was','wer','wo','warum'], answer:'wer',
+    hint:'B nennt eine Person.' },
+
+  { dialog:[{sp:'A', text:'___ trinkst du gerne morgens?', gap:true},
+            {sp:'B', text:'Eine Tasse Kaffee mit Milch.'}],
+    options:['was','wie','warum','welche'], answer:'was',
+    hint:'B nennt eine Sache.' },
+
+  { dialog:[{sp:'A', text:'___ hast du Zeit für mich?', gap:true},
+            {sp:'B', text:'Heute Abend nach 19 Uhr.'}],
+    options:['wieviel','wann','wo','wer'], answer:'wann',
+    hint:'B nennt einen Zeitpunkt.' },
+
+  { dialog:[{sp:'A', text:'___ bist du so glücklich heute?', gap:true},
+            {sp:'B', text:'Weil meine Freundin angekommen ist.'}],
+    options:['warum','wer','wann','was'], answer:'warum',
+    hint:'B nennt einen Grund.' },
+
+  { dialog:[{sp:'A', text:'___ Tasche möchtest du kaufen?', gap:true},
+            {sp:'B', text:'Die schwarze Tasche dort.'}],
+    options:['welche','was','wo','wieviel'], answer:'welche',
+    hint:'B wählt aus.' },
+
+  { dialog:[{sp:'A', text:'___ liegen meine Schlüssel?', gap:true},
+            {sp:'B', text:'Sie liegen auf dem Sofa.'}],
+    options:['was','wo','wer','wie'], answer:'wo',
+    hint:'B nennt einen Ort.' },
+
+  // ── Block 3: 15 neue Dialoge ──
+  { dialog:[{sp:'A', text:'___ alt ist deine Schwester?', gap:true},
+            {sp:'B', text:'Sie ist 18 Jahre alt.'}],
+    options:['wieviel','wann','wie','wo'], answer:'wie',
+    hint:'B nennt ein Alter.' },
+
+  { dialog:[{sp:'A', text:'___ bleibst du heute Abend wach?', gap:true},
+            {sp:'B', text:'Bis ungefähr Mitternacht.'}],
+    options:['wann','wielange','wie','warum'], answer:'wielange',
+    hint:'B nennt eine Dauer.' },
+
+  { dialog:[{sp:'A', text:'___ Zeit brauchst du noch?', gap:true},
+            {sp:'B', text:'Nur noch fünf Minuten.'}],
+    options:['wann','wieviel','wielange','wie'], answer:'wieviel',
+    hint:'B nennt eine Menge Zeit.' },
+
+  { dialog:[{sp:'A', text:'___ ist heute krank?', gap:true},
+            {sp:'B', text:'Lisa ist zu Hause geblieben.'}],
+    options:['wo','wer','wann','wieviel'], answer:'wer',
+    hint:'B nennt eine Person.' },
+
+  { dialog:[{sp:'A', text:'___ hast du im Rucksack?', gap:true},
+            {sp:'B', text:'Bücher und mein Laptop.'}],
+    options:['wo','was','wieviel','wer'], answer:'was',
+    hint:'B nennt Sachen.' },
+
+  { dialog:[{sp:'A', text:'___ schreibt ihr die Prüfung?', gap:true},
+            {sp:'B', text:'Nächsten Freitag.'}],
+    options:['wann','was','wie','warum'], answer:'wann',
+    hint:'B nennt einen Tag.' },
+
+  { dialog:[{sp:'A', text:'___ trinkst du keinen Kaffee?', gap:true},
+            {sp:'B', text:'Weil ich Kaffee nicht mag.'}],
+    options:['was','warum','wie','welche'], answer:'warum',
+    hint:'B erklärt den Grund.' },
+
+  { dialog:[{sp:'A', text:'___ Schuhe trägst du heute?', gap:true},
+            {sp:'B', text:'Meine neuen Sneaker.'}],
+    options:['was','welche','wie','wann'], answer:'welche',
+    hint:'B wählt aus.' },
+
+  { dialog:[{sp:'A', text:'___ machst du Urlaub diesen Sommer?', gap:true},
+            {sp:'B', text:'In Italien, am Meer.'}],
+    options:['wo','wann','warum','wie'], answer:'wo',
+    hint:'B nennt einen Ort.' },
+
+  { dialog:[{sp:'A', text:'___ findest du das Wetter?', gap:true},
+            {sp:'B', text:'Ich finde es heute super.'}],
+    options:['was','wie','warum','wo'], answer:'wie',
+    hint:'B äußert eine Meinung.' },
+
+  { dialog:[{sp:'A', text:'___ habt ihr Pause in der Schule?', gap:true},
+            {sp:'B', text:'Fünfzehn Minuten am Vormittag.'}],
+    options:['wann','wieviel','wielange','was'], answer:'wielange',
+    hint:'B nennt eine Dauer.' },
+
+  { dialog:[{sp:'A', text:'___ Milch trinkst du am Tag?', gap:true},
+            {sp:'B', text:'Etwa einen halben Liter.'}],
+    options:['was','wieviel','welche','warum'], answer:'wieviel',
+    hint:'B nennt eine Menge.' },
+
+  { dialog:[{sp:'A', text:'___ kommt zu deiner Geburtstagsparty?', gap:true},
+            {sp:'B', text:'Alle meine Freunde aus der Klasse.'}],
+    options:['wer','welche','was','wo'], answer:'wer',
+    hint:'B nennt Personen.' },
+
+  { dialog:[{sp:'A', text:'___ kaufst du im Supermarkt?', gap:true},
+            {sp:'B', text:'Brot, Milch und Obst.'}],
+    options:['wann','wo','was','welche'], answer:'was',
+    hint:'B nennt Sachen.' },
+
+  { dialog:[{sp:'A', text:'___ kommen deine Eltern zurück?', gap:true},
+            {sp:'B', text:'Am Sonntag um 18 Uhr.'}],
+    options:['wer','wo','wann','wielange'], answer:'wann',
+    hint:'B nennt eine Zeit.' },
+
+  // ── Block 4: 15 neue Dialoge ──
+  { dialog:[{sp:'A', text:'___ fährst du nicht mit dem Auto?', gap:true},
+            {sp:'B', text:'Weil ich keinen Führerschein habe.'}],
+    options:['warum','wo','wann','wie'], answer:'warum',
+    hint:'B erklärt den Grund.' },
+
+  { dialog:[{sp:'A', text:'___ Eissorte ist deine Lieblingseissorte?', gap:true},
+            {sp:'B', text:'Schokolade ist mein Favorit.'}],
+    options:['welche','was','wer','wieviel'], answer:'welche',
+    hint:'B wählt aus.' },
+
+  { dialog:[{sp:'A', text:'___ kann ich gut Pizza essen?', gap:true},
+            {sp:'B', text:'In der Pizzeria nebenan.'}],
+    options:['was','wo','wer','wann'], answer:'wo',
+    hint:'B nennt einen Ort.' },
+
+  { dialog:[{sp:'A', text:'___ war dein Tag?', gap:true},
+            {sp:'B', text:'Mein Tag war anstrengend, aber gut.'}],
+    options:['wann','wie','was','wer'], answer:'wie',
+    hint:'B beschreibt etwas.' },
+
+  { dialog:[{sp:'A', text:'___ fährt der Bus bis zum Bahnhof?', gap:true},
+            {sp:'B', text:'Etwa zwanzig Minuten.'}],
+    options:['wieviel','wo','wielange','wann'], answer:'wielange',
+    hint:'B nennt eine Dauer.' },
+
+  { dialog:[{sp:'A', text:'___ Wasser ist noch in der Flasche?', gap:true},
+            {sp:'B', text:'Ungefähr ein Glas voll.'}],
+    options:['wieviel','wo','was','wie'], answer:'wieviel',
+    hint:'B nennt eine Menge.' },
+
+  { dialog:[{sp:'A', text:'___ wartet draußen vor der Tür?', gap:true},
+            {sp:'B', text:'Mein Hund Rex.'}],
+    options:['was','wo','wer','wie'], answer:'wer',
+    hint:'B nennt ein Lebewesen.' },
+
+  { dialog:[{sp:'A', text:'___ schenkst du deiner Schwester?', gap:true},
+            {sp:'B', text:'Ein neues Buch.'}],
+    options:['wer','was','warum','wie'], answer:'was',
+    hint:'B nennt eine Sache.' },
+
+  { dialog:[{sp:'A', text:'___ gehst du normalerweise schlafen?', gap:true},
+            {sp:'B', text:'Gegen 22 Uhr.'}],
+    options:['wann','wie','warum','welche'], answer:'wann',
+    hint:'B nennt eine Zeit.' },
+
+  { dialog:[{sp:'A', text:'___ schreist du so laut?', gap:true},
+            {sp:'B', text:'Weil ich Angst habe!'}],
+    options:['wieviel','warum','wer','wo'], answer:'warum',
+    hint:'B nennt einen Grund.' },
+
+  { dialog:[{sp:'A', text:'___ Übung war am schwersten?', gap:true},
+            {sp:'B', text:'Die letzte Übung war wirklich schwer.'}],
+    options:['welche','wie','warum','was'], answer:'welche',
+    hint:'B wählt aus.' },
+
+  { dialog:[{sp:'A', text:'___ arbeitet dein Vater?', gap:true},
+            {sp:'B', text:'In einem Krankenhaus.'}],
+    options:['wo','wer','wieviel','wie'], answer:'wo',
+    hint:'B nennt einen Ort.' },
+
+  { dialog:[{sp:'A', text:'___ schmeckt dir die Suppe?', gap:true},
+            {sp:'B', text:'Die Suppe schmeckt fantastisch.'}],
+    options:['wie','was','warum','welche'], answer:'wie',
+    hint:'B beschreibt einen Geschmack.' },
+
+  { dialog:[{sp:'A', text:'___ kennt ihr euch schon?', gap:true},
+            {sp:'B', text:'Wir kennen uns seit der Schule.'}],
+    options:['wielange','wer','wann','wie'], answer:'wielange',
+    hint:'B nennt eine Dauer.' },
+
+  { dialog:[{sp:'A', text:'___ Brot brauchen wir für das Frühstück?', gap:true},
+            {sp:'B', text:'Ein halbes Brot reicht.'}],
+    options:['wieviel','welche','was','wer'], answer:'wieviel',
+    hint:'B nennt eine Menge.' },
+
+  // ── Block 5: 5 neue Dialoge ──
+  { dialog:[{sp:'A', text:'___ hilft dir beim Umzug?', gap:true},
+            {sp:'B', text:'Meine zwei Brüder.'}],
+    options:['wer','warum','wieviel','wann'], answer:'wer',
+    hint:'B nennt Personen.' },
+
+  { dialog:[{sp:'A', text:'___ ist heute der Plan?', gap:true},
+            {sp:'B', text:'Wir gehen schwimmen und essen Pizza.'}],
+    options:['was','wann','wie','wer'], answer:'was',
+    hint:'B nennt einen Plan.' },
+
+  { dialog:[{sp:'A', text:'___ siehst du deine Großeltern?', gap:true},
+            {sp:'B', text:'Jeden Sonntag.'}],
+    options:['wo','wann','wer','was'], answer:'wann',
+    hint:'B nennt einen Zeitpunkt.' },
+
+  { dialog:[{sp:'A', text:'___ machst du das Fenster zu?', gap:true},
+            {sp:'B', text:'Weil es draußen kalt ist.'}],
+    options:['was','wann','warum','wie'], answer:'warum',
+    hint:'B erklärt den Grund.' },
+
+  { dialog:[{sp:'A', text:'___ hast du das Fahrrad gefunden?', gap:true},
+            {sp:'B', text:'Im Park hinter der Bank.'}],
+    options:['wo','was','wann','warum'], answer:'wo',
+    hint:'B nennt einen Ort.' },
 ];
 
 // ── State ─────────────────────────────────────
-let g1 = { cur:0, correct:0, wrong:0, results:[], dropValue:null };
-let g2 = { cur:0, correct:0, wrong:0, results:[] };
+const BLOCK_SIZE = 15;
+let g1 = { cur:0, blockStart:0, correct:0, wrong:0, results:[], dropValue:null };
+let g2 = { cur:0, blockStart:0, correct:0, wrong:0, results:[] };
 let dragging = null;
+
+// helpers: how many questions are left after the current block
+function g1RemainingAfterBlock() { return Math.max(0, g1Data.length - (g1.blockStart + currentG1BlockSize())); }
+function g2RemainingAfterBlock() { return Math.max(0, g2Data.length - (g2.blockStart + currentG2BlockSize())); }
+function currentG1BlockSize() { return Math.min(BLOCK_SIZE, g1Data.length - g1.blockStart); }
+function currentG2BlockSize() { return Math.min(BLOCK_SIZE, g2Data.length - g2.blockStart); }
+
+// update the in-game pill button state
+function updateLoadMoreButtons() {
+  const g1Btn = document.getElementById('g1LoadMorePill');
+  const g1Cnt = document.getElementById('g1LoadCount');
+  const g1Rem = g1RemainingAfterBlock();
+  if (g1Btn) {
+    g1Btn.disabled = g1Rem === 0;
+    g1Cnt.textContent = g1Rem > 0 ? `(${g1Rem} übrig)` : '(alle gesehen)';
+  }
+  const g2Btn = document.getElementById('g2LoadMorePill');
+  const g2Cnt = document.getElementById('g2LoadCount');
+  const g2Rem = g2RemainingAfterBlock();
+  if (g2Btn) {
+    g2Btn.disabled = g2Rem === 0;
+    g2Cnt.textContent = g2Rem > 0 ? `(${g2Rem} übrig)` : '(alle gesehen)';
+  }
+}
 
 // ── Tab switching ─────────────────────────────
 function switchTab(n) {
@@ -571,12 +906,16 @@ function clearDrop(dz) {
 
 function renderG1() {
   const wrap = document.getElementById('g1CardWrap');
-  if (g1.cur >= g1Data.length) { showG1End(); return; }
+  const blockSize = currentG1BlockSize();
+  const blockEnd  = g1.blockStart + blockSize;          // exclusive
+  if (g1.cur >= blockEnd) { showG1End(); return; }
   const q = g1Data[g1.cur];
-  const pct = Math.round((g1.cur / g1Data.length) * 100);
+  const inBlock = g1.cur - g1.blockStart;               // 0-based
+  const pct = Math.round((inBlock / blockSize) * 100);
   document.getElementById('g1Fill').style.width = pct + '%';
-  document.getElementById('g1ProgText').textContent = `Frage ${g1.cur+1} von 15`;
+  document.getElementById('g1ProgText').textContent = `Frage ${inBlock+1} von ${blockSize}`;
   document.getElementById('g1ProgPct').textContent  = pct + '%';
+  updateLoadMoreButtons();
 
   // build question HTML with drop zone
   const parts = q.q.split('___');
@@ -588,7 +927,7 @@ function renderG1() {
 
   wrap.innerHTML = `
     <div class="g1-card" id="g1Card">
-      <span class="g1-qnum">Frage ${g1.cur+1} / 15</span>
+      <span class="g1-qnum">Frage ${inBlock+1} / ${blockSize}</span>
       <div class="answer-bubble">💬 Antwort: <span>${q.given}</span></div>
       <div style="font-size:0.8rem;color:var(--muted);font-weight:700;">📝 Ziehe das richtige W-Wort in die Lücke:</div>
       <div class="question-line">${qHTML}</div>
@@ -651,8 +990,9 @@ function showG1End() {
   const end = document.getElementById('g1End');
   end.classList.add('show');
 
-  const pct = Math.round((g1.correct / 15) * 100);
-  document.getElementById('g1Score').textContent = `${g1.correct} / 15 richtig`;
+  const blockSize = currentG1BlockSize();
+  const pct = Math.round((g1.correct / blockSize) * 100);
+  document.getElementById('g1Score').textContent = `${g1.correct} / ${blockSize} richtig`;
 
   let trophy='💪', msg='Übung macht den Meister – probiere es nochmal!';
   if (pct===100){trophy='🏆';msg='Perfekt! Alle W-Fragen sitzen!';}
@@ -662,6 +1002,17 @@ function showG1End() {
   document.getElementById('g1Trophy').textContent = trophy;
   document.getElementById('g1Msg').textContent    = msg;
   document.getElementById('g1Fill').style.width   = '100%';
+
+  // toggle "load more" button at end screen
+  const endBtn = document.getElementById('g1EndLoadBtn');
+  const remaining = g1RemainingAfterBlock();
+  if (remaining > 0) {
+    endBtn.style.display = '';
+    endBtn.disabled = false;
+    endBtn.textContent = `⏭️ Weitere ${Math.min(BLOCK_SIZE, remaining)} laden`;
+  } else {
+    endBtn.style.display = 'none';
+  }
 
   const list = document.getElementById('g1Results');
   list.innerHTML = '';
@@ -679,7 +1030,29 @@ function showG1End() {
 }
 
 function restartG1() {
-  g1 = { cur:0, correct:0, wrong:0, results:[], dropValue:null };
+  // repeat the current block
+  g1.cur       = g1.blockStart;
+  g1.correct   = 0;
+  g1.wrong     = 0;
+  g1.results   = [];
+  g1.dropValue = null;
+  document.getElementById('g1Correct').textContent = 0;
+  document.getElementById('g1Wrong').textContent   = 0;
+  document.getElementById('g1End').classList.remove('show');
+  document.getElementById('g1Chips').style.display = '';
+  renderG1();
+}
+
+function loadMoreG1() {
+  // jump to next block of 15 (or whatever remains)
+  const next = g1.blockStart + BLOCK_SIZE;
+  if (next >= g1Data.length) return;     // safety
+  g1.blockStart = next;
+  g1.cur        = next;
+  g1.correct    = 0;
+  g1.wrong      = 0;
+  g1.results    = [];
+  g1.dropValue  = null;
   document.getElementById('g1Correct').textContent = 0;
   document.getElementById('g1Wrong').textContent   = 0;
   document.getElementById('g1End').classList.remove('show');
@@ -692,12 +1065,16 @@ function restartG1() {
 // ══════════════════════════════════════════════
 function renderG2() {
   const wrap = document.getElementById('g2CardWrap');
-  if (g2.cur >= g2Data.length) { showG2End(); return; }
+  const blockSize = currentG2BlockSize();
+  const blockEnd  = g2.blockStart + blockSize;
+  if (g2.cur >= blockEnd) { showG2End(); return; }
   const q = g2Data[g2.cur];
-  const pct = Math.round((g2.cur / g2Data.length) * 100);
+  const inBlock = g2.cur - g2.blockStart;
+  const pct = Math.round((inBlock / blockSize) * 100);
   document.getElementById('g2Fill').style.width   = pct + '%';
-  document.getElementById('g2ProgText').textContent = `Frage ${g2.cur+1} von 15`;
+  document.getElementById('g2ProgText').textContent = `Frage ${inBlock+1} von ${blockSize}`;
   document.getElementById('g2ProgPct').textContent  = pct + '%';
+  updateLoadMoreButtons();
 
   // build dialog HTML
   let dialogHTML = q.dialog.map(line => {
@@ -721,7 +1098,7 @@ function renderG2() {
 
   wrap.innerHTML = `
     <div class="g2-card">
-      <span class="g2-qnum">Frage ${g2.cur+1} / 15</span>
+      <span class="g2-qnum">Frage ${inBlock+1} / ${blockSize}</span>
       <div style="font-size:0.82rem;color:var(--muted);font-weight:700;">💬 Lies den Dialog – welches W-Wort fehlt?</div>
       <div class="dialog-box">${dialogHTML}</div>
       <div class="g1-hint">💡 ${q.hint}</div>
@@ -775,8 +1152,9 @@ function showG2End() {
   const end = document.getElementById('g2End');
   end.classList.add('show');
 
-  const pct = Math.round((g2.correct / 15) * 100);
-  document.getElementById('g2Score').textContent = `${g2.correct} / 15 richtig`;
+  const blockSize = currentG2BlockSize();
+  const pct = Math.round((g2.correct / blockSize) * 100);
+  document.getElementById('g2Score').textContent = `${g2.correct} / ${blockSize} richtig`;
 
   let trophy='💪', msg='Nochmal versuchen – du schaffst das!';
   if (pct===100){trophy='🏆';msg='Perfekt! Alle Dialoge verstanden!';}
@@ -786,6 +1164,17 @@ function showG2End() {
   document.getElementById('g2Trophy').textContent = trophy;
   document.getElementById('g2Msg').textContent    = msg;
   document.getElementById('g2Fill').style.width   = '100%';
+
+  // toggle "load more" button at end screen
+  const endBtn = document.getElementById('g2EndLoadBtn');
+  const remaining = g2RemainingAfterBlock();
+  if (remaining > 0) {
+    endBtn.style.display = '';
+    endBtn.disabled = false;
+    endBtn.textContent = `⏭️ Weitere ${Math.min(BLOCK_SIZE, remaining)} laden`;
+  } else {
+    endBtn.style.display = 'none';
+  }
 
   const list = document.getElementById('g2Results');
   list.innerHTML = '';
@@ -804,7 +1193,25 @@ function showG2End() {
 }
 
 function restartG2() {
-  g2 = { cur:0, correct:0, wrong:0, results:[] };
+  // repeat the current block
+  g2.cur     = g2.blockStart;
+  g2.correct = 0;
+  g2.wrong   = 0;
+  g2.results = [];
+  document.getElementById('g2Correct').textContent = 0;
+  document.getElementById('g2Wrong').textContent   = 0;
+  document.getElementById('g2End').classList.remove('show');
+  renderG2();
+}
+
+function loadMoreG2() {
+  const next = g2.blockStart + BLOCK_SIZE;
+  if (next >= g2Data.length) return;
+  g2.blockStart = next;
+  g2.cur        = next;
+  g2.correct    = 0;
+  g2.wrong      = 0;
+  g2.results    = [];
   document.getElementById('g2Correct').textContent = 0;
   document.getElementById('g2Wrong').textContent   = 0;
   document.getElementById('g2End').classList.remove('show');
@@ -815,6 +1222,7 @@ function restartG2() {
 buildG1Chips();
 renderG1();
 renderG2();
+updateLoadMoreButtons();
 </script>
 </body>
 </html>
