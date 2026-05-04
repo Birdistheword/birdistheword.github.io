@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hatte · war – Präteritum üben</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f172a;--surface:#1e293b;--surface2:#263348;--border:#334155;
+  --accent:#38bdf8;--accent2:#f472b6;--green:#34d399;--red:#f87171;
+  --yellow:#fbbf24;--text:#e2e8f0;--muted:#64748b;
+  --radius:18px;--shadow:0 8px 32px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Nunito',sans-serif;background:var(--bg);
+  background-image:radial-gradient(ellipse at 10% 0%,rgba(56,189,248,.12) 0%,transparent 45%),
+    radial-gradient(ellipse at 90% 100%,rgba(244,114,182,.12) 0%,transparent 45%);
+  min-height:100vh;color:var(--text);padding:24px 16px 60px;
+  display:flex;flex-direction:column;align-items:center;
+}
+header{text-align:center;margin-bottom:28px}
+header h1{
+  font-family:'Baloo 2',cursive;font-size:clamp(2rem,6vw,3rem);font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+header p{color:var(--muted);margin-top:6px;font-size:.95rem}
+.tabs{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px;
+  background:var(--surface);border-radius:99px;padding:5px;
+  border:2px solid var(--border);justify-content:center;
+}
+.tab-btn{
+  padding:10px 18px;border:none;border-radius:99px;cursor:pointer;
+  font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;
+  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap;
+}
+.tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a}
+.progress-wrap{width:100%;max-width:620px;margin-bottom:14px}
+.progress-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px;font-weight:700}
+.progress-bar-bg{background:var(--border);border-radius:99px;height:9px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .45s ease}
+.score-row{display:flex;gap:14px;justify-content:center;margin-bottom:8px}
+.score-pill{background:var(--surface);border:2px solid var(--border);border-radius:99px;padding:5px 16px;font-weight:900;font-size:.88rem;display:flex;align-items:center;gap:7px}
+.dot{width:9px;height:9px;border-radius:50%}
+.dot-g{background:var(--green)}.dot-r{background:var(--red)}
+.loadmore-row{display:flex;justify-content:center;margin-bottom:18px}
+.btn-loadmore-pill{
+  background:var(--surface);color:var(--text);border:2px solid var(--border);border-radius:99px;
+  padding:7px 18px;font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:800;
+  cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  transition:transform .15s,border-color .15s,background .15s;
+}
+.btn-loadmore-pill:hover:not(:disabled){transform:translateY(-1px);border-color:var(--accent);background:rgba(56,189,248,.08)}
+.btn-loadmore-pill:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.lm-count{color:var(--muted);font-weight:700;font-size:.78rem}
+.game-panel{display:none;flex-direction:column;align-items:center;width:100%;max-width:620px}
+.game-panel.active{display:flex}
+
+/* ── Cards ── */
+.card{
+  background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:32px 26px 26px;width:100%;
+  display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden;
+  animation:cardIn .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.c1::before{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.c2::before{background:linear-gradient(90deg,var(--accent2),var(--yellow))}
+.c3::before{background:linear-gradient(90deg,var(--yellow),var(--green))}
+.qnum{font-size:.75rem;color:var(--muted);font-weight:700;letter-spacing:.07em}
+
+/* ── Typing inputs ── */
+.sentence-line{font-size:1.12rem;font-weight:700;line-height:2.5}
+.gap-input{
+  display:inline-block;height:36px;min-width:82px;
+  background:var(--surface2);border:2px dashed var(--border);border-radius:10px;
+  padding:0 10px;font-family:'Nunito',sans-serif;font-size:.98rem;font-weight:700;
+  color:var(--text);text-align:center;vertical-align:middle;
+  transition:border-color .2s,background .2s;outline:none;
+  -webkit-appearance:none;
+}
+.gap-input:focus{border-color:var(--accent);background:rgba(56,189,248,.06);border-style:solid}
+.gap-input.ok{border-color:var(--green)!important;border-style:solid!important;background:rgba(52,211,153,.1)!important;color:var(--green)!important}
+.gap-input.bad{border-color:var(--red)!important;border-style:solid!important;background:rgba(248,113,113,.1)!important;color:var(--red)!important}
+.gap-input:disabled{cursor:not-allowed}
+
+/* ── Verb chips (Aufgabe 2) ── */
+.verb-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;padding-top:4px;border-top:1px solid var(--border)}
+.verb-label{font-size:.7rem;color:var(--muted);font-weight:800;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.verb-chip{
+  font-family:'Baloo 2',cursive;font-size:.84rem;font-weight:800;
+  padding:3px 12px;border-radius:8px;
+  background:rgba(56,189,248,.1);border:1.5px solid rgba(56,189,248,.25);color:var(--accent);
+}
+
+/* ── Present box (Aufgabe 3) ── */
+.pres-box{background:var(--surface2);border-radius:14px;padding:18px 20px;border-left:4px solid var(--accent)}
+.pres-label{display:block;font-size:.7rem;color:var(--muted);font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pres-text{font-size:1.15rem;font-weight:700;color:var(--text)}
+.g3-textarea{
+  width:100%;min-height:64px;resize:vertical;
+  background:var(--surface2);border:2px solid var(--border);border-radius:12px;
+  padding:14px 16px;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:700;
+  color:var(--text);line-height:1.45;transition:border-color .2s;
+}
+.g3-textarea::placeholder{color:var(--muted);font-weight:600;font-style:italic}
+.g3-textarea:focus{outline:none;border-color:var(--accent);background:rgba(56,189,248,.06)}
+.g3-textarea:disabled{opacity:.7;cursor:not-allowed}
+
+/* ── Solution box ── */
+.sol-box{
+  display:none;flex-direction:column;gap:6px;
+  background:rgba(251,191,36,.10);border:2px solid var(--yellow);border-radius:12px;
+  padding:14px 18px;animation:fadeDown .35s ease both;
+}
+.sol-box.show{display:flex}
+.sol-label{font-size:.72rem;color:var(--yellow);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.sol-text{font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.4}
+
+/* ── Inline feedback ── */
+.inline-fb{
+  display:none;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:12px;font-weight:700;font-size:.92rem;
+}
+.inline-fb.show{display:flex}
+.inline-fb.ok{background:rgba(52,211,153,.15);border:2px solid var(--green);color:var(--green)}
+.inline-fb.bad{background:rgba(248,113,113,.15);border:2px solid var(--red);color:var(--red)}
+
+/* ── Self-eval ── */
+.self-eval-row{display:none;gap:10px;flex-wrap:wrap;animation:fadeDown .35s ease both}
+.self-eval-row.show{display:flex}
+.self-eval-btn{
+  flex:1;min-width:130px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;
+  padding:12px 18px;border-radius:12px;cursor:pointer;border:2px solid;
+  transition:transform .15s,filter .15s;
+}
+.self-eval-btn.ok{background:rgba(52,211,153,.14);border-color:var(--green);color:var(--green)}
+.self-eval-btn.bad{background:rgba(248,113,113,.14);border-color:var(--red);color:var(--red)}
+.self-eval-btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.12)}
+.self-eval-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.self-eval-btn.chosen.ok{background:rgba(52,211,153,.3)}
+.self-eval-btn.chosen.bad{background:rgba(248,113,113,.3)}
+
+/* ── Buttons ── */
+.check-btn{
+  align-self:flex-end;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0f172a;border:none;border-radius:12px;padding:12px 28px;
+  font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;cursor:pointer;
+  transition:transform .15s,filter .15s;
+}
+.check-btn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.check-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.next-btn{
+  align-self:flex-end;background:var(--surface2);border:2px solid var(--border);
+  color:var(--text);border-radius:12px;padding:11px 24px;
+  font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;
+  transition:transform .15s,border-color .15s;display:none;
+}
+.next-btn:hover{transform:translateY(-2px);border-color:var(--accent)}
+.next-btn.show{display:block}
+.show-sol-btn{
+  align-self:flex-end;background:linear-gradient(135deg,var(--yellow),var(--green));
+  color:#0f172a;border:none;border-radius:12px;padding:12px 26px;
+  font-family:'Baloo 2',cursive;font-size:1.02rem;font-weight:800;cursor:pointer;
+  transition:transform .15s,filter .15s;
+}
+.show-sol-btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.07)}
+.show-sol-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ── End screen (unchanged from template) ── */
+.end-screen{display:none;flex-direction:column;align-items:center;gap:18px;max-width:620px;width:100%;animation:cardIn .5s ease both}
+.end-screen.show{display:flex}
+.end-trophy{font-size:5.5rem;animation:floaty 2s ease-in-out infinite}
+.end-title{
+  font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;text-align:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.end-score{font-size:2.4rem;font-weight:900;color:var(--yellow);font-family:'Baloo 2',cursive}
+.end-msg{color:var(--muted);text-align:center;font-size:1rem;max-width:340px}
+.results-list{width:100%;display:flex;flex-direction:column;gap:9px;max-height:320px;overflow-y:auto}
+.results-list::-webkit-scrollbar{width:5px}
+.results-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+.r-row{background:var(--surface);border:2px solid var(--border);border-radius:13px;padding:10px 14px;display:flex;align-items:center;gap:12px;font-size:.86rem}
+.r-row.ok{border-color:var(--green)}.r-row.bad{border-color:var(--red)}
+.r-text{flex:1;line-height:1.4}.r-sub{color:var(--muted);font-size:.78rem;margin-top:3px}
+.btn-restart{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0f172a;border:none;border-radius:14px;padding:15px 42px;
+  font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 24px rgba(56,189,248,.3);transition:transform .15s,filter .15s;
+}
+.btn-restart:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.btn-loadmore{
+  background:var(--surface);color:var(--text);border:2px solid var(--accent);
+  border-radius:14px;padding:14px 30px;
+  font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;cursor:pointer;
+  transition:transform .15s,background .15s;
+}
+.btn-loadmore:hover{transform:translateY(-2px);background:rgba(56,189,248,.08)}
+.btn-loadmore:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.end-btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+@keyframes cardIn{from{opacity:0;transform:scale(.9) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+/* ── Aufgabe 4 ── */
+.c4::before{background:linear-gradient(90deg,var(--green),var(--accent))}
+.verb-bank{background:var(--surface2);border-radius:14px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--border)}
+.verb-bank-label{font-size:.7rem;color:var(--muted);font-weight:800;letter-spacing:.08em;text-transform:uppercase;width:100%;margin-bottom:2px}
+.text-block{font-size:1.06rem;font-weight:600;line-height:3.1;color:var(--text)}
+.correction-badge{color:var(--yellow);font-weight:800;font-size:.82rem;margin-left:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>hatte · war</h1>
+  <p>Präteritum von <strong>haben</strong> und <strong>sein</strong></p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" id="tb1" onclick="switchTab(1)">1 · Präteritum</button>
+  <button class="tab-btn"        id="tb2" onclick="switchTab(2)">2 · Lücken gemischt</button>
+  <button class="tab-btn"        id="tb3" onclick="switchTab(3)">3 · Umformen</button>
+  <button class="tab-btn"        id="tb4" onclick="switchTab(4)">4 · Lückentext</button>
+</div>
+
+<!-- ═══ PANEL 1 ═══ -->
+<div class="game-panel active" id="panel1">
+  <div class="progress-wrap">
+    <div class="progress-label"><span id="g1pt">Satz 1 von 10</span><span id="g1pp">0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g1f" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g1ok">0</span> richtig</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g1no">0</span> falsch</div>
+  </div>
+  <div class="loadmore-row">
+    <button class="btn-loadmore-pill" id="g1lp" onclick="loadG1()">
+      Nächste 10 laden <span class="lm-count" id="g1lc"></span>
+    </button>
+  </div>
+  <div id="g1w" style="width:100%"></div>
+  <div class="end-screen" id="g1e">
+    <div class="end-trophy" id="g1tr"></div>
+    <div class="end-title">Block geschafft!</div>
+    <div class="end-score" id="g1sc"></div>
+    <div class="end-msg" id="g1mg"></div>
+    <div class="results-list" id="g1rl"></div>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG1()">Nochmal</button>
+      <button class="btn-loadmore" id="g1elb" onclick="loadG1()">Weitere 10 laden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL 2 ═══ -->
+<div class="game-panel" id="panel2">
+  <div class="progress-wrap">
+    <div class="progress-label"><span id="g2pt">Satz 1 von 10</span><span id="g2pp">0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g2f" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g2ok">0</span> richtig</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g2no">0</span> falsch</div>
+  </div>
+  <div class="loadmore-row">
+    <button class="btn-loadmore-pill" id="g2lp" onclick="loadG2()">
+      Nächste 10 laden <span class="lm-count" id="g2lc"></span>
+    </button>
+  </div>
+  <div id="g2w" style="width:100%"></div>
+  <div class="end-screen" id="g2e">
+    <div class="end-trophy" id="g2tr"></div>
+    <div class="end-title">Block geschafft!</div>
+    <div class="end-score" id="g2sc"></div>
+    <div class="end-msg" id="g2mg"></div>
+    <div class="results-list" id="g2rl"></div>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG2()">Nochmal</button>
+      <button class="btn-loadmore" id="g2elb" onclick="loadG2()">Weitere 10 laden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL 3 ═══ -->
+<div class="game-panel" id="panel3">
+  <div class="progress-wrap">
+    <div class="progress-label"><span id="g3pt">Satz 1 von 10</span><span id="g3pp">0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g3f" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g3ok">0</span> richtig</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g3no">0</span> falsch</div>
+  </div>
+  <div class="loadmore-row">
+    <button class="btn-loadmore-pill" id="g3lp" onclick="loadG3()">
+      Nächste 10 laden <span class="lm-count" id="g3lc"></span>
+    </button>
+  </div>
+  <div id="g3w" style="width:100%"></div>
+  <div class="end-screen" id="g3e">
+    <div class="end-trophy" id="g3tr"></div>
+    <div class="end-title">Block geschafft!</div>
+    <div class="end-score" id="g3sc"></div>
+    <div class="end-msg" id="g3mg"></div>
+    <div class="results-list" id="g3rl"></div>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG3()">Nochmal</button>
+      <button class="btn-loadmore" id="g3elb" onclick="loadG3()">Weitere 10 laden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL 4 ═══ -->
+<div class="game-panel" id="panel4">
+  <div class="progress-wrap">
+    <div class="progress-label"><span id="g4pt">Text 1 von 6</span><span id="g4pp">0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g4f" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g4ok">0</span> fehlerfrei</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g4no">0</span> mit Fehlern</div>
+  </div>
+  <div id="g4w" style="width:100%"></div>
+  <div class="end-screen" id="g4e">
+    <div class="end-trophy" id="g4tr"></div>
+    <div class="end-title">Alle Texte geschafft!</div>
+    <div class="end-score" id="g4sc"></div>
+    <div class="end-msg" id="g4mg"></div>
+    <div class="results-list" id="g4rl"></div>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG4()">Nochmal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BLOCK = 10;
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+
+// Aufgabe 1: Präteritum haben/sein – eine Lücke, User tippt
+const g1Data = [
+  // Block 1
+  {s:'Gestern ___ ich sehr müde.',a:'war'},
+  {s:'Das Wetter ___ schön.',a:'war'},
+  {s:'Wir ___ keine Zeit.',a:'hatten'},
+  {s:'Er ___ Hunger.',a:'hatte'},
+  {s:'Du ___ in Berlin.',a:'warst'},
+  {s:'Das Kind ___ Angst.',a:'hatte'},
+  {s:'Ihr ___ eine gute Idee.',a:'hattet'},
+  {s:'Wir ___ viel Spaß.',a:'hatten'},
+  {s:'Das Café ___ voll.',a:'war'},
+  {s:'Ich ___ keine Lust.',a:'hatte'},
+  // Block 2
+  {s:'Du ___ Recht.',a:'hattest'},
+  {s:'Ihr ___ in München.',a:'wart'},
+  {s:'Wir ___ in der Schule.',a:'waren'},
+  {s:'Er ___ nervös vor dem Test.',a:'war'},
+  {s:'Das Essen ___ lecker.',a:'war'},
+  {s:'Ich ___ Durst.',a:'hatte'},
+  {s:'Du ___ gestern nicht zu Hause.',a:'warst'},
+  {s:'Die Kinder ___ schlechte Laune.',a:'hatten'},
+  {s:'Das Baby ___ Fieber.',a:'hatte'},
+  {s:'Ihr ___ müde nach der Reise.',a:'wart'},
+  // Block 3
+  {s:'Das Auto ___ kaputt.',a:'war'},
+  {s:'Wir ___ kein Internet.',a:'hatten'},
+  {s:'Ich ___ in der Küche.',a:'war'},
+  {s:'Du ___ keine Angst.',a:'hattest'},
+  {s:'Das Buch ___ interessant.',a:'war'},
+  {s:'Er ___ ein Fahrrad.',a:'hatte'},
+  {s:'Ihr ___ gestern im Park.',a:'wart'},
+  {s:'Wir ___ eine Wohnung in Wien.',a:'hatten'},
+  {s:'Das Konzert ___ langweilig.',a:'war'},
+  {s:'Er ___ kein Glück.',a:'hatte'},
+  // Block 4
+  {s:'Ich ___ zu viel Stress.',a:'hatte'},
+  {s:'Du ___ gestern krank.',a:'warst'},
+  {s:'Ihr ___ keine Hausaufgaben.',a:'hattet'},
+  {s:'Anna ___ ein rotes Kleid.',a:'hatte'},
+  {s:'Wir ___ Glück mit dem Wetter.',a:'hatten'},
+  {s:'Er ___ sehr müde.',a:'war'},
+  {s:'Ich ___ keinen Hunger.',a:'hatte'},
+  {s:'Das Restaurant ___ teuer.',a:'war'},
+  {s:'Die Freunde ___ viel Geld.',a:'hatten'},
+  {s:'Wir ___ ein Problem.',a:'hatten'},
+  // Block 5
+  {s:'Er ___ früher Lehrer.',a:'war'},
+  {s:'Ich ___ keine Idee.',a:'hatte'},
+  {s:'Du ___ in der Bibliothek.',a:'warst'},
+  {s:'Das Hotel ___ einen Pool.',a:'hatte'},
+  {s:'Ihr ___ eine Katze.',a:'hattet'},
+  {s:'Die Schüler ___ keine Hausaufgaben.',a:'hatte'},
+  {s:'Das Zimmer ___ klein.',a:'war'},
+  {s:'Wir ___ zwei Wochen in Spanien.',a:'waren'},
+  {s:'Du ___ immer freundlich.',a:'warst'},
+  {s:'Er ___ einen Hund.',a:'hatte'},
+  // Block 6
+  {s:'Ich ___ früher sehr sportlich.',a:'war'},
+  {s:'Du ___ Durst nach dem Sport.',a:'hattest'},
+  {s:'Wir ___ keine Kinder.',a:'hatten'},
+  {s:'Das Baby ___ Fieber.',a:'hatte'},
+  {s:'Ihr ___ gestern viel Gepäck.',a:'hattet'},
+  {s:'Er ___ Fieber.',a:'hatte'},
+  {s:'Anna ___ ein Problem.',a:'hatte'},
+  {s:'Wir ___ Hunger nach dem Sport.',a:'hatten'},
+  {s:'Du ___ sehr freundlich.',a:'warst'},
+  {s:'Ich ___ eine gute Note.',a:'hatte'},
+];
+
+// Aufgabe 2: Gemischte Lücken – Perfekt (alle Verben außer sein/haben) + Präteritum sein/haben
+// p = parts: strings und {a:'antwort'} – v = Verben im Infinitiv
+const g2Data = [
+  // Block 1 – Perfekt mit haben
+  {p:['Ich ',{a:'habe'},' viel Deutsch ',{a:'gelernt'},'.'],v:['lernen']},
+  {p:['Er ',{a:'hat'},' Fußball ',{a:'gespielt'},'.'],v:['spielen']},
+  {p:['Wir ',{a:'haben'},' Pizza ',{a:'gegessen'},'.'],v:['essen']},
+  {p:['Du ',{a:'hast'},' einen Brief ',{a:'geschrieben'},'.'],v:['schreiben']},
+  {p:['Ihr ',{a:'habt'},' Musik ',{a:'gehört'},'.'],v:['hören']},
+  {p:['Sie ',{a:'hat'},' das Zimmer ',{a:'aufgeräumt'},'.'],v:['aufräumen']},
+  {p:['Ich ',{a:'habe'},' einen Film ',{a:'gesehen'},'.'],v:['sehen']},
+  {p:['Wir ',{a:'haben'},' Wasser ',{a:'getrunken'},'.'],v:['trinken']},
+  {p:['Er ',{a:'hat'},' die Hausaufgaben ',{a:'gemacht'},'.'],v:['machen']},
+  {p:['Du ',{a:'hast'},' das Buch ',{a:'gekauft'},'.'],v:['kaufen']},
+  // Block 2 – Perfekt mit sein
+  {p:['Ich ',{a:'bin'},' nach Hause ',{a:'gegangen'},'.'],v:['gehen']},
+  {p:['Er ',{a:'ist'},' nach München ',{a:'gefahren'},'.'],v:['fahren']},
+  {p:['Wir ',{a:'sind'},' früh ',{a:'aufgestanden'},'.'],v:['aufstehen']},
+  {p:['Du ',{a:'bist'},' schnell ',{a:'gelaufen'},'.'],v:['laufen']},
+  {p:['Anna ',{a:'ist'},' um 8 Uhr ',{a:'gekommen'},'.'],v:['kommen']},
+  {p:['Ihr ',{a:'seid'},' ins Kino ',{a:'gegangen'},'.'],v:['gehen']},
+  {p:['Ich ',{a:'bin'},' mit dem Zug ',{a:'gefahren'},'.'],v:['fahren']},
+  {p:['Er ',{a:'ist'},' früh ',{a:'eingeschlafen'},'.'],v:['einschlafen']},
+  {p:['Wir ',{a:'sind'},' im Park ',{a:'gelaufen'},'.'],v:['laufen']},
+  {p:['Du ',{a:'bist'},' heute früh ',{a:'aufgestanden'},'.'],v:['aufstehen']},
+  // Block 3 – nur Präteritum
+  {p:['Das Wetter ',{a:'war'},' super.'],v:['sein']},
+  {p:['Ich ',{a:'hatte'},' Kopfschmerzen.'],v:['haben']},
+  {p:['Wir ',{a:'waren'},' zwei Wochen in Spanien.'],v:['sein']},
+  {p:['Er ',{a:'hatte'},' keine Zeit.'],v:['haben']},
+  {p:['Du ',{a:'warst'},' sehr freundlich.'],v:['sein']},
+  {p:['Ihr ',{a:'hattet'},' viel Gepäck.'],v:['haben']},
+  {p:['Die Kinder ',{a:'hatten'},' ein schönes Zimmer.'],v:['haben']},
+  {p:['Das Café ',{a:'war'},' voll.'],v:['sein']},
+  {p:['Ich ',{a:'hatte'},' keine Idee.'],v:['haben']},
+  {p:['Du ',{a:'warst'},' in der Bibliothek.'],v:['sein']},
+  // Block 4 – mehr Perfekt haben
+  {p:['Er ',{a:'hat'},' seine Mutter ',{a:'angerufen'},'.'],v:['anrufen']},
+  {p:['Wir ',{a:'haben'},' zusammen ',{a:'gekocht'},'.'],v:['kochen']},
+  {p:['Ihr ',{a:'habt'},' lange ',{a:'geschlafen'},'.'],v:['schlafen']},
+  {p:['Ich ',{a:'habe'},' ein Foto ',{a:'gemacht'},'.'],v:['machen']},
+  {p:['Du ',{a:'hast'},' Deutsch ',{a:'geübt'},'.'],v:['üben']},
+  {p:['Anna ',{a:'hat'},' das Fenster ',{a:'geöffnet'},'.'],v:['öffnen']},
+  {p:['Wir ',{a:'haben'},' die Wohnung ',{a:'geputzt'},'.'],v:['putzen']},
+  {p:['Er ',{a:'hat'},' ein Buch ',{a:'gelesen'},'.'],v:['lesen']},
+  {p:['Ich ',{a:'habe'},' einen Kurs ',{a:'besucht'},'.'],v:['besuchen']},
+  {p:['Du ',{a:'hast'},' auf den Bus ',{a:'gewartet'},'.'],v:['warten']},
+  // Block 5 – mehr Perfekt sein + haben
+  {p:['Anna ',{a:'ist'},' nach Hause ',{a:'gegangen'},'.'],v:['gehen']},
+  {p:['Wir ',{a:'sind'},' nach Berlin ',{a:'geflogen'},'.'],v:['fliegen']},
+  {p:['Er ',{a:'ist'},' um 7 Uhr ',{a:'aufgestanden'},'.'],v:['aufstehen']},
+  {p:['Du ',{a:'bist'},' in die Schule ',{a:'gegangen'},'.'],v:['gehen']},
+  {p:['Ich ',{a:'bin'},' zu Fuß ',{a:'gekommen'},'.'],v:['kommen']},
+  {p:['Du ',{a:'hast'},' den Hund ',{a:'gefüttert'},'.'],v:['füttern']},
+  {p:['Wir ',{a:'sind'},' spät ',{a:'angekommen'},'.'],v:['ankommen']},
+  {p:['Er ',{a:'hatte'},' Urlaub.'],v:['haben']},
+  {p:['Ich ',{a:'bin'},' früh ins Bett ',{a:'gegangen'},'.'],v:['gehen']},
+  {p:['Anna ',{a:'hat'},' das Licht ',{a:'ausgemacht'},'.'],v:['ausmachen']},
+  // Block 6 – gemischt (Präteritum + Perfekt in einem Satz)
+  {p:['Ich ',{a:'war'},' müde und ',{a:'bin'},' früh ',{a:'eingeschlafen'},'.'],v:['sein','einschlafen']},
+  {p:['Er ',{a:'hatte'},' Hunger und ',{a:'hat'},' einen Döner ',{a:'gegessen'},'.'],v:['haben','essen']},
+  {p:['Wir ',{a:'waren'},' in Berlin und ',{a:'haben'},' viel ',{a:'gesehen'},'.'],v:['sein','sehen']},
+  {p:['Du ',{a:'hattest'},' Zeit und ',{a:'hast'},' ein Buch ',{a:'gelesen'},'.'],v:['haben','lesen']},
+  {p:['Anna ',{a:'war'},' krank und ',{a:'hat'},' viel ',{a:'geschlafen'},'.'],v:['sein','schlafen']},
+  {p:['Ihr ',{a:'wart'},' müde, aber ihr ',{a:'habt'},' noch ',{a:'gekocht'},'.'],v:['sein','kochen']},
+  {p:['Ich ',{a:'hatte'},' kein Geld und ',{a:'bin'},' zu Fuß ',{a:'gegangen'},'.'],v:['haben','gehen']},
+  {p:['Er ',{a:'war'},' in Wien und ',{a:'hat'},' Freunde ',{a:'besucht'},'.'],v:['sein','besuchen']},
+  {p:['Wir ',{a:'hatten'},' Urlaub und ',{a:'sind'},' nach Spanien ',{a:'gefahren'},'.'],v:['haben','fahren']},
+  {p:['Du ',{a:'warst'},' allein und ',{a:'hast'},' Musik ',{a:'gehört'},'.'],v:['sein','hören']},
+];
+
+// Aufgabe 3: Satztransformation – Präsens → Vergangenheit (Selbstkontrolle)
+const g3Data = [
+  // Block 1
+  {pres:'Ich bin müde.',          past:'Ich war müde.'},
+  {pres:'Er hat Hunger.',         past:'Er hatte Hunger.'},
+  {pres:'Wir essen Pizza.',       past:'Wir haben Pizza gegessen.'},
+  {pres:'Sie fährt nach Berlin.', past:'Sie ist nach Berlin gefahren.'},
+  {pres:'Du lernst Deutsch.',     past:'Du hast Deutsch gelernt.'},
+  {pres:'Ich habe keine Zeit.',   past:'Ich hatte keine Zeit.'},
+  {pres:'Wir sind in der Schule.',past:'Wir waren in der Schule.'},
+  {pres:'Er spielt Fußball.',     past:'Er hat Fußball gespielt.'},
+  {pres:'Du trinkst Wasser.',     past:'Du hast Wasser getrunken.'},
+  {pres:'Ihr seid müde.',         past:'Ihr wart müde.'},
+  // Block 2
+  {pres:'Ich gehe ins Kino.',     past:'Ich bin ins Kino gegangen.'},
+  {pres:'Das Wetter ist schön.',  past:'Das Wetter war schön.'},
+  {pres:'Wir haben viel Arbeit.', past:'Wir hatten viel Arbeit.'},
+  {pres:'Er kommt aus Deutschland.',past:'Er ist aus Deutschland gekommen.'},
+  {pres:'Du machst die Hausaufgaben.',past:'Du hast die Hausaufgaben gemacht.'},
+  {pres:'Anna hat ein rotes Kleid.',past:'Anna hatte ein rotes Kleid.'},
+  {pres:'Wir gehen in die Schule.',past:'Wir sind in die Schule gegangen.'},
+  {pres:'Er liest ein Buch.',     past:'Er hat ein Buch gelesen.'},
+  {pres:'Ich bin in Wien.',       past:'Ich war in Wien.'},
+  {pres:'Du hörst Musik.',        past:'Du hast Musik gehört.'},
+  // Block 3
+  {pres:'Wir fahren nach München.',past:'Wir sind nach München gefahren.'},
+  {pres:'Er hat keine Hausaufgaben.',past:'Er hatte keine Hausaufgaben.'},
+  {pres:'Ich schreibe einen Brief.',past:'Ich habe einen Brief geschrieben.'},
+  {pres:'Du bist krank.',         past:'Du warst krank.'},
+  {pres:'Wir kochen Abendessen.', past:'Wir haben Abendessen gekocht.'},
+  {pres:'Anna ist glücklich.',    past:'Anna war glücklich.'},
+  {pres:'Er ruft seine Mutter an.',past:'Er hat seine Mutter angerufen.'},
+  {pres:'Ich habe Kopfschmerzen.',past:'Ich hatte Kopfschmerzen.'},
+  {pres:'Du schläfst lange.',     past:'Du hast lange geschlafen.'},
+  {pres:'Wir sind in Berlin.',    past:'Wir waren in Berlin.'},
+  // Block 4
+  {pres:'Er kauft ein Fahrrad.',  past:'Er hat ein Fahrrad gekauft.'},
+  {pres:'Ich stehe früh auf.',    past:'Ich bin früh aufgestanden.'},
+  {pres:'Du hast Durst.',         past:'Du hattest Durst.'},
+  {pres:'Wir sehen einen Film.',  past:'Wir haben einen Film gesehen.'},
+  {pres:'Die Kinder sind in Spanien.',past:'Die Kinder waren in Spanien.'},
+  {pres:'Er läuft im Park.',      past:'Er ist im Park gelaufen.'},
+  {pres:'Ich habe kein Geld.',    past:'Ich hatte kein Geld.'},
+  {pres:'Du gehst nach Hause.',   past:'Du bist nach Hause gegangen.'},
+  {pres:'Wir haben ein Problem.', past:'Wir hatten ein Problem.'},
+  {pres:'Er öffnet das Fenster.', past:'Er hat das Fenster geöffnet.'},
+  // Block 5
+  {pres:'Ich bin zu Hause.',      past:'Ich war zu Hause.'},
+  {pres:'Du fährst mit dem Bus.', past:'Du bist mit dem Bus gefahren.'},
+  {pres:'Wir haben Hunger.',      past:'Wir hatten Hunger.'},
+  {pres:'Anna putzt die Wohnung.',past:'Anna hat die Wohnung geputzt.'},
+  {pres:'Er ist nervös.',         past:'Er war nervös.'},
+  {pres:'Ich besuche einen Kurs.',past:'Ich habe einen Kurs besucht.'},
+  {pres:'Du wartest auf den Bus.',past:'Du hast auf den Bus gewartet.'},
+  {pres:'Wir sind glücklich.',    past:'Wir waren glücklich.'},
+  {pres:'Er schläft früh ein.',   past:'Er ist früh eingeschlafen.'},
+  {pres:'Ich habe viel Stress.',  past:'Ich hatte viel Stress.'},
+  // Block 6
+  {pres:'Du räumst das Zimmer auf.',past:'Du hast das Zimmer aufgeräumt.'},
+  {pres:'Wir fliegen nach Spanien.',past:'Wir sind nach Spanien geflogen.'},
+  {pres:'Anna hat keine Angst.',  past:'Anna hatte keine Angst.'},
+  {pres:'Er trinkt Kaffee.',      past:'Er hat Kaffee getrunken.'},
+  {pres:'Ich gehe früh schlafen.',past:'Ich bin früh schlafen gegangen.'},
+  {pres:'Er ist zu Hause.',       past:'Er war zu Hause.'},
+  {pres:'Ich kaufe ein Ticket.',  past:'Ich habe ein Ticket gekauft.'},
+  {pres:'Die Freunde haben Hunger.',past:'Die Freunde hatten Hunger.'},
+  {pres:'Du bist allein.',        past:'Du warst allein.'},
+  {pres:'Wir spielen Karten.',    past:'Wir haben Karten gespielt.'},
+];
+
+// ═══════════════════════════════════════════════
+// SHARED UTILITIES
+// ═══════════════════════════════════════════════
+
+function eq(a, b) {
+  return a.trim().toLowerCase() === b.trim().toLowerCase();
+}
+
+function endInfo(ok, total) {
+  const pct = total ? Math.round((ok / total) * 100) : 0;
+  if (pct === 100) return ['🏆', 'Perfekt! Alle richtig!'];
+  if (pct >= 80)   return ['🥇', 'Sehr gut!'];
+  if (pct >= 60)   return ['👍', 'Gut gemacht!'];
+  return ['💪', 'Weiter üben – du schaffst das!'];
+}
+
+function updatePills() {
+  // G1
+  const g1rem = g1Data.length - g1.bs - BLOCK;
+  const g1lp = document.getElementById('g1lp');
+  if (g1rem > 0) { g1lp.disabled = false; document.getElementById('g1lc').textContent = '('+g1rem+' übrig)'; }
+  else { g1lp.disabled = true; document.getElementById('g1lc').textContent = ''; }
+  // G2
+  const g2rem = g2Data.length - g2.bs - BLOCK;
+  const g2lp = document.getElementById('g2lp');
+  if (g2rem > 0) { g2lp.disabled = false; document.getElementById('g2lc').textContent = '('+g2rem+' übrig)'; }
+  else { g2lp.disabled = true; document.getElementById('g2lc').textContent = ''; }
+  // G3
+  const g3rem = g3Data.length - g3.bs - BLOCK;
+  const g3lp = document.getElementById('g3lp');
+  if (g3rem > 0) { g3lp.disabled = false; document.getElementById('g3lc').textContent = '('+g3rem+' übrig)'; }
+  else { g3lp.disabled = true; document.getElementById('g3lc').textContent = ''; }
+}
+
+function switchTab(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('panel'+i).classList.toggle('active', i===n);
+    document.getElementById('tb'+i).classList.toggle('active', i===n);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// GAME 1 – Präteritum tippen (eine Lücke)
+// ═══════════════════════════════════════════════
+const g1 = {bs:0, cur:0, ok:0, no:0, res:[]};
+
+function renderG1() {
+  const blockEnd = g1.bs + BLOCK;
+  if (g1.cur >= blockEnd) { showG1End(); return; }
+  const q = g1Data[g1.cur];
+  const inBlock = g1.cur - g1.bs;
+  const pct = Math.round((inBlock / BLOCK) * 100);
+  document.getElementById('g1f').style.width = pct + '%';
+  document.getElementById('g1pt').textContent = `Satz ${inBlock+1} von ${BLOCK}`;
+  document.getElementById('g1pp').textContent = pct + '%';
+  updatePills();
+
+  const parts = q.s.split('___');
+  const w = Math.max(82, (q.a.length + 4) * 11) + 'px';
+
+  document.getElementById('g1w').innerHTML = `
+    <div class="card c1">
+      <span class="qnum">PRÄTERITUM · ${inBlock+1}/${BLOCK}</span>
+      <div class="sentence-line">${parts[0]}<input type="text" class="gap-input" id="g1i" style="width:${w}" placeholder="…" autocomplete="off" autocorrect="off" spellcheck="false">${parts[1]||''}</div>
+      <div class="inline-fb" id="g1fb"></div>
+      <div style="display:flex;gap:10px;align-self:flex-end">
+        <button class="check-btn" id="g1cb" onclick="checkG1()">Prüfen</button>
+        <button class="next-btn" id="g1nb" onclick="nextG1()">Weiter →</button>
+      </div>
+    </div>`;
+
+  const inp = document.getElementById('g1i');
+  inp.focus();
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); checkG1(); }
+  });
+}
+
+function checkG1() {
+  const inp = document.getElementById('g1i');
+  if (!inp || inp.disabled) return;
+  const val = inp.value;
+  if (!val.trim()) return;
+  const q = g1Data[g1.cur];
+  const ok = eq(val, q.a);
+  inp.classList.add(ok ? 'ok' : 'bad');
+  inp.disabled = true;
+  document.getElementById('g1cb').disabled = true;
+  const fb = document.getElementById('g1fb');
+  fb.className = 'inline-fb show ' + (ok ? 'ok' : 'bad');
+  fb.textContent = ok ? 'Richtig!' : 'Richtige Form: ' + q.a;
+  if (ok) { g1.ok++; document.getElementById('g1ok').textContent = g1.ok; }
+  else    { g1.no++; document.getElementById('g1no').textContent = g1.no; }
+  g1.res.push({q, val, ok});
+  document.getElementById('g1nb').classList.add('show');
+  if (ok) setTimeout(() => nextG1(), 900);
+}
+
+function nextG1() { g1.cur++; renderG1(); }
+
+function showG1End() {
+  document.getElementById('g1w').innerHTML = '';
+  document.getElementById('g1f').style.width = '100%';
+  const e = document.getElementById('g1e');
+  e.classList.add('show');
+  document.getElementById('g1sc').textContent = `${g1.ok} / ${BLOCK} richtig`;
+  const [tr, mg] = endInfo(g1.ok, BLOCK);
+  document.getElementById('g1tr').textContent = tr;
+  document.getElementById('g1mg').textContent = mg;
+  const elb = document.getElementById('g1elb');
+  if (g1.bs + BLOCK < g1Data.length) { elb.style.display = ''; elb.disabled = false; }
+  else elb.style.display = 'none';
+  const rl = document.getElementById('g1rl');
+  rl.innerHTML = '';
+  g1.res.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'r-row ' + (r.ok ? 'ok' : 'bad');
+    const solved = r.q.s.replace('___', `<strong style="color:var(--${r.ok?'green':'red'})">${r.q.a}</strong>`);
+    d.innerHTML = `<div class="r-text"><div>${solved}</div><div class="r-sub">Deine Antwort: ${r.val||'–'}</div></div><span>${r.ok?'✓':'✗'}</span>`;
+    rl.appendChild(d);
+  });
+}
+
+function restartG1() {
+  g1.cur=g1.bs; g1.ok=0; g1.no=0; g1.res=[];
+  document.getElementById('g1ok').textContent=0;
+  document.getElementById('g1no').textContent=0;
+  document.getElementById('g1e').classList.remove('show');
+  renderG1();
+}
+
+function loadG1() {
+  const next = g1.bs + BLOCK;
+  if (next >= g1Data.length) return;
+  g1.bs=next; g1.cur=next; g1.ok=0; g1.no=0; g1.res=[];
+  document.getElementById('g1ok').textContent=0;
+  document.getElementById('g1no').textContent=0;
+  document.getElementById('g1e').classList.remove('show');
+  renderG1();
+}
+
+// ═══════════════════════════════════════════════
+// GAME 2 – Gemischte Lücken (Perfekt + Präteritum)
+// ═══════════════════════════════════════════════
+const g2 = {bs:0, cur:0, ok:0, no:0, res:[]};
+
+function renderG2() {
+  const blockEnd = g2.bs + BLOCK;
+  if (g2.cur >= blockEnd) { showG2End(); return; }
+  const q = g2Data[g2.cur];
+  const inBlock = g2.cur - g2.bs;
+  const pct = Math.round((inBlock / BLOCK) * 100);
+  document.getElementById('g2f').style.width = pct + '%';
+  document.getElementById('g2pt').textContent = `Satz ${inBlock+1} von ${BLOCK}`;
+  document.getElementById('g2pp').textContent = pct + '%';
+  updatePills();
+
+  let gapCount = 0;
+  const sentHtml = q.p.map(part => {
+    if (typeof part === 'string') return part;
+    const w = Math.max(82, (part.a.length + 4) * 10) + 'px';
+    return `<input type="text" class="gap-input" id="g2i${gapCount++}" data-ans="${part.a}" style="width:${w}" placeholder="…" autocomplete="off" autocorrect="off" spellcheck="false">`;
+  }).join('');
+
+  const verbsHtml = q.v.map(v => `<span class="verb-chip">${v}</span>`).join('');
+
+  document.getElementById('g2w').innerHTML = `
+    <div class="card c2">
+      <span class="qnum">GEMISCHT · ${inBlock+1}/${BLOCK}</span>
+      <div class="sentence-line">${sentHtml}</div>
+      <div class="verb-row"><span class="verb-label">Infinitiv</span>${verbsHtml}</div>
+      <div class="inline-fb" id="g2fb"></div>
+      <div style="display:flex;gap:10px;align-self:flex-end">
+        <button class="check-btn" id="g2cb" onclick="checkG2()">Prüfen</button>
+        <button class="next-btn" id="g2nb" onclick="nextG2()">Weiter →</button>
+      </div>
+    </div>`;
+
+  const first = document.getElementById('g2i0');
+  if (first) first.focus();
+  for (let i = 0; i < gapCount; i++) {
+    const inp = document.getElementById('g2i'+i);
+    if (inp) inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); checkG2(); }
+    });
+  }
+}
+
+function checkG2() {
+  const cb = document.getElementById('g2cb');
+  if (cb.disabled) return;
+  const q = g2Data[g2.cur];
+  let gapIdx = 0, allOk = true;
+  const typed = [];
+
+  q.p.forEach(part => {
+    if (typeof part === 'string') return;
+    const inp = document.getElementById('g2i'+gapIdx++);
+    if (!inp) return;
+    const val = inp.value;
+    const ok = eq(val, part.a);
+    typed.push({val, ans: part.a, ok});
+    inp.classList.add(ok ? 'ok' : 'bad');
+    inp.disabled = true;
+    if (!ok) allOk = false;
+  });
+
+  cb.disabled = true;
+  const fb = document.getElementById('g2fb');
+  if (allOk) {
+    g2.ok++; document.getElementById('g2ok').textContent = g2.ok;
+    fb.className = 'inline-fb show ok';
+    fb.textContent = 'Richtig!';
+  } else {
+    g2.no++; document.getElementById('g2no').textContent = g2.no;
+    const wrong = typed.filter(t => !t.ok).map(t => t.ans).join(', ');
+    fb.className = 'inline-fb show bad';
+    fb.textContent = 'Korrekte Formen: ' + wrong;
+  }
+
+  g2.res.push({q, typed, ok: allOk});
+  document.getElementById('g2nb').classList.add('show');
+  if (allOk) setTimeout(() => nextG2(), 900);
+}
+
+function nextG2() { g2.cur++; renderG2(); }
+
+function showG2End() {
+  document.getElementById('g2w').innerHTML = '';
+  document.getElementById('g2f').style.width = '100%';
+  document.getElementById('g2e').classList.add('show');
+  document.getElementById('g2sc').textContent = `${g2.ok} / ${BLOCK} richtig`;
+  const [tr, mg] = endInfo(g2.ok, BLOCK);
+  document.getElementById('g2tr').textContent = tr;
+  document.getElementById('g2mg').textContent = mg;
+  const elb = document.getElementById('g2elb');
+  if (g2.bs + BLOCK < g2Data.length) { elb.style.display = ''; elb.disabled = false; }
+  else elb.style.display = 'none';
+  const rl = document.getElementById('g2rl');
+  rl.innerHTML = '';
+  g2.res.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'r-row ' + (r.ok ? 'ok' : 'bad');
+    const solSent = r.q.p.map(p => typeof p === 'string' ? p : `<strong>${p.a}</strong>`).join('');
+    const deine = r.typed.map(t => t.val||'–').join(', ');
+    d.innerHTML = `<div class="r-text"><div>${solSent}</div><div class="r-sub">Deine Eingaben: ${deine}</div></div><span>${r.ok?'✓':'✗'}</span>`;
+    rl.appendChild(d);
+  });
+}
+
+function restartG2() {
+  g2.cur=g2.bs; g2.ok=0; g2.no=0; g2.res=[];
+  document.getElementById('g2ok').textContent=0;
+  document.getElementById('g2no').textContent=0;
+  document.getElementById('g2e').classList.remove('show');
+  renderG2();
+}
+
+function loadG2() {
+  const next = g2.bs + BLOCK;
+  if (next >= g2Data.length) return;
+  g2.bs=next; g2.cur=next; g2.ok=0; g2.no=0; g2.res=[];
+  document.getElementById('g2ok').textContent=0;
+  document.getElementById('g2no').textContent=0;
+  document.getElementById('g2e').classList.remove('show');
+  renderG2();
+}
+
+// ═══════════════════════════════════════════════
+// GAME 3 – Satztransformation (Selbstkontrolle)
+// ═══════════════════════════════════════════════
+const g3 = {bs:0, cur:0, ok:0, no:0, res:[], revealed:false, typed:''};
+
+function renderG3() {
+  const blockEnd = g3.bs + BLOCK;
+  if (g3.cur >= blockEnd) { showG3End(); return; }
+  const q = g3Data[g3.cur];
+  const inBlock = g3.cur - g3.bs;
+  const pct = Math.round((inBlock / BLOCK) * 100);
+  document.getElementById('g3f').style.width = pct + '%';
+  document.getElementById('g3pt').textContent = `Satz ${inBlock+1} von ${BLOCK}`;
+  document.getElementById('g3pp').textContent = pct + '%';
+  g3.revealed = false; g3.typed = '';
+  updatePills();
+
+  document.getElementById('g3w').innerHTML = `
+    <div class="card c3">
+      <span class="qnum">UMFORMEN · ${inBlock+1}/${BLOCK}</span>
+      <div class="pres-box">
+        <span class="pres-label">Präsens</span>
+        <span class="pres-text">${q.pres}</span>
+      </div>
+      <textarea class="g3-textarea" id="g3ta" placeholder="Schreibe den Satz in der Vergangenheit …" oninput="g3.typed=this.value"></textarea>
+      <div class="sol-box" id="g3sb">
+        <span class="sol-label">Musterlösung</span>
+        <span class="sol-text" id="g3st"></span>
+      </div>
+      <div class="self-eval-row" id="g3er">
+        <button class="self-eval-btn ok"  id="g3bok" onclick="evalG3(true)">Richtig</button>
+        <button class="self-eval-btn bad" id="g3bno" onclick="evalG3(false)">Falsch</button>
+      </div>
+      <div style="display:flex;gap:10px;align-self:flex-end">
+        <button class="show-sol-btn" id="g3ss" onclick="showSolG3()">Lösung</button>
+        <button class="next-btn" id="g3nb" onclick="nextG3()">Weiter →</button>
+      </div>
+    </div>`;
+
+  const ta = document.getElementById('g3ta');
+  ta.focus();
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); showSolG3(); }
+  });
+}
+
+function showSolG3() {
+  if (g3.revealed) return;
+  g3.revealed = true;
+  document.getElementById('g3st').textContent = g3Data[g3.cur].past;
+  document.getElementById('g3sb').classList.add('show');
+  document.getElementById('g3er').classList.add('show');
+  document.getElementById('g3ss').disabled = true;
+  document.getElementById('g3ta').disabled = true;
+}
+
+function evalG3(ok) {
+  document.getElementById('g3bok').classList.toggle('chosen', ok);
+  document.getElementById('g3bno').classList.toggle('chosen', !ok);
+  document.getElementById('g3bok').disabled = true;
+  document.getElementById('g3bno').disabled = true;
+  if (ok) { g3.ok++; document.getElementById('g3ok').textContent = g3.ok; }
+  else    { g3.no++; document.getElementById('g3no').textContent = g3.no; }
+  g3.res.push({q: g3Data[g3.cur], typed: g3.typed, ok});
+  document.getElementById('g3nb').classList.add('show');
+}
+
+function nextG3() { g3.cur++; renderG3(); }
+
+function showG3End() {
+  document.getElementById('g3w').innerHTML = '';
+  document.getElementById('g3f').style.width = '100%';
+  document.getElementById('g3e').classList.add('show');
+  document.getElementById('g3sc').textContent = `${g3.ok} / ${BLOCK} richtig`;
+  const [tr, mg] = endInfo(g3.ok, BLOCK);
+  document.getElementById('g3tr').textContent = tr;
+  document.getElementById('g3mg').textContent = mg;
+  const elb = document.getElementById('g3elb');
+  if (g3.bs + BLOCK < g3Data.length) { elb.style.display = ''; elb.disabled = false; }
+  else elb.style.display = 'none';
+  const rl = document.getElementById('g3rl');
+  rl.innerHTML = '';
+  g3.res.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'r-row ' + (r.ok ? 'ok' : 'bad');
+    const typed = r.typed && r.typed.trim() ? r.typed : '<em style="color:var(--muted)">–</em>';
+    d.innerHTML = `<div class="r-text"><div style="font-size:.8rem;color:var(--muted)">${r.q.pres}</div><div>Dein Satz: ${typed}</div><div class="r-sub">Musterlösung: <strong>${r.q.past}</strong></div></div><span>${r.ok?'✓':'✗'}</span>`;
+    rl.appendChild(d);
+  });
+}
+
+function restartG3() {
+  g3.cur=g3.bs; g3.ok=0; g3.no=0; g3.res=[]; g3.typed=''; g3.revealed=false;
+  document.getElementById('g3ok').textContent=0;
+  document.getElementById('g3no').textContent=0;
+  document.getElementById('g3e').classList.remove('show');
+  renderG3();
+}
+
+function loadG3() {
+  const next = g3.bs + BLOCK;
+  if (next >= g3Data.length) return;
+  g3.bs=next; g3.cur=next; g3.ok=0; g3.no=0; g3.res=[]; g3.typed=''; g3.revealed=false;
+  document.getElementById('g3ok').textContent=0;
+  document.getElementById('g3no').textContent=0;
+  document.getElementById('g3e').classList.remove('show');
+  renderG3();
+}
+
+// ═══════════════════════════════════════════════
+// GAME 4 – Lückentext (Fließtext, gemischt)
+// ═══════════════════════════════════════════════
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+const G4_TOTAL = 6;
+const g4 = {cur:0, ok:0, no:0, res:[], checked:false};
+
+// p = parts (strings + {a:'answer'}), verbs = Infinitive (gemischt)
+// Regel: sein/haben im Chip → Präteritum; alle anderen Verben → Perfekt
+const g4Data = [
+  {
+    title: 'Ein Morgen in Berlin',
+    parts: [
+      'Gestern ',{a:'war'},' ich sehr müde. Ich ',{a:'bin'},' um halb sieben ',{a:'aufgestanden'},
+      '. Das Wetter ',{a:'war'},' kalt. Ich ',{a:'habe'},' schnell Kaffee ',{a:'getrunken'},
+      '. Dann ',{a:'habe'},' ich ein Brötchen ',{a:'gegessen'},'. Um acht Uhr ',{a:'bin'},
+      ' ich in die Arbeit ',{a:'gefahren'},'.'
+    ],
+    verbs: ['sein','aufstehen','sein','trinken','essen','fahren']
+  },
+  {
+    title: 'Ein Samstag zu Hause',
+    parts: [
+      'Am Samstag ',{a:'hatte'},' ich frei. Ich ',{a:'habe'},' lange ',{a:'geschlafen'},
+      '. Dann ',{a:'habe'},' ich das Zimmer ',{a:'aufgeräumt'},'. Ich ',{a:'bin'},
+      ' in den Supermarkt ',{a:'gegangen'},' und ',{a:'habe'},' Obst ',{a:'gekauft'},
+      '. Das Wetter ',{a:'war'},' schön. Am Abend ',{a:'habe'},' ich für mich ',{a:'gekocht'},'.'
+    ],
+    verbs: ['haben','schlafen','aufräumen','gehen','kaufen','sein','kochen']
+  },
+  {
+    title: 'Im Supermarkt',
+    parts: [
+      'Gestern ',{a:'bin'},' ich in den Supermarkt ',{a:'gegangen'},'. Ich ',{a:'hatte'},
+      ' eine kurze Liste. Ich ',{a:'habe'},' Brot und Milch ',{a:'gekauft'},
+      '. Die Kassiererin ',{a:'war'},' sehr nett. Ich ',{a:'habe'},' mit der Karte ',{a:'bezahlt'},
+      '. Dann ',{a:'bin'},' ich nach Hause ',{a:'gelaufen'},'.'
+    ],
+    verbs: ['gehen','haben','kaufen','sein','bezahlen','laufen']
+  },
+  {
+    title: 'Ein Ausflug in den Zoo',
+    parts: [
+      'Am Sonntag ',{a:'sind'},' wir in den Zoo ',{a:'gegangen'},'. Das Wetter ',{a:'war'},
+      ' super. Wir ',{a:'haben'},' viele Tiere ',{a:'gesehen'},'. Die Kinder ',{a:'haben'},
+      ' viel ',{a:'gespielt'},'. Wir ',{a:'haben'},' mittags Pizza ',{a:'gegessen'},
+      '. Wir ',{a:'hatten'},' einen schönen Tag. Am Abend ',{a:'sind'},
+      ' wir müde nach Hause ',{a:'gefahren'},'.'
+    ],
+    verbs: ['gehen','sein','sehen','spielen','essen','haben','fahren']
+  },
+  {
+    title: 'Krank zu Hause',
+    parts: [
+      'Am Montag ',{a:'war'},' ich krank. Ich ',{a:'hatte'},' Fieber und Kopfschmerzen. Ich ',
+      {a:'habe'},' den ganzen Tag ',{a:'geschlafen'},'. Meine Mutter ',{a:'hat'},
+      ' mich ',{a:'angerufen'},'. Ich ',{a:'habe'},' viel Tee ',{a:'getrunken'},
+      ' und eine Suppe ',{a:'gegessen'},'. Am Abend ',{a:'war'},' das Fieber weg.'
+    ],
+    verbs: ['sein','haben','schlafen','anrufen','trinken','essen','sein']
+  },
+  {
+    title: 'Eine Reise nach Wien',
+    parts: [
+      'Letzten Sommer ',{a:'bin'},' ich nach Wien ',{a:'gefahren'},'. Die Stadt ',{a:'war'},
+      ' wunderschön. Ich ',{a:'habe'},' viele Museen ',{a:'besucht'},'. Ich ',{a:'habe'},
+      ' auch gutes Essen ',{a:'gegessen'},'. Das Hotel ',{a:'hatte'},' ein schönes Zimmer. ',
+      'Am letzten Tag ',{a:'bin'},' ich früh ',{a:'aufgestanden'},' und ',{a:'habe'},
+      ' noch einmal die Stadt ',{a:'gesehen'},'.'
+    ],
+    verbs: ['fahren','sein','besuchen','essen','haben','aufstehen','sehen']
+  }
+];
+
+function renderG4() {
+  if (g4.cur >= G4_TOTAL) { showG4End(); return; }
+  const q = g4Data[g4.cur];
+  g4.checked = false;
+  const pct = Math.round((g4.cur / G4_TOTAL) * 100);
+  document.getElementById('g4f').style.width = pct + '%';
+  document.getElementById('g4pt').textContent = `Text ${g4.cur+1} von ${G4_TOTAL}`;
+  document.getElementById('g4pp').textContent = pct + '%';
+
+  let gapCount = 0;
+  const textHtml = q.parts.map(p => {
+    if (typeof p === 'string') return p;
+    const w = Math.max(80, (p.a.length + 4) * 10) + 'px';
+    return `<input type="text" class="gap-input" id="g4i${gapCount++}" data-ans="${p.a}" style="width:${w}" placeholder="…" autocomplete="off" autocorrect="off" spellcheck="false">`;
+  }).join('');
+
+  const shuffled = shuffle(q.verbs);
+  const verbsHtml = shuffled.map(v => `<span class="verb-chip">${v}</span>`).join('');
+
+  document.getElementById('g4w').innerHTML = `
+    <div class="card c4">
+      <span class="qnum">LÜCKENTEXT · ${g4.cur+1}/${G4_TOTAL} – ${q.title}</span>
+      <div class="verb-bank">
+        <span class="verb-bank-label">Verben (Infinitiv, gemischte Reihenfolge)</span>
+        ${verbsHtml}
+      </div>
+      <div class="text-block">${textHtml}</div>
+      <div class="inline-fb" id="g4fb"></div>
+      <div style="display:flex;gap:10px;align-self:flex-end">
+        <button class="check-btn" id="g4cb" onclick="checkG4()">Alles prüfen</button>
+        <button class="next-btn" id="g4nb" onclick="nextG4()">${g4.cur < G4_TOTAL-1 ? 'Weiter →' : 'Ergebnis'}</button>
+      </div>
+    </div>`;
+
+  document.getElementById('g4i0').focus();
+  for (let i=0; i<gapCount; i++) {
+    const inp = document.getElementById('g4i'+i);
+    if (inp) inp.addEventListener('keydown', e => {
+      if (e.key==='Enter') { e.preventDefault(); checkG4(); }
+    });
+  }
+}
+
+function checkG4() {
+  if (g4.checked) return;
+  g4.checked = true;
+  const q = g4Data[g4.cur];
+  let total = 0;
+  q.parts.forEach(p => { if (typeof p !== 'string') total++; });
+
+  let correct = 0;
+  const typed = [];
+
+  for (let i=0; i<total; i++) {
+    const inp = document.getElementById('g4i'+i);
+    if (!inp) continue;
+    const ans = inp.dataset.ans;
+    const val = inp.value;
+    const ok = eq(val, ans);
+    typed.push({val, ans, ok});
+    inp.classList.add(ok ? 'ok' : 'bad');
+    inp.disabled = true;
+    if (ok) {
+      correct++;
+    } else {
+      const badge = document.createElement('span');
+      badge.className = 'correction-badge';
+      badge.textContent = '→ ' + ans;
+      inp.insertAdjacentElement('afterend', badge);
+    }
+  }
+
+  document.getElementById('g4cb').disabled = true;
+  const allOk = correct === total;
+  const fb = document.getElementById('g4fb');
+  fb.className = 'inline-fb show ' + (allOk ? 'ok' : 'bad');
+  fb.textContent = allOk
+    ? `Perfekt! Alle ${total} Lücken richtig.`
+    : `${correct} von ${total} Lücken richtig. Korrekturen sind in Gelb markiert.`;
+
+  if (allOk) { g4.ok++; document.getElementById('g4ok').textContent = g4.ok; }
+  else       { g4.no++; document.getElementById('g4no').textContent = g4.no; }
+  g4.res.push({q, typed, correct, total, ok: allOk});
+  document.getElementById('g4nb').classList.add('show');
+}
+
+function nextG4() { g4.cur++; renderG4(); }
+
+function showG4End() {
+  document.getElementById('g4w').innerHTML = '';
+  document.getElementById('g4f').style.width = '100%';
+  document.getElementById('g4e').classList.add('show');
+  const done = g4.ok + g4.no;
+  document.getElementById('g4sc').textContent = `${g4.ok} / ${done} Texte fehlerfrei`;
+  const [tr, mg] = endInfo(g4.ok, done);
+  document.getElementById('g4tr').textContent = tr;
+  document.getElementById('g4mg').textContent = mg;
+  const rl = document.getElementById('g4rl');
+  rl.innerHTML = '';
+  g4.res.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'r-row ' + (r.ok ? 'ok' : 'bad');
+    const errors = r.typed.filter(t=>!t.ok).map(t=>`<em>${t.val||'–'}</em> → <strong>${t.ans}</strong>`).join(', ');
+    d.innerHTML = `<div class="r-text"><div><strong>${r.q.title}</strong> <span style="color:var(--muted);font-size:.78rem">${r.correct}/${r.total} Lücken</span></div>${!r.ok?`<div class="r-sub">${errors}</div>`:''}</div><span>${r.ok?'✓':'✗'}</span>`;
+    rl.appendChild(d);
+  });
+}
+
+function restartG4() {
+  g4.cur=0; g4.ok=0; g4.no=0; g4.res=[]; g4.checked=false;
+  document.getElementById('g4ok').textContent=0;
+  document.getElementById('g4no').textContent=0;
+  document.getElementById('g4e').classList.remove('show');
+  renderG4();
+}
+
+// ── Init ──────────────────────────────────────
+renderG1(); renderG2(); renderG3(); renderG4();
+</script>
+</body>
+</html>

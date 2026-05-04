@@ -49,15 +49,17 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
 
 /* ── Tabs ── */
 .tabs {
-  display: flex; gap: 10px; margin-bottom: 28px;
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px;
   background: var(--surface); border-radius: 99px; padding: 5px;
   border: 2px solid var(--border);
+  justify-content: center;
 }
 .tab-btn {
-  padding: 10px 26px; border: none; border-radius: 99px; cursor: pointer;
-  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+  padding: 10px 18px; border: none; border-radius: 99px; cursor: pointer;
+  font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700;
   background: transparent; color: var(--muted);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 .tab-btn.active {
   background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -230,6 +232,84 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
 .g2-opt.chosen-bad { background:rgba(248,113,113,0.2)!important; border-color:var(--red)!important;   color:var(--red)!important; }
 .g2-opt.reveal-ok  { background:rgba(52,211,153,0.12); border-color:var(--green); color:var(--green); }
 
+/* ── GAME 3 card ── */
+.g3-card {
+  background: var(--surface); border:2px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 32px 26px 26px; width:100%;
+  display:flex; flex-direction:column; gap:16px;
+  position:relative; overflow:hidden;
+  animation: cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.g3-card::before {
+  content:''; position:absolute; top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--yellow),var(--green));
+}
+.g3-qnum { font-size:0.75rem; color:var(--muted); font-weight:700; letter-spacing:.07em; }
+
+.g3-answer-box {
+  background:var(--surface2); border-radius:14px; padding:18px 20px;
+  font-size:1.15rem; font-weight:700; line-height:1.45;
+  border-left:4px solid var(--green);
+}
+.g3-answer-box .ab-label {
+  display:block; font-size:0.7rem; color:var(--muted); font-weight:800;
+  letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;
+}
+.g3-answer-box .ab-text { color:var(--text); }
+
+.g3-textarea {
+  width:100%; min-height:60px; resize:vertical;
+  background:var(--surface2); border:2px solid var(--border); border-radius:12px;
+  padding:14px 16px; font-family:'Nunito',sans-serif; font-size:1.05rem; font-weight:700;
+  color:var(--text); line-height:1.45;
+  transition:border-color 0.2s, background 0.2s;
+}
+.g3-textarea::placeholder { color:var(--muted); font-weight:600; font-style:italic; }
+.g3-textarea:focus { outline:none; border-color:var(--accent); background:rgba(56,189,248,0.06); }
+.g3-textarea:disabled { opacity:0.7; cursor:not-allowed; }
+
+.g3-solution-box {
+  display:none; flex-direction:column; gap:6px;
+  background:rgba(251,191,36,0.10); border:2px solid var(--yellow); border-radius:12px;
+  padding:14px 18px; animation:fadeDown 0.35s ease both;
+}
+.g3-solution-box.show { display:flex; }
+.g3-solution-box .sol-label {
+  font-size:0.72rem; color:var(--yellow); font-weight:800;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+.g3-solution-box .sol-text { font-size:1.1rem; font-weight:800; color:var(--text); line-height:1.4; }
+.g3-solution-box .sol-text .sol-w { padding:2px 8px; border-radius:7px; }
+
+.self-eval-row {
+  display:none; gap:10px; flex-wrap:wrap;
+  animation:fadeDown 0.35s ease both;
+}
+.self-eval-row.show { display:flex; }
+.self-eval-btn {
+  flex:1; min-width:140px;
+  font-family:'Baloo 2',cursive; font-size:1rem; font-weight:800;
+  padding:12px 18px; border-radius:12px; cursor:pointer;
+  border:2px solid; transition:transform 0.15s, filter 0.15s;
+}
+.self-eval-btn.ok  { background:rgba(52,211,153,0.14); border-color:var(--green); color:var(--green); }
+.self-eval-btn.bad { background:rgba(248,113,113,0.14); border-color:var(--red);   color:var(--red); }
+.self-eval-btn:hover:not(:disabled) { transform:translateY(-2px); filter:brightness(1.12); }
+.self-eval-btn:disabled { opacity:0.45; cursor:not-allowed; transform:none; }
+.self-eval-btn.chosen.ok  { background:rgba(52,211,153,0.3); }
+.self-eval-btn.chosen.bad { background:rgba(248,113,113,0.3); }
+
+.show-sol-btn {
+  align-self:flex-end;
+  background:linear-gradient(135deg,var(--yellow),var(--green));
+  color:#0f172a; border:none; border-radius:12px; padding:12px 26px;
+  font-family:'Baloo 2',cursive; font-size:1.02rem; font-weight:800; cursor:pointer;
+  transition:transform 0.15s, filter 0.15s;
+}
+.show-sol-btn:hover:not(:disabled) { transform:translateY(-2px); filter:brightness(1.07); }
+.show-sol-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
 /* ── End screen ── */
 .end-screen {
   display:none; flex-direction:column; align-items:center; gap:18px;
@@ -297,12 +377,13 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
 
 <header>
   <h1>W-Fragen üben 🎮</h1>
-  <p>Zwei Spiele – eine Grammatik!</p>
+  <p>Drei Spiele – eine Grammatik!</p>
 </header>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab(1)">🎯 Spiel 1 – Drag & Drop</button>
   <button class="tab-btn"       onclick="switchTab(2)">💬 Spiel 2 – Dialog</button>
+  <button class="tab-btn"       onclick="switchTab(3)">✏️ Spiel 3 – Schreiben</button>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -375,6 +456,42 @@ header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
     <div class="end-btn-row">
       <button class="btn-restart" onclick="restartG2()">🔄 Block wiederholen</button>
       <button class="btn-loadmore" id="g2EndLoadBtn" onclick="loadMoreG2()">⏭️ Weitere 15 laden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SPIEL 3 – Frage schreiben (Selbstkontrolle)
+═══════════════════════════════════════════ -->
+<div class="game-panel" id="panel3">
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="g3ProgText">Frage 1 von 15</span>
+      <span id="g3ProgPct">0%</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-fill" id="g3Fill" style="width:0%"></div></div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill"><div class="dot dot-g"></div><span id="g3Correct">0</span> richtig</div>
+    <div class="score-pill"><div class="dot dot-r"></div><span id="g3Wrong">0</span> falsch</div>
+  </div>
+  <div class="loadmore-row">
+    <button class="btn-loadmore-pill" id="g3LoadMorePill" onclick="loadMoreG3()">
+      ⏭️ Nächste 15 laden <span class="lm-count" id="g3LoadCount"></span>
+    </button>
+  </div>
+
+  <div id="g3CardWrap" style="width:100%"></div>
+  <div class="end-screen" id="g3End">
+    <div class="end-trophy" id="g3Trophy">🏆</div>
+    <div class="end-title">Block geschafft!</div>
+    <div class="end-score" id="g3Score"></div>
+    <div class="end-msg"   id="g3Msg"></div>
+    <div class="results-list" id="g3Results"></div>
+    <div class="end-btn-row">
+      <button class="btn-restart" onclick="restartG3()">🔄 Block wiederholen</button>
+      <button class="btn-loadmore" id="g3EndLoadBtn" onclick="loadMoreG3()">⏭️ Weitere 15 laden</button>
     </div>
   </div>
 </div>
@@ -811,17 +928,99 @@ const g2Data = [
     hint:'B nennt einen Ort.' },
 ];
 
+// ── GAME 3 DATA ───────────────────────────────
+// Each item: a given answer + a model question (Musterlösung) + which W-word it tests
+const g3Data = [
+  // ── Block 1 (15) ──
+  { given:'Mein Bruder Max kommt mit.',          solution:'Wer kommt mit?',                    wword:'wer' },
+  { given:'Pizza und Salat.',                    solution:'Was kochst du heute?',              wword:'was' },
+  { given:'Am Samstag um 19 Uhr.',               solution:'Wann beginnt die Party?',           wword:'wann' },
+  { given:'Weil mein Wecker nicht geklingelt hat.', solution:'Warum bist du zu spät?',         wword:'warum' },
+  { given:'Im obersten Stockwerk.',              solution:'Wo ist dein Büro?',                 wword:'wo' },
+  { given:'Mit dem Bus.',                        solution:'Wie kommst du zur Schule?',         wword:'wie' },
+  { given:'Ich nehme die rote Tasche.',          solution:'Welche Tasche nimmst du?',          wword:'welche' },
+  { given:'Drei Tage.',                          solution:'Wie lange bleibst du in Berlin?',   wword:'wielange' },
+  { given:'Fünfzehn Euro.',                      solution:'Wie viel kostet das?',              wword:'wieviel' },
+  { given:'Frau Müller unterrichtet uns Mathe.', solution:'Wer unterrichtet euch Mathe?',      wword:'wer' },
+  { given:'Ich habe einen Apfel gegessen.',      solution:'Was hast du gegessen?',             wword:'was' },
+  { given:'In zwei Wochen.',                     solution:'Wann fährst du in den Urlaub?',     wword:'wann' },
+  { given:'Weil sie krank ist.',                 solution:'Warum ist sie nicht in der Schule?',wword:'warum' },
+  { given:'Hinter dem Bahnhof.',                 solution:'Wo ist das Hotel?',                 wword:'wo' },
+  { given:'Sehr gut, danke.',                    solution:'Wie geht es dir?',                  wword:'wie' },
+
+  // ── Block 2 (15) ──
+  { given:'Die deutsche Sprache.',               solution:'Welche Sprache lernst du?',         wword:'welche' },
+  { given:'Eine halbe Stunde.',                  solution:'Wie lange dauert die Pause?',       wword:'wielange' },
+  { given:'Zwei Liter pro Tag.',                 solution:'Wie viel Wasser trinkst du?',       wword:'wieviel' },
+  { given:'Mein Onkel hat angerufen.',           solution:'Wer hat angerufen?',                wword:'wer' },
+  { given:'Eine warme Jacke.',                   solution:'Was brauchst du?',                  wword:'was' },
+  { given:'Nach dem Essen.',                     solution:'Wann gehst du spazieren?',          wword:'wann' },
+  { given:'Weil ich Hunger habe.',               solution:'Warum kochst du schon?',            wword:'warum' },
+  { given:'Auf dem Schreibtisch.',               solution:'Wo liegt mein Laptop?',             wword:'wo' },
+  { given:'Mit zwei N.',                         solution:'Wie schreibt man dieses Wort?',     wword:'wie' },
+  { given:'Ich mag die kurze Hose.',             solution:'Welche Hose magst du?',             wword:'welche' },
+  { given:'Seit zwei Jahren.',                   solution:'Wie lange lebst du in Deutschland?',wword:'wielange' },
+  { given:'Hundert Gramm.',                      solution:'Wie viel Butter brauchen wir?',     wword:'wieviel' },
+  { given:'Die neuen Schüler aus Spanien.',      solution:'Wer kommt aus Spanien?',            wword:'wer' },
+  { given:'Mathe und Englisch.',                 solution:'Was lernst du heute?',              wword:'was' },
+  { given:'Im Frühling.',                        solution:'Wann blühen die Blumen?',           wword:'wann' },
+
+  // ── Block 3 (15) ──
+  { given:'Weil das Geschäft geschlossen war.',  solution:'Warum hast du nichts gekauft?',     wword:'warum' },
+  { given:'In Berlin.',                          solution:'Wo wohnt deine Schwester?',         wword:'wo' },
+  { given:'Ich heiße Sofia.',                    solution:'Wie heißt du?',                     wword:'wie' },
+  { given:'Frühling und Sommer sind toll.',      solution:'Welche Jahreszeiten magst du?',     wword:'welche' },
+  { given:'Den ganzen Tag.',                     solution:'Wie lange hast du gearbeitet?',     wword:'wielange' },
+  { given:'Nur ein bisschen.',                   solution:'Wie viel Salz nimmst du?',          wword:'wieviel' },
+  { given:'Mein Vater fährt mich zur Schule.',   solution:'Wer fährt dich zur Schule?',        wword:'wer' },
+  { given:'Eine spannende Serie.',               solution:'Was schaust du gerade?',            wword:'was' },
+  { given:'Um halb sieben Uhr morgens.',         solution:'Wann stehst du auf?',               wword:'wann' },
+  { given:'Weil es regnet.',                     solution:'Warum bleibst du zu Hause?',        wword:'warum' },
+  { given:'Neben der Apotheke.',                 solution:'Wo ist die Bäckerei?',              wword:'wo' },
+  { given:'Sehr lecker!',                        solution:'Wie schmeckt der Kuchen?',          wword:'wie' },
+  { given:'Ich finde die blauen Schuhe schön.',  solution:'Welche Schuhe findest du schön?',   wword:'welche' },
+  { given:'Die Kinder spielen im Garten.',       solution:'Wer spielt im Garten?',             wword:'wer' },
+  { given:'Ein neues Auto.',                     solution:'Was möchtest du kaufen?',           wword:'was' },
+
+  // ── Block 4 (15) ──
+  { given:'Am Wochenende.',                      solution:'Wann hast du Zeit?',                wword:'wann' },
+  { given:'Weil ich morgen früh aufstehen muss.',solution:'Warum gehst du schon ins Bett?',    wword:'warum' },
+  { given:'Im Schwimmbad.',                      solution:'Wo trainierst du?',                 wword:'wo' },
+  { given:'Schnell und konzentriert.',           solution:'Wie arbeitet er?',                  wword:'wie' },
+  { given:'Die alte Kirche im Zentrum.',         solution:'Welche Kirche meinst du?',          wword:'welche' },
+  { given:'Bis Mitternacht.',                    solution:'Wie lange bleibst du noch?',        wword:'wielange' },
+  { given:'Sehr viel!',                          solution:'Wie viel Spaß hast du?',            wword:'wieviel' },
+  { given:'Mein Chef hat den Termin verschoben.',solution:'Wer hat den Termin verschoben?',    wword:'wer' },
+  { given:'Brot, Käse und Marmelade.',           solution:'Was kaufst du im Supermarkt?',      wword:'was' },
+  { given:'Letzten Freitag.',                    solution:'Wann hast du das Buch gekauft?',    wword:'wann' },
+  { given:'Weil ich meinen Schlüssel verloren habe.', solution:'Warum kommst du nicht rein?',  wword:'warum' },
+  { given:'Unter dem Bett.',                     solution:'Wo sind meine Schuhe?',             wword:'wo' },
+  { given:'Ich bin 30 Jahre alt.',               solution:'Wie alt bist du?',                  wword:'wie' },
+  { given:'Ich bestelle die große Pizza.',       solution:'Welche Pizza bestellst du?',        wword:'welche' },
+  { given:'Niemand war zu Hause.',               solution:'Wer war zu Hause?',                 wword:'wer' },
+
+  // ── Block 5 (5) ──
+  { given:'Ein Tablet und ein Buch.',            solution:'Was hast du zum Geburtstag bekommen?', wword:'was' },
+  { given:'Heute Abend.',                        solution:'Wann kommen die Gäste?',            wword:'wann' },
+  { given:'In Frankreich.',                      solution:'Wo macht ihr Urlaub?',              wword:'wo' },
+  { given:'Es ist sonnig und warm.',             solution:'Wie ist das Wetter?',               wword:'wie' },
+  { given:'Ungefähr 45 Minuten.',                solution:'Wie lange dauert die Fahrt?',       wword:'wielange' },
+];
+
 // ── State ─────────────────────────────────────
 const BLOCK_SIZE = 15;
 let g1 = { cur:0, blockStart:0, correct:0, wrong:0, results:[], dropValue:null };
 let g2 = { cur:0, blockStart:0, correct:0, wrong:0, results:[] };
+let g3 = { cur:0, blockStart:0, correct:0, wrong:0, results:[], typed:'', revealed:false };
 let dragging = null;
 
 // helpers: how many questions are left after the current block
 function g1RemainingAfterBlock() { return Math.max(0, g1Data.length - (g1.blockStart + currentG1BlockSize())); }
 function g2RemainingAfterBlock() { return Math.max(0, g2Data.length - (g2.blockStart + currentG2BlockSize())); }
+function g3RemainingAfterBlock() { return Math.max(0, g3Data.length - (g3.blockStart + currentG3BlockSize())); }
 function currentG1BlockSize() { return Math.min(BLOCK_SIZE, g1Data.length - g1.blockStart); }
 function currentG2BlockSize() { return Math.min(BLOCK_SIZE, g2Data.length - g2.blockStart); }
+function currentG3BlockSize() { return Math.min(BLOCK_SIZE, g3Data.length - g3.blockStart); }
 
 // update the in-game pill button state
 function updateLoadMoreButtons() {
@@ -839,6 +1038,13 @@ function updateLoadMoreButtons() {
     g2Btn.disabled = g2Rem === 0;
     g2Cnt.textContent = g2Rem > 0 ? `(${g2Rem} übrig)` : '(alle gesehen)';
   }
+  const g3Btn = document.getElementById('g3LoadMorePill');
+  const g3Cnt = document.getElementById('g3LoadCount');
+  const g3Rem = g3RemainingAfterBlock();
+  if (g3Btn) {
+    g3Btn.disabled = g3Rem === 0;
+    g3Cnt.textContent = g3Rem > 0 ? `(${g3Rem} übrig)` : '(alle gesehen)';
+  }
 }
 
 // ── Tab switching ─────────────────────────────
@@ -846,6 +1052,7 @@ function switchTab(n) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n-1));
   document.getElementById('panel1').classList.toggle('active', n===1);
   document.getElementById('panel2').classList.toggle('active', n===2);
+  document.getElementById('panel3').classList.toggle('active', n===3);
 }
 
 // ══════════════════════════════════════════════
@@ -1218,10 +1425,181 @@ function loadMoreG2() {
   renderG2();
 }
 
+// ══════════════════════════════════════════════
+// GAME 3 – Frage schreiben (Selbstkontrolle)
+// ══════════════════════════════════════════════
+function renderG3() {
+  const wrap = document.getElementById('g3CardWrap');
+  const blockSize = currentG3BlockSize();
+  const blockEnd  = g3.blockStart + blockSize;
+  if (g3.cur >= blockEnd) { showG3End(); return; }
+  const q = g3Data[g3.cur];
+  const inBlock = g3.cur - g3.blockStart;
+  const pct = Math.round((inBlock / blockSize) * 100);
+  document.getElementById('g3Fill').style.width   = pct + '%';
+  document.getElementById('g3ProgText').textContent = `Frage ${inBlock+1} von ${blockSize}`;
+  document.getElementById('g3ProgPct').textContent  = pct + '%';
+  updateLoadMoreButtons();
+
+  // reset per-question state
+  g3.typed    = '';
+  g3.revealed = false;
+
+  wrap.innerHTML = `
+    <div class="g3-card" id="g3Card">
+      <span class="g3-qnum">Frage ${inBlock+1} / ${blockSize}</span>
+      <div style="font-size:0.82rem;color:var(--muted);font-weight:700;">✏️ Schreibe die passende Frage zu dieser Antwort:</div>
+      <div class="g3-answer-box">
+        <span class="ab-label">💬 Antwort</span>
+        <span class="ab-text">${q.given}</span>
+      </div>
+      <textarea class="g3-textarea" id="g3Input" placeholder="Tippe hier deine Frage… (mit ? am Ende)"
+                oninput="g3.typed = this.value"></textarea>
+      <div class="g3-solution-box" id="g3SolBox">
+        <span class="sol-label">✔ Musterlösung</span>
+        <span class="sol-text" id="g3SolText"></span>
+      </div>
+      <div class="self-eval-row" id="g3EvalRow">
+        <button class="self-eval-btn ok"  id="g3EvalOk"  onclick="evalG3(true)">✅ Hatte ich richtig</button>
+        <button class="self-eval-btn bad" id="g3EvalBad" onclick="evalG3(false)">❌ Falsch</button>
+      </div>
+      <div style="display:flex;gap:12px;align-self:flex-end;flex-wrap:wrap;justify-content:flex-end">
+        <button class="show-sol-btn" id="g3ShowBtn" onclick="showSolutionG3()">🔍 Lösung zeigen</button>
+        <button class="next-btn"     id="g3NextBtn" onclick="nextG3()">Weiter →</button>
+      </div>
+    </div>`;
+
+  // focus textarea, plus Enter shortcut to reveal solution
+  const ta = document.getElementById('g3Input');
+  ta.focus();
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!g3.revealed) showSolutionG3();
+    }
+  });
+}
+
+function showSolutionG3() {
+  if (g3.revealed) return;
+  g3.revealed = true;
+  const q = g3Data[g3.cur];
+
+  // build coloured solution: highlight the W-word at the start
+  const meta = wMeta(q.wword);
+  const label = meta.label;
+  const rest  = q.solution.slice(label.length); // everything after the W-word
+  const html  = `<span class="sol-w ${meta.css}">${label}</span>${rest}`;
+  document.getElementById('g3SolText').innerHTML = html;
+
+  document.getElementById('g3SolBox').classList.add('show');
+  document.getElementById('g3EvalRow').classList.add('show');
+  document.getElementById('g3ShowBtn').disabled = true;
+  document.getElementById('g3Input').disabled   = true;
+}
+
+function evalG3(isOk) {
+  const q = g3Data[g3.cur];
+  g3.results.push({ q, typed: g3.typed, isOk });
+
+  // visually mark the chosen self-eval button
+  document.getElementById('g3EvalOk').classList.toggle('chosen', isOk);
+  document.getElementById('g3EvalBad').classList.toggle('chosen', !isOk);
+  document.getElementById('g3EvalOk').disabled  = true;
+  document.getElementById('g3EvalBad').disabled = true;
+
+  if (isOk) {
+    g3.correct++;
+    document.getElementById('g3Correct').textContent = g3.correct;
+  } else {
+    g3.wrong++;
+    document.getElementById('g3Wrong').textContent = g3.wrong;
+  }
+  document.getElementById('g3NextBtn').classList.add('show');
+}
+
+function nextG3() { g3.cur++; renderG3(); }
+
+function showG3End() {
+  document.getElementById('g3CardWrap').innerHTML = '';
+  const end = document.getElementById('g3End');
+  end.classList.add('show');
+
+  const blockSize = currentG3BlockSize();
+  const pct = blockSize ? Math.round((g3.correct / blockSize) * 100) : 0;
+  document.getElementById('g3Score').textContent = `${g3.correct} / ${blockSize} richtig`;
+
+  let trophy='💪', msg='Übung macht den Meister – probiere es nochmal!';
+  if (pct===100){trophy='🏆';msg='Perfekt! Du kannst alle Fragen formulieren!';}
+  else if(pct>=80){trophy='🥇';msg='Sehr gut! Fast alle Fragen sitzen!';}
+  else if(pct>=60){trophy='👍';msg='Gut gemacht! Bleib dran!';}
+
+  document.getElementById('g3Trophy').textContent = trophy;
+  document.getElementById('g3Msg').textContent    = msg;
+  document.getElementById('g3Fill').style.width   = '100%';
+
+  // toggle "load more" button at end screen
+  const endBtn = document.getElementById('g3EndLoadBtn');
+  const remaining = g3RemainingAfterBlock();
+  if (remaining > 0) {
+    endBtn.style.display = '';
+    endBtn.disabled = false;
+    endBtn.textContent = `⏭️ Weitere ${Math.min(BLOCK_SIZE, remaining)} laden`;
+  } else {
+    endBtn.style.display = 'none';
+  }
+
+  const list = document.getElementById('g3Results');
+  list.innerHTML = '';
+  g3.results.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'r-row ' + (r.isOk ? 'ok' : 'bad');
+    const typedDisplay = r.typed && r.typed.trim() ? r.typed : '<em style="color:var(--muted)">– (leer) –</em>';
+    row.innerHTML = `
+      <div class="r-text">
+        <div style="font-weight:700;font-size:0.84rem;color:var(--muted)">💬 ${r.q.given}</div>
+        <div style="font-weight:700;margin-top:3px">Deine Frage: ${typedDisplay}</div>
+        <div class="r-sub">✔ Musterlösung: <strong>${r.q.solution}</strong></div>
+      </div>
+      <span>${r.isOk?'✅':'❌'}</span>`;
+    list.appendChild(row);
+  });
+}
+
+function restartG3() {
+  g3.cur     = g3.blockStart;
+  g3.correct = 0;
+  g3.wrong   = 0;
+  g3.results = [];
+  g3.typed   = '';
+  g3.revealed = false;
+  document.getElementById('g3Correct').textContent = 0;
+  document.getElementById('g3Wrong').textContent   = 0;
+  document.getElementById('g3End').classList.remove('show');
+  renderG3();
+}
+
+function loadMoreG3() {
+  const next = g3.blockStart + BLOCK_SIZE;
+  if (next >= g3Data.length) return;
+  g3.blockStart = next;
+  g3.cur        = next;
+  g3.correct    = 0;
+  g3.wrong      = 0;
+  g3.results    = [];
+  g3.typed      = '';
+  g3.revealed   = false;
+  document.getElementById('g3Correct').textContent = 0;
+  document.getElementById('g3Wrong').textContent   = 0;
+  document.getElementById('g3End').classList.remove('show');
+  renderG3();
+}
+
 // ── Init ──────────────────────────────────────
 buildG1Chips();
 renderG1();
 renderG2();
+renderG3();
 updateLoadMoreButtons();
 </script>
 </body>
