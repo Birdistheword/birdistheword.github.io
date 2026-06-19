@@ -1,0 +1,252 @@
+/* ============================================================
+   Bird is the Word — Deutsch Übungen
+   Shared design system. One stylesheet for every page.
+   Based on the "Präteritum" look: light, friendly, rounded.
+
+   HOW TO THEME A PAGE:
+   Put a theme class on <body>, e.g. <body class="theme-teal">.
+   Available: theme-purple (default), theme-teal, theme-coral,
+   theme-blue, theme-green, theme-amber.
+   Everything (buttons, headers, badges) follows --accent.
+   ============================================================ */
+
+:root {
+  /* Accent — overridden by the theme-* classes below */
+  --accent:        #7c3aed;
+  --accent-light:  #ede9fe;
+  --accent-mid:    #c4b5fd;
+
+  /* Neutrals */
+  --bg:        #f9fafb;
+  --surface:   #ffffff;
+  --gray-100:  #f3f4f6;
+  --gray-200:  #e5e7eb;
+  --gray-300:  #d1d5db;
+  --gray-400:  #9ca3af;
+  --gray-600:  #4b5563;
+  --gray-800:  #1f2937;
+
+  /* Feedback */
+  --correct:        #16a34a;
+  --correct-light:  #dcfce7;
+  --wrong:          #dc2626;
+  --wrong-light:    #fee2e2;
+
+  /* Shape */
+  --radius:     12px;
+  --radius-lg:  16px;
+  --shadow:     0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg:  0 8px 30px rgba(0,0,0,0.12);
+
+  /* Type */
+  --font: 'Nunito', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ---- Themes ---- */
+.theme-purple { --accent:#7c3aed; --accent-light:#ede9fe; --accent-mid:#c4b5fd; }
+.theme-teal   { --accent:#0d9488; --accent-light:#ccfbf1; --accent-mid:#5eead4; }
+.theme-coral  { --accent:#e05a47; --accent-light:#ffe3dd; --accent-mid:#f7a896; }
+.theme-blue   { --accent:#2563eb; --accent-light:#dbeafe; --accent-mid:#93c5fd; }
+.theme-green  { --accent:#15803d; --accent-light:#dcfce7; --accent-mid:#86efac; }
+.theme-amber  { --accent:#b45309; --accent-light:#fef3c7; --accent-mid:#fcd34d; }
+
+/* ---- Reset ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--gray-800);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--accent); }
+
+/* ============================================================
+   Header / top bar
+   ============================================================ */
+.site-header {
+  background: var(--surface);
+  border-bottom: 3px solid var(--accent);
+  box-shadow: var(--shadow);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.site-header .brand {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+}
+.site-header h1 {
+  font-size: 1.4rem; font-weight: 800; color: var(--accent);
+}
+.site-header .subtitle {
+  font-size: 0.9rem; color: var(--gray-400); font-weight: 700;
+}
+.back-link {
+  font-size: 0.9rem; font-weight: 800; color: var(--gray-600);
+  text-decoration: none; padding: 8px 14px; border-radius: 50px;
+  background: var(--gray-100); transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.back-link:hover { background: var(--accent-light); color: var(--accent); }
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.container { max-width: 960px; margin: 32px auto; padding: 0 24px 80px; }
+.container-wide { max-width: 1140px; }
+
+/* ============================================================
+   Cards
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 26px 30px;
+  margin-bottom: 22px;
+}
+.card h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: 14px; }
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  font-family: var(--font);
+  font-weight: 800; font-size: 0.95rem;
+  padding: 11px 20px; border-radius: 50px;
+  border: 2px solid transparent; cursor: pointer;
+  transition: transform .12s, box-shadow .12s, background .15s, color .15s;
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
+.btn-ghost   { background: var(--surface); color: var(--accent); border-color: var(--accent-mid); }
+.btn-ghost:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ============================================================
+   Badges / chips
+   ============================================================ */
+.badge {
+  display: inline-block; font-size: 0.72rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 3px 9px; border-radius: 50px;
+  background: var(--accent-light); color: var(--accent);
+}
+.badge-level { background: var(--gray-100); color: var(--gray-600); }
+
+/* ============================================================
+   Tables
+   ============================================================ */
+.table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.table th {
+  text-align: left; padding: 9px 10px; font-weight: 800;
+  font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--accent); border-bottom: 2px solid var(--accent-mid);
+}
+.table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); }
+.table tr:last-child td { border-bottom: none; }
+
+/* ============================================================
+   Quiz options (multiple choice)
+   ============================================================ */
+.option {
+  display: block; width: 100%; text-align: left;
+  font-family: var(--font); font-size: 1rem; font-weight: 700;
+  padding: 14px 18px; margin-bottom: 10px;
+  background: var(--surface); color: var(--gray-800);
+  border: 2px solid var(--gray-200); border-radius: var(--radius);
+  cursor: pointer; transition: border-color .15s, background .15s;
+}
+.option:hover { border-color: var(--accent-mid); }
+.option.correct { background: var(--correct-light); border-color: var(--correct); color: var(--correct); }
+.option.wrong   { background: var(--wrong-light);   border-color: var(--wrong);   color: var(--wrong); }
+
+/* ============================================================
+   Hint / note box
+   ============================================================ */
+.hint {
+  background: var(--gray-100);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px; padding: 12px 16px;
+  font-size: 0.9rem; line-height: 1.6; margin-top: 14px;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-footer {
+  text-align: center; color: var(--gray-400);
+  font-size: 0.85rem; font-weight: 700;
+  padding: 28px 20px 40px;
+}
+
+/* ============================================================
+   DASHBOARD (index.html)
+   ============================================================ */
+.dash-hero {
+  text-align: center; padding: 48px 24px 8px;
+}
+.dash-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--accent); }
+.dash-hero p  { color: var(--gray-600); font-weight: 600; margin-top: 8px; font-size: 1.05rem; }
+
+.dash-search { margin: 22px auto 0; max-width: 460px; padding: 0 24px; }
+.dash-search input {
+  width: 100%; font-family: var(--font); font-size: 1rem; font-weight: 600;
+  padding: 13px 18px; border-radius: 50px;
+  border: 2px solid var(--gray-200); background: var(--surface); color: var(--gray-800);
+  box-shadow: var(--shadow); transition: border-color .15s, box-shadow .15s;
+}
+.dash-search input::placeholder { color: var(--gray-400); font-weight: 600; }
+.dash-search input:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-light);
+}
+
+.no-results {
+  text-align: center; color: var(--gray-400);
+  font-weight: 700; font-size: 1.05rem; padding: 40px 0;
+}
+
+.topic-section { margin-top: 40px; }
+.topic-section > h2 {
+  font-size: 1.25rem; font-weight: 800; color: var(--gray-800);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.topic-section > h2::before {
+  content: ""; width: 10px; height: 22px; border-radius: 4px; background: var(--accent);
+}
+
+.exercise-grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+.exercise-card {
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px;
+  text-decoration: none; color: inherit;
+  border: 2px solid transparent;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: transform .14s, box-shadow .14s, border-color .14s;
+}
+.exercise-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-mid);
+}
+.exercise-card .ex-title { font-size: 1.05rem; font-weight: 800; color: var(--gray-800); }
+.exercise-card .ex-meta  { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+
+/* ============================================================
+   Small screens
+   ============================================================ */
+@media (max-width: 600px) {
+  .container { margin: 20px auto; padding: 0 16px 60px; }
+  .card { padding: 20px; }
+  .site-header { padding: 14px 16px; }
+}

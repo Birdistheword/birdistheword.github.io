@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 1. Change the title -->
+<title>Titel der Übung — Deutsch</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- ../assets because this file lives in /exercises -->
+<link rel="stylesheet" href="../assets/styles.css">
+
+<!-- 2. Optional: page-specific styles go here. Reuse the shared
+        classes/variables (var(--accent), .card, .btn ...) first. -->
+<style>
+  /* .my-thing { color: var(--accent); } */
+</style>
+</head>
+
+<!-- 3. Pick a colour: theme-purple | theme-teal | theme-coral |
+        theme-blue | theme-green | theme-amber -->
+<body class="theme-purple">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>Titel der Übung</h1>
+    <span class="subtitle">Kurzbeschreibung · A1</span>
+  </div>
+  <a class="back-link" href="../index.html">← Übersicht</a>
+</header>
+
+<main class="container">
+
+  <!-- ===== Building blocks you can copy ===== -->
+
+  <!-- Card -->
+  <div class="card">
+    <h2>Überschrift</h2>
+    <p>Dein Inhalt hier.</p>
+    <div class="hint">💡 Ein kleiner Tipp oder eine Regel.</div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="card">
+    <button class="btn btn-primary">Weiter</button>
+    <a class="btn btn-ghost" href="#">Zurücksetzen</a>
+  </div>
+
+  <!-- Multiple choice -->
+  <div class="card">
+    <h2>Was ist richtig?</h2>
+    <button class="option">Antwort A</button>
+    <button class="option correct">Antwort B (richtig)</button>
+    <button class="option wrong">Antwort C (falsch)</button>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    <table class="table">
+      <thead><tr><th>Pronomen</th><th>Form</th></tr></thead>
+      <tbody>
+        <tr><td>ich</td><td>…</td></tr>
+        <tr><td>du</td><td>…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Badges -->
+  <div class="card">
+    <span class="badge">Spiel</span>
+    <span class="badge badge-level">A1</span>
+  </div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word · Deutsch lernen</footer>
+
+<script>
+  // 4. Your exercise logic here.
+</script>
+</body>
+</html>
