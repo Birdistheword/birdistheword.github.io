@@ -125,6 +125,7 @@ a { color: var(--accent); }
   text-decoration: none;
 }
 .btn:hover { transform: translateY(-2px); }
+.btn[hidden] { display: none; }   /* `hidden` must win over .btn's display */
 .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
 .btn-ghost   { background: var(--surface); color: var(--accent); border-color: var(--accent-mid); }
 .btn-ghost:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -381,13 +382,8 @@ a { color: var(--accent); }
 }
 .flash-tools { margin-top: 14px; }
 
-/* ---- Drag & Drop ---- */
-.dd { max-width: 680px; margin: 0 auto; }
-.dd-stats {
-  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-  justify-content: center; margin-bottom: 16px;
-  font-weight: 800; color: var(--gray-600);
-}
+/* ---- Drag & Drop (one sentence at a time) ---- */
+.dd { max-width: 640px; margin: 0 auto; }
 .dd-bank {
   display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
   padding: 16px; margin-bottom: 10px;
@@ -409,13 +405,9 @@ a { color: var(--accent); }
   text-align: center; color: var(--gray-400);
   font-weight: 700; font-size: .85rem; margin-bottom: 18px;
 }
-.dd-sentences { display: flex; flex-direction: column; gap: 14px; }
-.dd-item {
-  background: var(--surface); border-radius: var(--radius);
-  box-shadow: var(--shadow); padding: 16px 18px;
-}
 .dd-row {
-  font-size: 1.1rem; font-weight: 700; line-height: 2.1; color: var(--gray-800);
+  font-size: 1.2rem; font-weight: 700; line-height: 2.2;
+  color: var(--gray-800); text-align: center; margin-bottom: 8px;
 }
 .dd-gap {
   display: inline-flex; align-items: center; justify-content: center;
@@ -429,8 +421,7 @@ a { color: var(--accent); }
 .dd-gap.filled { border-style: solid; }
 .dd-gap.correct { background: var(--correct-light); border-color: var(--correct); color: var(--correct); }
 .dd-gap.wrong   { background: var(--wrong-light);   border-color: var(--wrong);   color: var(--wrong); }
-.dd-expl { margin-top: 10px; font-size: .9rem; }
-.dd-actions { display: flex; justify-content: center; margin-top: 22px; }
+.dd [data-next]:not([hidden]) { margin: 18px auto 0; display: block; }
 .dd-ghost {
   position: fixed; z-index: 2000; pointer-events: none;
   font-weight: 800; font-size: 1rem; padding: 10px 18px; border-radius: 999px;

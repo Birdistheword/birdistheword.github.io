@@ -478,9 +478,9 @@ function flashcardGame(selector, options) {
 
 /* ============================================================
    dragDropGame(selector, options)
-   A word bank of draggable chips + sentences with gaps.
-   Drag the correct word into each gap, then press "Prüfen".
-   Works with mouse AND touch (phones/tablets).
+   A word bank of draggable chips + ONE sentence with a gap at a
+   time. Drag the correct word into the gap → instant feedback →
+   "Weiter" for the next sentence. Mouse AND touch (phones/tablets).
    options = {
      words: [ "mich", "dich", ... ],            // shared chip bank
      items: [ { sentence, answer, explain? } ]  // single set
@@ -502,49 +502,38 @@ function dragDropGame(selector, options) {
   };
   const shuffleMaybe = arr => (options.shuffle === false ? arr.slice() : shuffle(arr));
 
-  let currentSet = 0, items = [], filled = [], checked = false;
-  let seconds = 0, timerId = null, started = false;
+  let currentSet = 0, items = [], idx = 0, score = 0, answered = false;
   let dragWord = null;
 
   root.classList.add("dd");
   root.innerHTML = `
     ${setBarHTML(sets.length)}
-    <div class="dd-stats">
-      <span class="mem-stat">Zeit <b data-time>0:00</b></span>
-      <span class="mem-stat">Gefüllt <b data-solved>0</b>/<span data-total>0</span></span>
-      <button class="btn btn-ghost mem-reset" type="button" data-reset>Nochmal</button>
+    <div class="quiz-bar">
+      <span>Satz <b data-q>1</b> / <span data-total>0</span></span>
+      <span>Punkte <b data-score>0</b></span>
     </div>
     <div class="dd-bank" data-bank></div>
-    <p class="dd-hint">Zieh das richtige Wort in die Lücke. Tippe eine gefüllte Lücke an, um sie zu leeren.</p>
-    <div class="dd-sentences" data-sentences></div>
-    <div class="dd-actions">
-      <button class="btn btn-primary" data-check>Prüfen</button>
+    <p class="dd-hint">Zieh das richtige Wort in die Lücke.</p>
+    <div class="card">
+      <div class="dd-row" data-row></div>
+      <div class="hint" data-explain hidden></div>
+      <button class="btn btn-primary" data-next hidden>Weiter →</button>
     </div>
     ${gameOverlayHTML()}`;
 
   const bank = root.querySelector("[data-bank]");
-  const sentencesEl = root.querySelector("[data-sentences]");
-  const timeEl = root.querySelector("[data-time]");
-  const solvedEl = root.querySelector("[data-solved]");
+  const rowEl = root.querySelector("[data-row]");
+  const explainEl = root.querySelector("[data-explain]");
+  const nextBtn = root.querySelector("[data-next]");
+  const qNum = root.querySelector("[data-q]");
   const totalEl = root.querySelector("[data-total]");
-  const checkBtn = root.querySelector("[data-check]");
+  const scoreEl = root.querySelector("[data-score]");
 
   // floating ghost element for touch dragging
   const ghost = document.createElement("div");
   ghost.className = "dd-ghost";
   ghost.hidden = true;
   document.body.appendChild(ghost);
-
-  function startTimer() {
-    if (started) return;
-    started = true;
-    timerId = setInterval(() => { seconds++; timeEl.textContent = fmtTime(seconds); }, 1000);
-  }
-  function stopTimer() { clearInterval(timerId); timerId = null; }
-
-  function updateSolved() {
-    solvedEl.textContent = filled.filter(w => w).length;
-  }
 
   function renderBank() {
     bank.innerHTML = "";
@@ -556,14 +545,14 @@ function dragDropGame(selector, options) {
       chip.dataset.word = w;
       chip.draggable = true;
       chip.addEventListener("dragstart", e => {
-        if (checked) { e.preventDefault(); return; }
+        if (answered) { e.preventDefault(); return; }
         dragWord = w;
         chip.classList.add("dragging");
         e.dataTransfer.effectAllowed = "copy";
       });
       chip.addEventListener("dragend", () => { dragWord = null; chip.classList.remove("dragging"); });
       chip.addEventListener("touchstart", e => {
-        if (checked) return;
+        if (answered) return;
         dragWord = w;
         chip.classList.add("dragging");
         showGhost(w, e.touches[0]);
@@ -573,60 +562,51 @@ function dragDropGame(selector, options) {
     });
   }
 
-  function renderSentences() {
-    sentencesEl.innerHTML = "";
-    items.forEach((item, i) => {
-      const wrap = document.createElement("div");
-      wrap.className = "dd-item";
+  function render() {
+    const item = items[idx];
+    answered = false;
+    qNum.textContent = idx + 1;
+    explainEl.hidden = true;
+    nextBtn.hidden = true;
 
-      const row = document.createElement("div");
-      row.className = "dd-row";
-      const parts = item.sentence.split("____");
-      const before = document.createElement("span");
-      before.textContent = parts[0];
-      const gap = document.createElement("span");
-      gap.className = "dd-gap";
-      gap.dataset.gap = i;
-      const after = document.createElement("span");
-      after.textContent = parts.slice(1).join("____");
-      row.append(before, gap, after);
-
-      const expl = document.createElement("div");
-      expl.className = "dd-expl hint";
-      expl.dataset.expl = i;
-      expl.hidden = true;
-
-      wrap.append(row, expl);
-      sentencesEl.appendChild(wrap);
-
-      setGapText(gap, i);
-      wireGap(gap, i);
-    });
+    rowEl.innerHTML = "";
+    const parts = item.sentence.split("____");
+    const before = document.createElement("span");
+    before.textContent = parts[0];
+    const gap = document.createElement("span");
+    gap.className = "dd-gap";
+    gap.dataset.gap = "1";
+    const after = document.createElement("span");
+    after.textContent = parts.slice(1).join("____");
+    rowEl.append(before, gap, after);
+    wireGap(gap);
   }
 
-  function setGapText(gap, i) {
-    if (filled[i]) { gap.textContent = filled[i]; gap.classList.add("filled"); }
-    else { gap.textContent = ""; gap.classList.remove("filled"); }
-  }
-
-  function wireGap(gap, i) {
-    gap.addEventListener("dragover", e => { if (!checked) { e.preventDefault(); gap.classList.add("over"); } });
+  function wireGap(gap) {
+    gap.addEventListener("dragover", e => { if (!answered) { e.preventDefault(); gap.classList.add("over"); } });
     gap.addEventListener("dragleave", () => gap.classList.remove("over"));
     gap.addEventListener("drop", e => {
       e.preventDefault(); gap.classList.remove("over");
-      if (!checked && dragWord) dropInto(i, dragWord);
-    });
-    gap.addEventListener("click", () => {
-      if (checked || !filled[i]) return;
-      filled[i] = null; setGapText(gap, i); updateSolved();
+      if (!answered && dragWord) evaluate(gap, dragWord);
     });
   }
 
-  function dropInto(i, word) {
-    startTimer();
-    filled[i] = word;
-    setGapText(sentencesEl.querySelector(`[data-gap="${i}"]`), i);
-    updateSolved();
+  function evaluate(gap, word) {
+    answered = true;
+    const item = items[idx];
+    gap.textContent = word;
+    gap.classList.add("filled");
+    const ok = word === item.answer;
+    if (ok) {
+      gap.classList.add("correct");
+      score++; scoreEl.textContent = score;
+      if (item.explain) { explainEl.textContent = "Richtig. " + item.explain; explainEl.hidden = false; }
+    } else {
+      gap.classList.add("wrong");
+      explainEl.innerHTML = `Richtig ist: <b>${item.answer}</b>` + (item.explain ? " — " + item.explain : "");
+      explainEl.hidden = false;
+    }
+    nextBtn.hidden = false;
   }
 
   // ---- touch drag helpers ----
@@ -643,9 +623,9 @@ function dragDropGame(selector, options) {
     if (!dragWord) return;
     const t = e.touches[0];
     moveGhost(t);
-    sentencesEl.querySelectorAll(".dd-gap").forEach(g => g.classList.remove("over"));
     const gap = gapUnder(t);
-    if (gap && !checked) gap.classList.add("over");
+    rowEl.querySelectorAll(".dd-gap").forEach(g => g.classList.remove("over"));
+    if (gap && !answered) gap.classList.add("over");
     e.preventDefault();
   }
   function onTouchEnd(e) {
@@ -653,59 +633,36 @@ function dragDropGame(selector, options) {
     ghost.hidden = true;
     bank.querySelectorAll(".dd-chip").forEach(c => c.classList.remove("dragging"));
     const gap = gapUnder(e.changedTouches[0]);
-    if (gap && !checked) dropInto(parseInt(gap.dataset.gap, 10), dragWord);
-    sentencesEl.querySelectorAll(".dd-gap").forEach(g => g.classList.remove("over"));
+    if (gap && !answered) evaluate(gap, dragWord);
+    rowEl.querySelectorAll(".dd-gap").forEach(g => g.classList.remove("over"));
     dragWord = null;
   }
   document.addEventListener("touchmove", onTouchMove, { passive: false });
   document.addEventListener("touchend", onTouchEnd);
 
-  function check() {
-    stopTimer();
-    checked = true;
-    let correct = 0;
-    items.forEach((item, i) => {
-      const gap = sentencesEl.querySelector(`[data-gap="${i}"]`);
-      const expl = sentencesEl.querySelector(`[data-expl="${i}"]`);
-      const ok = filled[i] === item.answer;
-      if (ok) { correct++; gap.classList.add("correct"); }
-      else {
-        gap.classList.add("wrong");
-        gap.textContent = filled[i] || "—";
-        expl.innerHTML = `Richtig: <b>${item.answer}</b>` + (item.explain ? " — " + item.explain : "");
-        expl.hidden = false;
-      }
-    });
-    checkBtn.disabled = true;
-    const stars = starsByRatio(correct, items.length);
-    showGameOverlay(root, stars,
-      stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
-      `Richtig: ${correct} / ${items.length} · Fehler: ${items.length - correct}`);
-  }
-
-  function reset() {
-    stopTimer();
-    seconds = 0; started = false; checked = false;
-    timeEl.textContent = "0:00";
-    filled = items.map(() => null);
-    checkBtn.disabled = false;
-    root.querySelector("[data-overlay]").hidden = true;
-    renderBank();
-    renderSentences();
-    updateSolved();
-  }
+  nextBtn.addEventListener("click", () => {
+    if (idx < items.length - 1) { idx++; render(); }
+    else {
+      const stars = starsByRatio(score, items.length);
+      showGameOverlay(root, stars,
+        stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+        `Richtig: ${score} / ${items.length}`);
+    }
+  });
 
   function loadSet(i) {
     currentSet = i;
     items = shuffleMaybe(sets[i]);
+    idx = 0; score = 0; scoreEl.textContent = "0";
+    answered = false;
     totalEl.textContent = items.length;
     updateSetLabel(root, i);
-    reset();
+    root.querySelector("[data-overlay]").hidden = true;
+    renderBank();
+    render();
   }
 
-  checkBtn.addEventListener("click", check);
-  root.querySelector("[data-reset]").addEventListener("click", reset);
-  root.querySelector("[data-again]").addEventListener("click", reset);
+  root.querySelector("[data-again]").addEventListener("click", () => loadSet(currentSet));
   wireSetBar(root, sets.length, loadSet, () => currentSet);
   loadSet(0);
 }
