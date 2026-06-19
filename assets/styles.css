@@ -381,6 +381,64 @@ a { color: var(--accent); }
 }
 .flash-tools { margin-top: 14px; }
 
+/* ---- Drag & Drop ---- */
+.dd { max-width: 680px; margin: 0 auto; }
+.dd-stats {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  justify-content: center; margin-bottom: 16px;
+  font-weight: 800; color: var(--gray-600);
+}
+.dd-bank {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  padding: 16px; margin-bottom: 10px;
+  background: var(--gray-100); border-radius: var(--radius-lg);
+  position: sticky; top: 8px; z-index: 5;
+}
+.dd-chip {
+  font-family: inherit; font-weight: 800; font-size: 1rem;
+  padding: 10px 18px; border-radius: 999px; cursor: grab;
+  background: var(--accent); color: #fff; border: none;
+  box-shadow: var(--shadow);
+  transition: transform .12s, box-shadow .12s, opacity .2s;
+  touch-action: none; -webkit-user-select: none; user-select: none;
+}
+.dd-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.dd-chip:active { cursor: grabbing; }
+.dd-chip.dragging { opacity: .35; }
+.dd-hint {
+  text-align: center; color: var(--gray-400);
+  font-weight: 700; font-size: .85rem; margin-bottom: 18px;
+}
+.dd-sentences { display: flex; flex-direction: column; gap: 14px; }
+.dd-item {
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px 18px;
+}
+.dd-row {
+  font-size: 1.1rem; font-weight: 700; line-height: 2.1; color: var(--gray-800);
+}
+.dd-gap {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 78px; min-height: 36px; padding: 2px 12px; margin: 0 3px;
+  vertical-align: middle; border-radius: 8px;
+  border: 2.5px dashed var(--accent-mid); background: var(--accent-light);
+  color: var(--accent); font-weight: 800; cursor: pointer;
+  transition: transform .12s, border-color .12s, background .12s;
+}
+.dd-gap.over { border-style: solid; border-color: var(--accent); transform: scale(1.06); }
+.dd-gap.filled { border-style: solid; }
+.dd-gap.correct { background: var(--correct-light); border-color: var(--correct); color: var(--correct); }
+.dd-gap.wrong   { background: var(--wrong-light);   border-color: var(--wrong);   color: var(--wrong); }
+.dd-expl { margin-top: 10px; font-size: .9rem; }
+.dd-actions { display: flex; justify-content: center; margin-top: 22px; }
+.dd-ghost {
+  position: fixed; z-index: 2000; pointer-events: none;
+  font-weight: 800; font-size: 1rem; padding: 10px 18px; border-radius: 999px;
+  background: var(--accent); color: #fff; box-shadow: var(--shadow-lg);
+  transform: rotate(-3deg);
+}
+.dd-ghost[hidden] { display: none; }
+
 /* Result overlay */
 .mem-overlay {
   position: fixed; inset: 0; z-index: 1000;

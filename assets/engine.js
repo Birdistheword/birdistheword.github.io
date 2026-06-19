@@ -34,7 +34,7 @@ function setBarHTML(n) {
     <div class="set-bar">
       <span class="set-label">Aufgaben-Set <b data-set>1</b> / ${n}</span>
       <button class="btn btn-ghost btn-sm" data-set-next>Nächste Aufgaben →</button>
-      <button class="btn btn-ghost btn-sm" data-set-rand>🎲 Zufällige Aufgaben</button>
+      <button class="btn btn-ghost btn-sm" data-set-rand>Zufällige Aufgaben</button>
     </div>`;
 }
 function wireSetBar(root, n, loadSet, getCurrent) {
@@ -95,9 +95,9 @@ function memoryGame(selector, options) {
 
   const sets = options.sets ? options.sets : [options.pairs || []];
   const messages = options.messages || {
-    three: "Perfekt! 🌟 Du bist ein Memory-Profi!",
-    two:   "Super gemacht! 👍 Fast perfekt!",
-    one:   "Geschafft! 🙂 Übung macht den Meister.",
+    three: "Perfekt! Du bist ein Memory-Profi.",
+    two:   "Super gemacht! Fast perfekt.",
+    one:   "Geschafft! Übung macht den Meister.",
   };
 
   let currentSet = 0, activePairs = [], pairCount = 0, starThresholds = {};
@@ -108,9 +108,9 @@ function memoryGame(selector, options) {
   root.innerHTML = `
     ${setBarHTML(sets.length)}
     <div class="mem-stats">
-      <span class="mem-stat">⏱ <b data-time>0:00</b></span>
-      <span class="mem-stat">❌ <b data-mistakes>0</b></span>
-      <span class="mem-stat">✅ <b data-found>0</b>/<span data-total>0</span></span>
+      <span class="mem-stat">Zeit <b data-time>0:00</b></span>
+      <span class="mem-stat">Fehler <b data-mistakes>0</b></span>
+      <span class="mem-stat">Gefunden <b data-found>0</b>/<span data-total>0</span></span>
       <button class="btn btn-ghost mem-reset" type="button">Nochmal</button>
     </div>
     <div class="mem-board" data-board></div>
@@ -238,9 +238,9 @@ function quizGame(selector, options) {
   if (!root) { console.error("quizGame: no element for", selector); return; }
   const sets = options.sets ? options.sets : [options.questions || []];
   const messages = options.messages || {
-    three: "Ausgezeichnet! 🌟 Fast alles richtig!",
-    two:   "Gut gemacht! 👍",
-    one:   "Weiter üben! 💪",
+    three: "Ausgezeichnet! Fast alles richtig.",
+    two:   "Gut gemacht!",
+    one:   "Weiter üben!",
   };
 
   let currentSet = 0, questions = [], idx = 0, score = 0, answered = false;
@@ -250,7 +250,7 @@ function quizGame(selector, options) {
     ${setBarHTML(sets.length)}
     <div class="quiz-bar">
       <span>Frage <b data-q>1</b> / <span data-total>0</span></span>
-      <span>✅ <b data-score>0</b></span>
+      <span>Punkte <b data-score>0</b></span>
     </div>
     <div class="card">
       <h2 data-question></h2>
@@ -332,9 +332,9 @@ function sortGame(selector, options) {
   const buckets = options.buckets;
   const sets = options.sets ? options.sets : [options.items || []];
   const messages = options.messages || {
-    three: "Perfekt sortiert! 🌟",
-    two:   "Gut gemacht! 👍",
-    one:   "Weiter üben! 💪",
+    three: "Perfekt sortiert!",
+    two:   "Gut gemacht!",
+    one:   "Weiter üben!",
   };
 
   let currentSet = 0, items = [], idx = 0, score = 0, answered = false;
@@ -442,7 +442,7 @@ function flashcardGame(selector, options) {
       <button class="btn btn-ghost" data-next>Weiter →</button>
     </div>
     <div class="flash-tools">
-      <button class="btn btn-ghost" data-shuffle>🔀 Mischen</button>
+      <button class="btn btn-ghost" data-shuffle>Mischen</button>
     </div>`;
 
   const cardEl = root.querySelector("[data-card]");
@@ -472,6 +472,240 @@ function flashcardGame(selector, options) {
     updateSetLabel(root, i);
     render();
   }
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
+}
+
+/* ============================================================
+   dragDropGame(selector, options)
+   A word bank of draggable chips + sentences with gaps.
+   Drag the correct word into each gap, then press "Prüfen".
+   Works with mouse AND touch (phones/tablets).
+   options = {
+     words: [ "mich", "dich", ... ],            // shared chip bank
+     items: [ { sentence, answer, explain? } ]  // single set
+     // OR sets: [ [ ...items ], ... ]
+     // Mark the gap in each sentence with ____ (four underscores)
+     shuffle?: true,         // shuffle sentence order + chip order (default true)
+     messages?: { three, two, one }
+   }
+   ============================================================ */
+function dragDropGame(selector, options) {
+  const root = document.querySelector(selector);
+  if (!root) { console.error("dragDropGame: no element for", selector); return; }
+  const words = options.words || [];
+  const sets = options.sets ? options.sets : [options.items || []];
+  const messages = options.messages || {
+    three: "Perfekt! Alles richtig.",
+    two:   "Gut gemacht!",
+    one:   "Weiter üben!",
+  };
+  const shuffleMaybe = arr => (options.shuffle === false ? arr.slice() : shuffle(arr));
+
+  let currentSet = 0, items = [], filled = [], checked = false;
+  let seconds = 0, timerId = null, started = false;
+  let dragWord = null;
+
+  root.classList.add("dd");
+  root.innerHTML = `
+    ${setBarHTML(sets.length)}
+    <div class="dd-stats">
+      <span class="mem-stat">Zeit <b data-time>0:00</b></span>
+      <span class="mem-stat">Gefüllt <b data-solved>0</b>/<span data-total>0</span></span>
+      <button class="btn btn-ghost mem-reset" type="button" data-reset>Nochmal</button>
+    </div>
+    <div class="dd-bank" data-bank></div>
+    <p class="dd-hint">Zieh das richtige Wort in die Lücke. Tippe eine gefüllte Lücke an, um sie zu leeren.</p>
+    <div class="dd-sentences" data-sentences></div>
+    <div class="dd-actions">
+      <button class="btn btn-primary" data-check>Prüfen</button>
+    </div>
+    ${gameOverlayHTML()}`;
+
+  const bank = root.querySelector("[data-bank]");
+  const sentencesEl = root.querySelector("[data-sentences]");
+  const timeEl = root.querySelector("[data-time]");
+  const solvedEl = root.querySelector("[data-solved]");
+  const totalEl = root.querySelector("[data-total]");
+  const checkBtn = root.querySelector("[data-check]");
+
+  // floating ghost element for touch dragging
+  const ghost = document.createElement("div");
+  ghost.className = "dd-ghost";
+  ghost.hidden = true;
+  document.body.appendChild(ghost);
+
+  function startTimer() {
+    if (started) return;
+    started = true;
+    timerId = setInterval(() => { seconds++; timeEl.textContent = fmtTime(seconds); }, 1000);
+  }
+  function stopTimer() { clearInterval(timerId); timerId = null; }
+
+  function updateSolved() {
+    solvedEl.textContent = filled.filter(w => w).length;
+  }
+
+  function renderBank() {
+    bank.innerHTML = "";
+    shuffleMaybe(words).forEach(w => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "dd-chip";
+      chip.textContent = w;
+      chip.dataset.word = w;
+      chip.draggable = true;
+      chip.addEventListener("dragstart", e => {
+        if (checked) { e.preventDefault(); return; }
+        dragWord = w;
+        chip.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "copy";
+      });
+      chip.addEventListener("dragend", () => { dragWord = null; chip.classList.remove("dragging"); });
+      chip.addEventListener("touchstart", e => {
+        if (checked) return;
+        dragWord = w;
+        chip.classList.add("dragging");
+        showGhost(w, e.touches[0]);
+        e.preventDefault();
+      }, { passive: false });
+      bank.appendChild(chip);
+    });
+  }
+
+  function renderSentences() {
+    sentencesEl.innerHTML = "";
+    items.forEach((item, i) => {
+      const wrap = document.createElement("div");
+      wrap.className = "dd-item";
+
+      const row = document.createElement("div");
+      row.className = "dd-row";
+      const parts = item.sentence.split("____");
+      const before = document.createElement("span");
+      before.textContent = parts[0];
+      const gap = document.createElement("span");
+      gap.className = "dd-gap";
+      gap.dataset.gap = i;
+      const after = document.createElement("span");
+      after.textContent = parts.slice(1).join("____");
+      row.append(before, gap, after);
+
+      const expl = document.createElement("div");
+      expl.className = "dd-expl hint";
+      expl.dataset.expl = i;
+      expl.hidden = true;
+
+      wrap.append(row, expl);
+      sentencesEl.appendChild(wrap);
+
+      setGapText(gap, i);
+      wireGap(gap, i);
+    });
+  }
+
+  function setGapText(gap, i) {
+    if (filled[i]) { gap.textContent = filled[i]; gap.classList.add("filled"); }
+    else { gap.textContent = ""; gap.classList.remove("filled"); }
+  }
+
+  function wireGap(gap, i) {
+    gap.addEventListener("dragover", e => { if (!checked) { e.preventDefault(); gap.classList.add("over"); } });
+    gap.addEventListener("dragleave", () => gap.classList.remove("over"));
+    gap.addEventListener("drop", e => {
+      e.preventDefault(); gap.classList.remove("over");
+      if (!checked && dragWord) dropInto(i, dragWord);
+    });
+    gap.addEventListener("click", () => {
+      if (checked || !filled[i]) return;
+      filled[i] = null; setGapText(gap, i); updateSolved();
+    });
+  }
+
+  function dropInto(i, word) {
+    startTimer();
+    filled[i] = word;
+    setGapText(sentencesEl.querySelector(`[data-gap="${i}"]`), i);
+    updateSolved();
+  }
+
+  // ---- touch drag helpers ----
+  function showGhost(w, t) { ghost.textContent = w; ghost.hidden = false; moveGhost(t); }
+  function moveGhost(t) {
+    ghost.style.left = (t.clientX - ghost.offsetWidth / 2) + "px";
+    ghost.style.top = (t.clientY - ghost.offsetHeight - 14) + "px";
+  }
+  function gapUnder(t) {
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    return el && el.closest ? el.closest(".dd-gap") : null;
+  }
+  function onTouchMove(e) {
+    if (!dragWord) return;
+    const t = e.touches[0];
+    moveGhost(t);
+    sentencesEl.querySelectorAll(".dd-gap").forEach(g => g.classList.remove("over"));
+    const gap = gapUnder(t);
+    if (gap && !checked) gap.classList.add("over");
+    e.preventDefault();
+  }
+  function onTouchEnd(e) {
+    if (!dragWord) return;
+    ghost.hidden = true;
+    bank.querySelectorAll(".dd-chip").forEach(c => c.classList.remove("dragging"));
+    const gap = gapUnder(e.changedTouches[0]);
+    if (gap && !checked) dropInto(parseInt(gap.dataset.gap, 10), dragWord);
+    sentencesEl.querySelectorAll(".dd-gap").forEach(g => g.classList.remove("over"));
+    dragWord = null;
+  }
+  document.addEventListener("touchmove", onTouchMove, { passive: false });
+  document.addEventListener("touchend", onTouchEnd);
+
+  function check() {
+    stopTimer();
+    checked = true;
+    let correct = 0;
+    items.forEach((item, i) => {
+      const gap = sentencesEl.querySelector(`[data-gap="${i}"]`);
+      const expl = sentencesEl.querySelector(`[data-expl="${i}"]`);
+      const ok = filled[i] === item.answer;
+      if (ok) { correct++; gap.classList.add("correct"); }
+      else {
+        gap.classList.add("wrong");
+        gap.textContent = filled[i] || "—";
+        expl.innerHTML = `Richtig: <b>${item.answer}</b>` + (item.explain ? " — " + item.explain : "");
+        expl.hidden = false;
+      }
+    });
+    checkBtn.disabled = true;
+    const stars = starsByRatio(correct, items.length);
+    showGameOverlay(root, stars,
+      stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+      `Richtig: ${correct} / ${items.length} · Fehler: ${items.length - correct}`);
+  }
+
+  function reset() {
+    stopTimer();
+    seconds = 0; started = false; checked = false;
+    timeEl.textContent = "0:00";
+    filled = items.map(() => null);
+    checkBtn.disabled = false;
+    root.querySelector("[data-overlay]").hidden = true;
+    renderBank();
+    renderSentences();
+    updateSolved();
+  }
+
+  function loadSet(i) {
+    currentSet = i;
+    items = shuffleMaybe(sets[i]);
+    totalEl.textContent = items.length;
+    updateSetLabel(root, i);
+    reset();
+  }
+
+  checkBtn.addEventListener("click", check);
+  root.querySelector("[data-reset]").addEventListener("click", reset);
+  root.querySelector("[data-again]").addEventListener("click", reset);
   wireSetBar(root, sets.length, loadSet, () => currentSet);
   loadSet(0);
 }
