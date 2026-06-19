@@ -302,6 +302,15 @@ a { color: var(--accent); }
   background: var(--correct-light); border-color: var(--correct); color: var(--correct);
 }
 
+/* ---- Set controls (shared across all games) ---- */
+.set-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  justify-content: center; margin-bottom: 20px;
+}
+.set-label { font-weight: 800; color: var(--gray-600); }
+.set-label b { color: var(--accent); }
+.btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+
 /* ---- Shared result overlay (quiz / sort) ---- */
 .game-overlay {
   position: fixed; inset: 0; z-index: 1000;

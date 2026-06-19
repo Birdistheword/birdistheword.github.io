@@ -18,6 +18,9 @@
 </header>
 
 <main class="container">
+  <div class="card">
+    <p>Welche Konjunktion passt? Wähle zwischen <b>aber</b>, <b>und</b>, <b>oder</b>, <b>sondern</b> und <b>denn</b>.</p>
+  </div>
   <div id="game"></div>
 </main>
 
@@ -26,23 +29,55 @@
 <script src="../assets/engine.js"></script>
 <script>
   quizGame("#game", {
-    questions: [
-      { q: "Ich spiele Fußball ____ ich schwimme gern.", options: ["aber","und","oder","sondern","denn"], answer: 1, explain: "und = verbindet zwei positive Dinge zusammen" },
-      { q: "Er liest ein Buch, ____ er hört keine Musik.", options: ["aber","und","oder","sondern","denn"], answer: 0, explain: "aber = Kontrast / Gegensatz zwischen zwei Sätzen" },
-      { q: "Spielst du Tennis ____ spielst du Volleyball?", options: ["aber","und","oder","sondern","denn"], answer: 2, explain: "oder = eine von zwei Möglichkeiten" },
-      { q: "Ich gehe nicht ins Kino, ____ ich bleibe zu Hause.", options: ["aber","und","oder","sondern","denn"], answer: 3, explain: "sondern = nach 'nicht' – korrigiert etwas Negatives" },
-      { q: "Sie tanzt gern, ____ Tanzen macht Spaß.", options: ["aber","und","oder","sondern","denn"], answer: 4, explain: "denn = erklärt den Grund (warum?)" },
-      { q: "Wir spielen Karten ____ wir schauen einen Film.", options: ["aber","und","oder","sondern","denn"], answer: 2, explain: "oder = Auswahl zwischen zwei Aktivitäten" },
-      { q: "Er macht Sport, ____ er ist oft müde.", options: ["aber","und","oder","sondern","denn"], answer: 0, explain: "aber = überraschender Gegensatz" },
-      { q: "Sie liest keine Bücher, ____ sie schaut Videos.", options: ["aber","und","oder","sondern","denn"], answer: 3, explain: "sondern = korrigiert 'keine Bücher' mit der echten Antwort" },
-      { q: "Ich gehe spazieren, ____ das Wetter ist schön.", options: ["aber","und","oder","sondern","denn"], answer: 4, explain: "denn = gibt den Grund für den Spaziergang" },
-      { q: "Mein Bruder malt ____ spielt Gitarre.", options: ["aber","und","oder","sondern","denn"], answer: 1, explain: "und = zwei Hobbys des Bruders zusammen" },
-      { q: "Sie läuft nicht, ____ sie fährt Fahrrad.", options: ["aber","und","oder","sondern","denn"], answer: 3, explain: "sondern = nach 'nicht' – zeigt die echte Alternative" },
-      { q: "Er spielt gern Schach, ____ er gewinnt selten.", options: ["aber","und","oder","sondern","denn"], answer: 0, explain: "aber = positiv (gern) vs. negativ (selten gewinnen)" },
-      { q: "Wir kochen zusammen ____ essen danach.", options: ["aber","und","oder","sondern","denn"], answer: 1, explain: "und = zwei Aktionen in Reihenfolge" },
-      { q: "Gehst du ins Schwimmbad ____ bleibst du zu Hause?", options: ["aber","und","oder","sondern","denn"], answer: 2, explain: "oder = zwei Optionen zur Wahl" },
-      { q: "Ich spiele kein Basketball, ____ ich spiele Handball.", options: ["aber","und","oder","sondern","denn"], answer: 3, explain: "sondern = nach 'kein' – die echte Information folgt" },
-      { q: "Sie malt gern, ____ Malen ist kreativ.", options: ["aber","und","oder","sondern","denn"], answer: 4, explain: "denn = Erklärung, warum sie gern malt" }
+    sets: [
+      [
+        { q:"Ich möchte Kaffee, ____ ich bin müde.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' gibt einen Grund an. Ich bin müde = Grund für den Kaffee." },
+        { q:"Er ist nicht faul, ____ fleißig.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert eine verneinte Aussage." },
+        { q:"Kommst du heute ____ morgen?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' verbindet zwei Alternativen." },
+        { q:"Sie singt ____ tanzt sehr gut.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei gleichwertige Aussagen." },
+        { q:"Ich mag Hunde, ____ ich bin allergisch.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' drückt einen Gegensatz aus." },
+        { q:"Er hat keinen Hunger, ____ er isst trotzdem.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' zeigt den Widerspruch: kein Hunger, trotzdem essen." },
+        { q:"Das ist nicht blau, ____ grün.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert: nicht blau → sondern grün." },
+        { q:"Willst du Tee ____ Kaffee?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' stellt zwei Optionen zur Wahl." },
+        { q:"Ich lerne Deutsch, ____ ich möchte in Deutschland arbeiten.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' gibt den Grund an." },
+        { q:"Sie liest ein Buch ____ hört Musik.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei Tätigkeiten." }
+      ],
+      [
+        { q:"Er kommt nicht, ____ er ist krank.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' erklärt den Grund: Er ist krank." },
+        { q:"Das ist nicht Deutsch, ____ Englisch.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert eine Verneinung." },
+        { q:"Ich bin müde, ____ ich kann nicht schlafen.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' zeigt den Gegensatz." },
+        { q:"Sie isst Obst ____ Gemüse.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei Dinge." },
+        { q:"Fährst du mit dem Bus ____ mit dem Fahrrad?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' bietet zwei Alternativen an." },
+        { q:"Ich mag das Lied nicht, ____ ich höre es immer.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' signalisiert einen Widerspruch." },
+        { q:"Das ist nicht mein Heft, ____ deins.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert nach einer Verneinung." },
+        { q:"Sie lernt viel, ____ die Prüfung ist schwer.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' gibt den Grund fürs Lernen an." },
+        { q:"Wir spielen Fußball ____ Basketball.", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' nennt zwei Optionen." },
+        { q:"Er kocht ____ backt gerne.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet die beiden Hobbys." }
+      ],
+      [
+        { q:"Ich trinke keinen Alkohol, ____ ich fahre noch.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' erklärt den Grund." },
+        { q:"Das Kind ist nicht traurig, ____ glücklich.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert nach der Verneinung." },
+        { q:"Es ist kalt, ____ die Sonne scheint.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' drückt einen Gegensatz aus." },
+        { q:"Sie kauft Brot ____ Butter.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei Einkäufe." },
+        { q:"Möchtest du ein Eis ____ einen Kuchen?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' stellt zwei Alternativen vor." },
+        { q:"Ich gehe nicht ins Kino, ____ ich bin zu müde.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' gibt den Grund an." },
+        { q:"Das ist kein Fehler, ____ Absicht.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert nach 'kein'." },
+        { q:"Er ist fleißig, ____ er macht oft Fehler.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' zeigt den Widerspruch." },
+        { q:"Sie singt ____ spielt Gitarre.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei Fähigkeiten." },
+        { q:"Kommt ihr mit dem Auto ____ zu Fuß?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' bietet zwei Möglichkeiten." }
+      ],
+      [
+        { q:"Ich stehe früh auf, ____ ich muss früh arbeiten.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' erklärt, warum er früh aufsteht." },
+        { q:"Das war nicht schön, ____ hässlich.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert die Verneinung." },
+        { q:"Er ist müde, ____ er macht weiter.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' zeigt den Widerspruch: müde, aber macht weiter." },
+        { q:"Wir essen Suppe ____ Salat.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei Gerichte." },
+        { q:"Trinkst du Wasser ____ Saft?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' stellt zwei Getränke zur Wahl." },
+        { q:"Sie arbeitet viel, ____ sie verdient wenig.", options:["aber","und","oder","sondern","denn"], answer:0, explain:"'aber' drückt den Kontrast aus." },
+        { q:"Das ist kein Zufall, ____ Absicht.", options:["aber","und","oder","sondern","denn"], answer:3, explain:"'sondern' korrigiert: kein Zufall → sondern Absicht." },
+        { q:"Ich bleibe zu Hause, ____ es ist zu kalt draußen.", options:["aber","und","oder","sondern","denn"], answer:4, explain:"'denn' gibt den Grund an." },
+        { q:"Er liest ____ schreibt jeden Tag.", options:["aber","und","oder","sondern","denn"], answer:1, explain:"'und' verbindet zwei Tätigkeiten." },
+        { q:"Gehst du ins Kino ____ ins Theater?", options:["aber","und","oder","sondern","denn"], answer:2, explain:"'oder' bietet zwei Alternativen." }
+      ]
     ]
   });
 </script>

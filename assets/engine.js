@@ -3,18 +3,13 @@
    Plain global script (no modules) so it works both on
    GitHub Pages and when a file is opened directly (file://).
    Load it before use: <script src="../assets/engine.js"></script>
-   then call memoryGame("#game", {...}).
 
-   memoryGame(selector, options)
-   ------------------------------
-   A flip-card memory (concentration) game.
-
-   options = {
-     pairs:  [ ["Vorderseite", "Rückseite"], ... ]   // required
-     columns:      number   // optional, default auto by pair count
-     starThresholds: { three: n, two: n }  // optional, by mistakes
-     messages: { three, two, one }         // optional end texts
-   }
+   Every game supports MULTIPLE SETS ("Aufgaben-Sets").
+   Pass either a single dataset (pairs/questions/items/cards)
+   OR `sets: [ <dataset>, <dataset>, ... ]` for several runs.
+   When more than one set exists, two buttons appear:
+     • "Nächste Aufgaben →"   – load the next set
+     • "🎲 Zufällige Aufgaben" – load a random set
    ============================================================ */
 
 function shuffle(arr) {
@@ -32,57 +27,102 @@ function fmtTime(totalSeconds) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+/* ---- Set controls (shared) ---- */
+function setBarHTML(n) {
+  if (!n || n <= 1) return "";
+  return `
+    <div class="set-bar">
+      <span class="set-label">Aufgaben-Set <b data-set>1</b> / ${n}</span>
+      <button class="btn btn-ghost btn-sm" data-set-next>Nächste Aufgaben →</button>
+      <button class="btn btn-ghost btn-sm" data-set-rand>🎲 Zufällige Aufgaben</button>
+    </div>`;
+}
+function wireSetBar(root, n, loadSet, getCurrent) {
+  const next = root.querySelector("[data-set-next]");
+  if (!next) return;
+  next.addEventListener("click", () => loadSet((getCurrent() + 1) % n));
+  root.querySelector("[data-set-rand]").addEventListener("click", () => {
+    let r; do { r = Math.floor(Math.random() * n); } while (n > 1 && r === getCurrent());
+    loadSet(r);
+  });
+}
+function updateSetLabel(root, i) {
+  const el = root.querySelector("[data-set]");
+  if (el) el.textContent = i + 1;
+}
+
+/* ---- Shared result overlay (quiz / sort) ---- */
+function gameOverlayHTML() {
+  return `
+    <div class="game-overlay" data-overlay hidden>
+      <div class="game-result">
+        <div class="game-stars" data-stars></div>
+        <h2 data-result-title></h2>
+        <p data-result-detail></p>
+        <button class="btn btn-primary" data-again>Noch einmal</button>
+      </div>
+    </div>`;
+}
+function showGameOverlay(root, stars, title, detail) {
+  root.querySelector("[data-stars]").innerHTML =
+    "★".repeat(stars) + "<span class='mem-star-empty'>" + "★".repeat(3 - stars) + "</span>";
+  root.querySelector("[data-result-title]").textContent = title;
+  root.querySelector("[data-result-detail]").textContent = detail;
+  root.querySelector("[data-overlay]").hidden = false;
+}
+function starsByRatio(correct, total) {
+  if (total === 0) return 3;
+  const r = correct / total;
+  if (r >= 0.9) return 3;
+  if (r >= 0.6) return 2;
+  return 1;
+}
+
+/* ============================================================
+   memoryGame(selector, options)
+   options = {
+     pairs: [ ["Vorderseite","Rückseite"], ... ]   // single set
+     // OR
+     sets:  [ [ ...pairs ], [ ...pairs ], ... ]     // several sets
+     columns?: number,
+     starThresholds?: { three, two },
+     messages?: { three, two, one }
+   }
+   ============================================================ */
 function memoryGame(selector, options) {
   const root = document.querySelector(selector);
   if (!root) { console.error("memoryGame: no element for", selector); return; }
 
-  const pairs = options.pairs || [];
-  const pairCount = pairs.length;
-
-  // Defaults scale with the size of the game.
-  const starThresholds = options.starThresholds || {
-    three: Math.floor(pairCount * 0.4),
-    two:   Math.floor(pairCount * 0.9),
-  };
+  const sets = options.sets ? options.sets : [options.pairs || []];
   const messages = options.messages || {
     three: "Perfekt! 🌟 Du bist ein Memory-Profi!",
     two:   "Super gemacht! 👍 Fast perfekt!",
     one:   "Geschafft! 🙂 Übung macht den Meister.",
   };
 
-  // ---- State ----
+  let currentSet = 0, activePairs = [], pairCount = 0, starThresholds = {};
   let first = null, second = null, lock = false;
-  let mistakes = 0, matched = 0;
-  let seconds = 0, timerId = null, started = false;
+  let mistakes = 0, matched = 0, seconds = 0, timerId = null, started = false;
 
-  // ---- Build DOM shell ----
   root.classList.add("mem");
   root.innerHTML = `
+    ${setBarHTML(sets.length)}
     <div class="mem-stats">
       <span class="mem-stat">⏱ <b data-time>0:00</b></span>
       <span class="mem-stat">❌ <b data-mistakes>0</b></span>
-      <span class="mem-stat">✅ <b data-found>0</b>/${pairCount}</span>
+      <span class="mem-stat">✅ <b data-found>0</b>/<span data-total>0</span></span>
       <button class="btn btn-ghost mem-reset" type="button">Nochmal</button>
     </div>
     <div class="mem-board" data-board></div>
-    <div class="mem-overlay" data-overlay hidden>
-      <div class="mem-result">
-        <div class="mem-stars" data-stars></div>
-        <h2 data-result-title></h2>
-        <p data-result-detail></p>
-        <button class="btn btn-primary mem-again" type="button">Noch einmal spielen</button>
-      </div>
-    </div>`;
+    ${gameOverlayHTML()}`;
 
-  const board      = root.querySelector("[data-board]");
-  const timeEl     = root.querySelector("[data-time]");
+  const board = root.querySelector("[data-board]");
+  const timeEl = root.querySelector("[data-time]");
   const mistakesEl = root.querySelector("[data-mistakes]");
-  const foundEl    = root.querySelector("[data-found]");
-  const overlay    = root.querySelector("[data-overlay]");
-
+  const foundEl = root.querySelector("[data-found]");
+  const totalEl = root.querySelector("[data-total]");
   if (options.columns) board.style.setProperty("--mem-cols", options.columns);
 
-  // ---- Timer ----
   function startTimer() {
     if (started) return;
     started = true;
@@ -90,9 +130,8 @@ function memoryGame(selector, options) {
   }
   function stopTimer() { clearInterval(timerId); timerId = null; }
 
-  // ---- Cards ----
   function makeDeck() {
-    const cards = pairs.flatMap(([front, back], i) => {
+    const cards = activePairs.flatMap(([front, back], i) => {
       const id = "p" + i;
       return [
         { id, text: front, role: "term" },
@@ -124,25 +163,18 @@ function memoryGame(selector, options) {
     if (card.classList.contains("revealed") || card.classList.contains("matched")) return;
     startTimer();
     card.classList.add("revealed");
-
     if (!first) { first = card; return; }
-    second = card;
-    lock = true;
-
+    second = card; lock = true;
     if (first.dataset.id === second.dataset.id) {
-      // match
       setTimeout(() => {
         first.classList.add("matched");
         second.classList.add("matched");
-        matched++;
-        foundEl.textContent = matched;
+        matched++; foundEl.textContent = matched;
         resetTurn();
         if (matched === pairCount) finish();
       }, 450);
     } else {
-      // miss
-      mistakes++;
-      mistakesEl.textContent = mistakes;
+      mistakes++; mistakesEl.textContent = mistakes;
       setTimeout(() => {
         first.classList.remove("revealed");
         second.classList.remove("revealed");
@@ -150,98 +182,74 @@ function memoryGame(selector, options) {
       }, 900);
     }
   }
-
   function resetTurn() { first = null; second = null; lock = false; }
 
   function starsFor(m) {
     if (m <= starThresholds.three) return 3;
-    if (m <= starThresholds.two)   return 2;
+    if (m <= starThresholds.two) return 2;
     return 1;
   }
-
   function finish() {
     stopTimer();
     const stars = starsFor(mistakes);
-    const starEl = root.querySelector("[data-stars]");
-    starEl.innerHTML =
-      "★".repeat(stars) + "<span class='mem-star-empty'>" + "★".repeat(3 - stars) + "</span>";
-
-    root.querySelector("[data-result-title]").textContent =
-      stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one;
-    root.querySelector("[data-result-detail]").textContent =
-      `Zeit: ${fmtTime(seconds)} · Fehler: ${mistakes}`;
-    overlay.hidden = false;
+    showGameOverlay(root, stars,
+      stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+      `Zeit: ${fmtTime(seconds)} · Fehler: ${mistakes}`);
   }
 
   function restart() {
     stopTimer();
     first = second = null; lock = false;
     mistakes = 0; matched = 0; seconds = 0; started = false;
-    timeEl.textContent = "0:00";
-    mistakesEl.textContent = "0";
-    foundEl.textContent = "0";
-    overlay.hidden = true;
+    timeEl.textContent = "0:00"; mistakesEl.textContent = "0"; foundEl.textContent = "0";
+    root.querySelector("[data-overlay]").hidden = true;
     render();
   }
 
+  function loadSet(i) {
+    currentSet = i;
+    activePairs = sets[i];
+    pairCount = activePairs.length;
+    starThresholds = options.starThresholds || {
+      three: Math.floor(pairCount * 0.4),
+      two:   Math.floor(pairCount * 0.9),
+    };
+    totalEl.textContent = pairCount;
+    updateSetLabel(root, i);
+    restart();
+  }
+
   root.querySelector(".mem-reset").addEventListener("click", restart);
-  root.querySelector(".mem-again").addEventListener("click", restart);
-
-  render();
-}
-
-/* ============================================================
-   Shared result overlay (quiz / sort)
-   ============================================================ */
-function gameOverlayHTML() {
-  return `
-    <div class="game-overlay" data-overlay hidden>
-      <div class="game-result">
-        <div class="game-stars" data-stars></div>
-        <h2 data-result-title></h2>
-        <p data-result-detail></p>
-        <button class="btn btn-primary" data-again>Noch einmal</button>
-      </div>
-    </div>`;
-}
-function showGameOverlay(root, stars, title, detail) {
-  root.querySelector("[data-stars]").innerHTML =
-    "★".repeat(stars) + "<span class='mem-star-empty'>" + "★".repeat(3 - stars) + "</span>";
-  root.querySelector("[data-result-title]").textContent = title;
-  root.querySelector("[data-result-detail]").textContent = detail;
-  root.querySelector("[data-overlay]").hidden = false;
-}
-function starsByRatio(correct, total) {
-  if (total === 0) return 3;
-  const r = correct / total;
-  if (r >= 0.9) return 3;
-  if (r >= 0.6) return 2;
-  return 1;
+  root.querySelector("[data-again]").addEventListener("click", restart);
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
 }
 
 /* ============================================================
    quizGame(selector, options)
    options = {
-     questions: [ { q, options:[...], answer:<index>, explain? } ],
-     shuffle?: true,   // shuffle question order (default true)
-     messages?: { three, two, one }
+     questions: [ { q, options:[...], answer:<index>, explain? } ]  // single set
+     // OR  sets: [ [ ...questions ], ... ]
+     shuffle?: true, messages?: { three, two, one }
    }
    ============================================================ */
 function quizGame(selector, options) {
   const root = document.querySelector(selector);
   if (!root) { console.error("quizGame: no element for", selector); return; }
+  const sets = options.sets ? options.sets : [options.questions || []];
   const messages = options.messages || {
     three: "Ausgezeichnet! 🌟 Fast alles richtig!",
     two:   "Gut gemacht! 👍",
     one:   "Weiter üben! 💪",
   };
-  const totalQ = options.questions.length;
-  let questions = [], idx = 0, score = 0, answered = false;
+
+  let currentSet = 0, questions = [], idx = 0, score = 0, answered = false;
 
   root.classList.add("quiz");
   root.innerHTML = `
+    ${setBarHTML(sets.length)}
     <div class="quiz-bar">
-      <span>Frage <b data-q>1</b> / ${totalQ}</span>
+      <span>Frage <b data-q>1</b> / <span data-total>0</span></span>
       <span>✅ <b data-score>0</b></span>
     </div>
     <div class="card">
@@ -257,6 +265,7 @@ function quizGame(selector, options) {
   const explainEl = root.querySelector("[data-explain]");
   const nextBtn = root.querySelector("[data-next]");
   const qNum = root.querySelector("[data-q]");
+  const totalEl = root.querySelector("[data-total]");
   const scoreEl = root.querySelector("[data-score]");
 
   function render() {
@@ -275,22 +284,15 @@ function quizGame(selector, options) {
       optsEl.appendChild(b);
     });
   }
-
   function choose(btn, i, item) {
     if (answered) return;
     answered = true;
-    if (i === item.answer) {
-      btn.classList.add("correct");
-      score++; scoreEl.textContent = score;
-    } else {
-      btn.classList.add("wrong");
-      optsEl.children[item.answer].classList.add("correct");
-    }
+    if (i === item.answer) { btn.classList.add("correct"); score++; scoreEl.textContent = score; }
+    else { btn.classList.add("wrong"); optsEl.children[item.answer].classList.add("correct"); }
     [...optsEl.children].forEach(c => (c.disabled = true));
     if (item.explain) { explainEl.textContent = item.explain; explainEl.hidden = false; }
     nextBtn.hidden = false;
   }
-
   nextBtn.addEventListener("click", () => {
     if (idx < questions.length - 1) { idx++; render(); }
     else {
@@ -301,41 +303,47 @@ function quizGame(selector, options) {
     }
   });
 
-  function start() {
-    questions = options.shuffle === false ? options.questions.slice() : shuffle(options.questions);
+  function loadSet(i) {
+    currentSet = i;
+    questions = options.shuffle === false ? sets[i].slice() : shuffle(sets[i]);
     idx = 0; score = 0; scoreEl.textContent = "0";
+    totalEl.textContent = questions.length;
+    updateSetLabel(root, i);
     root.querySelector("[data-overlay]").hidden = true;
     render();
   }
-  root.querySelector("[data-again]").addEventListener("click", start);
-  start();
+  root.querySelector("[data-again]").addEventListener("click", () => loadSet(currentSet));
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
 }
 
 /* ============================================================
-   sortGame(selector, options)  — put each item in the right bucket
+   sortGame(selector, options)
    options = {
-     buckets: [ { label } , ... ],            // order = index
-     items:   [ { text, bucket:<index>, explain? }, ... ],
-     shuffle?: true,
-     messages?: { three, two, one }
+     buckets: [ { label }, ... ],
+     items: [ { text, bucket:<index>, explain? } ]   // single set
+     // OR sets: [ [ ...items ], ... ]
+     shuffle?: true, messages?: { three, two, one }
    }
    ============================================================ */
 function sortGame(selector, options) {
   const root = document.querySelector(selector);
   if (!root) { console.error("sortGame: no element for", selector); return; }
   const buckets = options.buckets;
+  const sets = options.sets ? options.sets : [options.items || []];
   const messages = options.messages || {
     three: "Perfekt sortiert! 🌟",
     two:   "Gut gemacht! 👍",
     one:   "Weiter üben! 💪",
   };
-  const totalI = options.items.length;
-  let items = [], idx = 0, score = 0, answered = false;
+
+  let currentSet = 0, items = [], idx = 0, score = 0, answered = false;
 
   root.classList.add("sort");
   root.innerHTML = `
+    ${setBarHTML(sets.length)}
     <div class="quiz-bar">
-      <span><b data-q>1</b> / ${totalI}</span>
+      <span><b data-q>1</b> / <span data-total>0</span></span>
       <span>✅ <b data-score>0</b></span>
     </div>
     <div class="card">
@@ -351,6 +359,7 @@ function sortGame(selector, options) {
   const feedbackEl = root.querySelector("[data-feedback]");
   const nextBtn = root.querySelector("[data-next]");
   const qNum = root.querySelector("[data-q]");
+  const totalEl = root.querySelector("[data-total]");
   const scoreEl = root.querySelector("[data-score]");
 
   function render() {
@@ -369,22 +378,15 @@ function sortGame(selector, options) {
       bucketsEl.appendChild(btn);
     });
   }
-
   function choose(btn, i, item) {
     if (answered) return;
     answered = true;
-    if (i === item.bucket) {
-      btn.classList.add("correct");
-      score++; scoreEl.textContent = score;
-    } else {
-      btn.classList.add("wrong");
-      bucketsEl.children[item.bucket].classList.add("correct");
-    }
+    if (i === item.bucket) { btn.classList.add("correct"); score++; scoreEl.textContent = score; }
+    else { btn.classList.add("wrong"); bucketsEl.children[item.bucket].classList.add("correct"); }
     [...bucketsEl.children].forEach(c => (c.disabled = true));
     if (item.explain) { feedbackEl.textContent = item.explain; feedbackEl.hidden = false; }
     nextBtn.hidden = false;
   }
-
   nextBtn.addEventListener("click", () => {
     if (idx < items.length - 1) { idx++; render(); }
     else {
@@ -395,31 +397,38 @@ function sortGame(selector, options) {
     }
   });
 
-  function start() {
-    items = options.shuffle === false ? options.items.slice() : shuffle(options.items);
+  function loadSet(i) {
+    currentSet = i;
+    items = options.shuffle === false ? sets[i].slice() : shuffle(sets[i]);
     idx = 0; score = 0; scoreEl.textContent = "0";
+    totalEl.textContent = items.length;
+    updateSetLabel(root, i);
     root.querySelector("[data-overlay]").hidden = true;
     render();
   }
-  root.querySelector("[data-again]").addEventListener("click", start);
-  start();
+  root.querySelector("[data-again]").addEventListener("click", () => loadSet(currentSet));
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
 }
 
 /* ============================================================
-   flashcardGame(selector, options)  — study cards, flip front/back
+   flashcardGame(selector, options)
    options = {
-     cards: [ { front, back }, ... ],
+     cards: [ { front, back }, ... ]     // single set
+     // OR sets: [ [ ...cards ], ... ]
      shuffle?: true
    }
    ============================================================ */
 function flashcardGame(selector, options) {
   const root = document.querySelector(selector);
   if (!root) { console.error("flashcardGame: no element for", selector); return; }
-  let cards = options.shuffle === false ? options.cards.slice() : shuffle(options.cards);
-  let idx = 0;
+  const sets = options.sets ? options.sets : [options.cards || []];
+
+  let currentSet = 0, cards = [], idx = 0;
 
   root.classList.add("flash");
   root.innerHTML = `
+    ${setBarHTML(sets.length)}
     <div class="flash-card" data-card>
       <div class="flash-inner">
         <div class="flash-face flash-front" data-front></div>
@@ -429,7 +438,7 @@ function flashcardGame(selector, options) {
     <p class="flash-hint">Klicke die Karte zum Umdrehen</p>
     <div class="flash-controls">
       <button class="btn btn-ghost" data-prev>← Zurück</button>
-      <span class="flash-progress"><b data-i>1</b> / ${cards.length}</span>
+      <span class="flash-progress"><b data-i>1</b> / <span data-total>0</span></span>
       <button class="btn btn-ghost" data-next>Weiter →</button>
     </div>
     <div class="flash-tools">
@@ -440,6 +449,7 @@ function flashcardGame(selector, options) {
   const frontEl = root.querySelector("[data-front]");
   const backEl = root.querySelector("[data-back]");
   const iEl = root.querySelector("[data-i]");
+  const totalEl = root.querySelector("[data-total]");
 
   function render() {
     cardEl.classList.remove("flipped");
@@ -447,17 +457,21 @@ function flashcardGame(selector, options) {
     backEl.textContent = cards[idx].back;
     iEl.textContent = idx + 1;
   }
-  function go(delta) {
-    idx = (idx + delta + cards.length) % cards.length;
-    render();
-  }
+  function go(delta) { idx = (idx + delta + cards.length) % cards.length; render(); }
 
   cardEl.addEventListener("click", () => cardEl.classList.toggle("flipped"));
   root.querySelector("[data-prev]").addEventListener("click", () => go(-1));
   root.querySelector("[data-next]").addEventListener("click", () => go(1));
-  root.querySelector("[data-shuffle]").addEventListener("click", () => {
-    cards = shuffle(cards); idx = 0; render();
-  });
+  root.querySelector("[data-shuffle]").addEventListener("click", () => { cards = shuffle(cards); idx = 0; render(); });
 
-  render();
+  function loadSet(i) {
+    currentSet = i;
+    cards = options.shuffle === false ? sets[i].slice() : shuffle(sets[i]);
+    idx = 0;
+    totalEl.textContent = cards.length;
+    updateSetLabel(root, i);
+    render();
+  }
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
 }

@@ -19,7 +19,7 @@
 
 <main class="container">
   <div class="card">
-    <p>Lies den Satz, überlege die richtige Präposition und drehe die Karte um.</p>
+    <p>Klicke die Karte um und lies die passende Präposition mit Erklärung.</p>
   </div>
   <div id="game"></div>
 </main>
@@ -29,27 +29,63 @@
 <script src="../assets/engine.js"></script>
 <script>
   flashcardGame("#game", {
-    cards: [
-      { front: "Ich habe ___ Montag Deutschunterricht.", back: "am" },
-      { front: "Wir treffen uns ___ zwei Stunden.", back: "in" },
-      { front: "Sie kommt ___ einer Woche zurück.", back: "in" },
-      { front: "Er wurde ___ 1990 geboren.", back: "— (keine Präposition: „1990“ oder „im Jahr 1990“)" },
-      { front: "___ Winter ist es kalt.", back: "Im" },
-      { front: "Das Konzert beginnt ___ 20 Uhr.", back: "um" },
-      { front: "Ich bleibe nur ___ das Wochenende.", back: "über" },
-      { front: "___ dem Essen putze ich mir die Zähne.", back: "Nach" },
-      { front: "Wir sehen uns ___ einer Stunde.", back: "in" },
-      { front: "Er arbeitet ___ einem Jahr in Berlin.", back: "seit" },
-      { front: "___ dem Urlaub erzählte sie viele Geschichten.", back: "Nach" },
-      { front: "Die Schule beginnt ___ September.", back: "im" },
-      { front: "___ Weihnachten fahren wir in die Berge.", back: "An" },
-      { front: "___ meinem Geburtstag bekam ich viele Geschenke.", back: "An" },
-      { front: "___ dem Abendessen schauen wir Fernsehen.", back: "Nach" },
-      { front: "Ich bin ___ dem 1. Januar wieder da.", back: "ab" },
-      { front: "Wir sind ___ Mitternacht nach Hause gegangen.", back: "um" },
-      { front: "___ dem Sommer fängt die Schule wieder an.", back: "Nach" },
-      { front: "Er ruft mich immer ___ der Arbeit an.", back: "nach" },
-      { front: "___ einer Woche war er wieder gesund.", back: "Nach" }
+    sets: [
+      [
+        { front:"Ich fahre ____ Montag nach Berlin.", back:"am — Tage: am Montag, am Dienstag …" },
+        { front:"Sie kommt ____ 15. März.", back:"am — Datum: am 15. März" },
+        { front:"Wir treffen uns ____ drei Uhr.", back:"um — Uhrzeit: um drei Uhr" },
+        { front:"Er ist ____ 1990 geboren.", back:"— (keine Präposition: '1990' oder 'im Jahr 1990')" },
+        { front:"Der Kurs beginnt ____ Januar.", back:"im — Monate: im Januar, im Februar …" },
+        { front:"Ich lerne Deutsch ____ zwei Jahren.", back:"seit — Beginn bis jetzt: seit zwei Jahren" },
+        { front:"Das Konzert ist ____ Abend.", back:"am — Tageszeiten: am Morgen, am Nachmittag, am Abend" },
+        { front:"Sie kommt ____ einer Stunde.", back:"in — Zukunft: in einer Stunde (= nach einer Stunde)" },
+        { front:"Wir fahren ____ Sommer in den Urlaub.", back:"im — Jahreszeiten: im Sommer, im Winter …" },
+        { front:"Der Film beginnt ____ 20:00 Uhr.", back:"um — genaue Uhrzeit" },
+        { front:"Ich bin ____ Woche beschäftigt.", back:"diese Woche / nächste Woche — ohne Präposition, oder 'in dieser Woche'" },
+        { front:"Er kommt ____ Weihnachten nach Hause.", back:"an — Feste und Feiertage: an Weihnachten, an Ostern" }
+      ],
+      [
+        { front:"____ Montag bis Freitag arbeite ich.", back:"von … bis — Zeitspanne: von Montag bis Freitag" },
+        { front:"Sie schläft ____ Mittag.", back:"bis — Endpunkt: bis Mittag" },
+        { front:"Ich warte ____ dem Unterricht.", back:"nach — danach: nach dem Unterricht" },
+        { front:"____ dem Essen mache ich einen Spaziergang.", back:"nach — zeitliche Folge: nach dem Essen" },
+        { front:"Er kommt ____ dem Wochenende zurück.", back:"nach — nach dem Wochenende" },
+        { front:"Ruf mich ____ dem Abendessen an!", back:"nach — nach dem Abendessen" },
+        { front:"Sie ist ____ dem Frühstück in die Schule gegangen.", back:"nach — zeitliche Reihenfolge" },
+        { front:"Ich lese ____ dem Schlafen noch ein bisschen.", back:"vor — vorher: vor dem Schlafen" },
+        { front:"____ dem Unterricht gehen wir Kaffee trinken.", back:"nach — Reihenfolge: nach dem Unterricht" },
+        { front:"Bitte komm ____ 10 Uhr nicht an!", back:"vor — nicht früher als: vor 10 Uhr (= früher als 10)" },
+        { front:"Wir treffen uns ____ zwei Stunden.", back:"in — zukünftiger Zeitpunkt: in zwei Stunden" },
+        { front:"Sie lernt ____ der Prüfung noch mal alles.", back:"vor — unmittelbar vorher: vor der Prüfung" }
+      ],
+      [
+        { front:"Er arbeitet ____ acht ____ fünf.", back:"von … bis — von acht bis fünf (Uhrzeit)" },
+        { front:"Ich bin ____ zwei Wochen in Wien.", back:"seit — Beginn bis jetzt: seit zwei Wochen" },
+        { front:"____ Ostern machen wir eine Reise.", back:"an — Feste: an Ostern" },
+        { front:"Sie hat ____ einem Jahr keine Nachrichten geschickt.", back:"seit — Dauer bis jetzt: seit einem Jahr" },
+        { front:"Der Zug fährt ____ 9:30 Uhr ab.", back:"um — genaue Uhrzeit" },
+        { front:"____ Herbst sind die Blätter bunt.", back:"im — Jahreszeiten: im Herbst" },
+        { front:"Ich habe ____ Dienstag einen Termin.", back:"am — Wochentage: am Dienstag" },
+        { front:"Wir spielen ____ Nacht Karten.", back:"in der — Nacht: in der Nacht (auch: nachts)" },
+        { front:"____ dem Konzert gehen wir essen.", back:"nach — danach: nach dem Konzert" },
+        { front:"Der Laden ist ____ 9:00 ____ 18:00 Uhr geöffnet.", back:"von … bis — Öffnungszeiten" },
+        { front:"Sie schreibt ____ Stunden an dem Brief.", back:"seit — Dauer: seit Stunden" },
+        { front:"Ich bin ____ einer Woche wieder zurück.", back:"in — zukünftig: in einer Woche" }
+      ],
+      [
+        { front:"____ dem Sport dusche ich.", back:"nach — nach dem Sport" },
+        { front:"Wir essen ____ Mittag zusammen.", back:"zu — feste Mahlzeiten: zu Mittag, zu Abend" },
+        { front:"Sie kommt ____ dem Urlaub erholt zurück.", back:"nach — nach dem Urlaub" },
+        { front:"____ welchem Tag hast du Zeit?", back:"an — an welchem Tag?" },
+        { front:"Ich lerne ____ der Prüfung noch mal.", back:"vor — vor der Prüfung" },
+        { front:"Er schläft ____ dem Mittagessen.", back:"nach — nach dem Mittagessen" },
+        { front:"Das Geschäft öffnet ____ 8 Uhr.", back:"um — um 8 Uhr" },
+        { front:"Wir fahren ____ August in den Urlaub.", back:"im — im August (Monate)" },
+        { front:"____ Neujahr feiern wir immer zusammen.", back:"an — an Neujahr (Feiertag)" },
+        { front:"Sie wohnt ____ drei Jahren in Deutschland.", back:"seit — seit drei Jahren" },
+        { front:"Ich rufe dich ____ dem Treffen an.", back:"nach — nach dem Treffen" },
+        { front:"Das Seminar dauert ____ Montag ____ Freitag.", back:"von … bis — von Montag bis Freitag" }
+      ]
     ]
   });
 </script>

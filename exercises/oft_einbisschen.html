@@ -19,7 +19,7 @@
 
 <main class="container">
   <div class="card">
-    <p>Passt <b>oft</b> (wie häufig?) oder <b>ein bisschen</b> (wie viel / wie sehr?) besser? Wähle die richtige Kategorie.</p>
+    <p>Sortiere die Sätze: Beschreibt das unterstrichene Wort eine <b>Häufigkeit</b> (oft) oder eine <b>Menge</b> (ein bisschen)?</p>
   </div>
   <div id="game"></div>
 </main>
@@ -29,23 +29,56 @@
 <script src="../assets/engine.js"></script>
 <script>
   sortGame("#game", {
-    buckets: [ { label: "oft" }, { label: "ein bisschen" } ],
-    items: [
-      { text: "Ich bin ___ müde nach dem Sport.", bucket: 1, explain: "Wie müde? → Menge/Intensität" },
-      { text: "Anna übt ___ Gitarre – fast jeden Tag!", bucket: 0, explain: "Wie oft übt sie? → Häufigkeit" },
-      { text: "Ich habe ___ Hunger, aber nicht viel.", bucket: 1, explain: "Wie viel Hunger? → Menge" },
-      { text: "Tom fährt ___ Fahrrad – dreimal pro Woche.", bucket: 0, explain: "Wie oft fährt er? → Häufigkeit" },
-      { text: "Das Lied ist ___ zu laut für mich.", bucket: 1, explain: "Wie laut? → Intensität" },
-      { text: "Wir schwimmen ___ im Sommer – jedes Wochenende.", bucket: 0, explain: "Wie oft? → Häufigkeit" },
-      { text: "Ich bin ___ nervös vor dem Test.", bucket: 1, explain: "Wie nervös? → Intensität" },
-      { text: "Mia spielt ___ Videospiele – fast jeden Abend.", bucket: 0, explain: "Wie oft spielt sie? → Häufigkeit" },
-      { text: "Ich trinke morgens oft Kaffee.", bucket: 0, explain: "Morgens, regelmäßig → Häufigkeit" },
-      { text: "Ich mag Regen ein bisschen – aber nicht zu viel!", bucket: 1, explain: "Wie sehr mag sie Regen? → Menge" },
-      { text: "Paul spielt oft Fußball mit seinen Freunden.", bucket: 0, explain: "Spielt er regelmäßig? → Häufigkeit" },
-      { text: "Das Buch ist ein bisschen schwer für mich.", bucket: 1, explain: "Wie schwer ist das Buch? → Intensität" },
-      { text: "Lukas geht oft joggen – jeden Morgen.", bucket: 0, explain: "Wie oft geht er joggen? → Häufigkeit" },
-      { text: "Mir ist ein bisschen kalt im Zimmer.", bucket: 1, explain: "Wie kalt ist es? → Intensität" },
-      { text: "Sie malt oft – fast jedes Wochenende.", bucket: 0, explain: "Malt sie regelmäßig? → Häufigkeit" }
+    buckets: [{ label: "oft" }, { label: "ein bisschen" }],
+    sets: [
+      [
+        { text:"Ich gehe manchmal ins Kino.", bucket:0, explain:"'manchmal' = Häufigkeit → oft-Gruppe" },
+        { text:"Sie trinkt ein bisschen Wasser.", bucket:1, explain:"'ein bisschen' = kleine Menge" },
+        { text:"Er kommt selten zu spät.", bucket:0, explain:"'selten' = Häufigkeit, auch wenn wenig → oft-Gruppe" },
+        { text:"Ich spreche ein bisschen Deutsch.", bucket:1, explain:"'ein bisschen' beschreibt hier die Menge / den Grad" },
+        { text:"Wir treffen uns oft am Wochenende.", bucket:0, explain:"'oft' = Häufigkeit" },
+        { text:"Sie isst ein bisschen Salat.", bucket:1, explain:"'ein bisschen' = kleine Menge" },
+        { text:"Er schläft manchmal am Tag.", bucket:0, explain:"'manchmal' = Häufigkeit" },
+        { text:"Kannst du ein bisschen lauter sprechen?", bucket:1, explain:"'ein bisschen' = ein wenig, Grad" },
+        { text:"Ich lese häufig abends.", bucket:0, explain:"'häufig' = Häufigkeit" },
+        { text:"Sie hat ein bisschen Zeit.", bucket:1, explain:"'ein bisschen' = kleine Menge" }
+      ],
+      [
+        { text:"Er hilft mir immer.", bucket:0, explain:"'immer' = Häufigkeit (100%)" },
+        { text:"Ich bin ein bisschen müde.", bucket:1, explain:"'ein bisschen' = Grad, nicht viel" },
+        { text:"Sie ruft manchmal an.", bucket:0, explain:"'manchmal' = Häufigkeit" },
+        { text:"Er isst ein bisschen von dem Kuchen.", bucket:1, explain:"'ein bisschen' = kleine Menge" },
+        { text:"Wir fahren oft ans Meer.", bucket:0, explain:"'oft' = Häufigkeit" },
+        { text:"Das Buch ist ein bisschen langweilig.", bucket:1, explain:"'ein bisschen' = Grad" },
+        { text:"Sie kommen nie pünktlich.", bucket:0, explain:"'nie' = Häufigkeit (0%)" },
+        { text:"Ich brauche ein bisschen Hilfe.", bucket:1, explain:"'ein bisschen' = geringe Menge" },
+        { text:"Er joggt täglich.", bucket:0, explain:"'täglich' = Häufigkeit" },
+        { text:"Es regnet ein bisschen.", bucket:1, explain:"'ein bisschen' = schwacher Regen, Grad" }
+      ],
+      [
+        { text:"Ich gehe regelmäßig spazieren.", bucket:0, explain:"'regelmäßig' = Häufigkeit" },
+        { text:"Sie hat ein bisschen Kopfschmerzen.", bucket:1, explain:"'ein bisschen' = Grad, nicht stark" },
+        { text:"Er kommt manchmal zum Unterricht.", bucket:0, explain:"'manchmal' = Häufigkeit" },
+        { text:"Kannst du mir ein bisschen Zucker geben?", bucket:1, explain:"'ein bisschen' = kleine Menge" },
+        { text:"Wir spielen häufig Karten.", bucket:0, explain:"'häufig' = Häufigkeit" },
+        { text:"Das ist ein bisschen teuer.", bucket:1, explain:"'ein bisschen' = Grad" },
+        { text:"Sie lernt immer abends.", bucket:0, explain:"'immer' = Häufigkeit" },
+        { text:"Ich habe ein bisschen Angst.", bucket:1, explain:"'ein bisschen' = Grad / Menge" },
+        { text:"Er fährt oft mit dem Fahrrad.", bucket:0, explain:"'oft' = Häufigkeit" },
+        { text:"Sie spricht ein bisschen Spanisch.", bucket:1, explain:"'ein bisschen' = geringer Grad der Sprachkenntnisse" }
+      ],
+      [
+        { text:"Ich schaue selten fern.", bucket:0, explain:"'selten' = Häufigkeit" },
+        { text:"Er trinkt ein bisschen Kaffee.", bucket:1, explain:"'ein bisschen' = kleine Menge" },
+        { text:"Sie kommt meistens zu spät.", bucket:0, explain:"'meistens' = Häufigkeit" },
+        { text:"Das Essen ist ein bisschen salzig.", bucket:1, explain:"'ein bisschen' = Grad" },
+        { text:"Wir gehen manchmal ins Restaurant.", bucket:0, explain:"'manchmal' = Häufigkeit" },
+        { text:"Ich brauche ein bisschen Geld.", bucket:1, explain:"'ein bisschen' = kleine Menge" },
+        { text:"Er lacht oft.", bucket:0, explain:"'oft' = Häufigkeit" },
+        { text:"Sie ist ein bisschen traurig.", bucket:1, explain:"'ein bisschen' = Grad" },
+        { text:"Wir treffen uns regelmäßig.", bucket:0, explain:"'regelmäßig' = Häufigkeit" },
+        { text:"Es fehlt noch ein bisschen Salz.", bucket:1, explain:"'ein bisschen' = kleine Menge" }
+      ]
     ]
   });
 </script>
