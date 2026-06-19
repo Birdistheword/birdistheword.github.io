@@ -439,6 +439,44 @@ a { color: var(--accent); }
 }
 .dd-ghost[hidden] { display: none; }
 
+/* ---- Collapsible reference table (native <details>) ---- */
+details.fold {
+  border: 2px solid var(--gray-200); border-radius: var(--radius);
+  overflow: hidden; margin-top: 14px; background: var(--surface);
+}
+details.fold > summary {
+  list-style: none; cursor: pointer; user-select: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 18px; background: var(--gray-100);
+  font-weight: 800; font-size: 0.82rem; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--gray-600);
+}
+details.fold > summary::-webkit-details-marker { display: none; }
+.fold-ico {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--gray-300); background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; color: var(--gray-400); transition: transform 0.25s;
+}
+details.fold[open] .fold-ico { transform: rotate(45deg); color: var(--accent); border-color: var(--accent); }
+.fold-inner { padding: 16px 18px 20px; }
+
+.ptable { width: 100%; border-collapse: separate; border-spacing: 4px; }
+.ptable th {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--gray-400);
+  padding: 6px 10px; text-align: center;
+}
+.ptable td {
+  background: var(--gray-100); border: 2px solid var(--gray-200);
+  border-radius: 8px; padding: 9px 12px; text-align: center;
+  font-weight: 700; font-size: 0.92rem; color: var(--gray-600);
+}
+.ptable td.pd {
+  background: var(--accent-light); border: 2px dashed var(--accent);
+  color: var(--accent); font-size: 1rem; font-weight: 900;
+}
+
 /* Result overlay */
 .mem-overlay {
   position: fixed; inset: 0; z-index: 1000;

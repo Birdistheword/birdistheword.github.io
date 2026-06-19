@@ -12,29 +12,30 @@
 <header class="site-header">
   <div class="brand">
     <h1>Akkusativ-Pronomen</h1>
-    <span class="subtitle">Personalpronomen im Akkusativ · A1</span>
+    <span class="subtitle">Ziehen &amp; Ablegen · A1</span>
   </div>
   <a class="back-link" href="../index.html">← Übersicht</a>
 </header>
 
 <main class="container">
   <div class="card">
-    <p>Welches Pronomen passt in die Lücke? Wähle die richtige Form im <b>Akkusativ</b>.</p>
-    <table class="table" style="margin-top:12px;font-size:0.9rem">
-      <thead>
-        <tr><th>Nominativ</th><th>Akkusativ</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>ich</td><td><span class="badge">mich</span></td></tr>
-        <tr><td>du</td><td><span class="badge">dich</span></td></tr>
-        <tr><td>er</td><td><span class="badge">ihn</span></td></tr>
-        <tr><td>sie (Sg.)</td><td><span class="badge">sie</span></td></tr>
-        <tr><td>es</td><td><span class="badge">es</span></td></tr>
-        <tr><td>wir</td><td><span class="badge">uns</span></td></tr>
-        <tr><td>ihr</td><td><span class="badge">euch</span></td></tr>
-        <tr><td>sie (Pl.)</td><td><span class="badge">sie</span></td></tr>
-      </tbody>
-    </table>
+    <p>Zieh das richtige Pronomen in jede Lücke und klicke dann auf <b>Prüfen</b>.</p>
+    <details class="fold">
+      <summary>Pronomen-Tabelle anzeigen <span class="fold-ico">+</span></summary>
+      <div class="fold-inner">
+        <table class="ptable">
+          <thead>
+            <tr><th>Nominativ</th><th>Akkusativ</th><th>Nominativ</th><th>Akkusativ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ich</td><td class="pd">mich</td><td>wir</td><td class="pd">uns</td></tr>
+            <tr><td>du</td><td class="pd">dich</td><td>ihr</td><td class="pd">euch</td></tr>
+            <tr><td>er</td><td class="pd">ihn</td><td>sie (Pl.)</td><td class="pd">sie</td></tr>
+            <tr><td>sie / es</td><td class="pd">sie / es</td><td>Sie</td><td class="pd">Sie</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
   </div>
   <div id="game"></div>
 </main>
@@ -43,55 +44,48 @@
 
 <script src="../assets/engine.js"></script>
 <script>
-  quizGame("#game", {
+  dragDropGame("#game", {
+    words: ["mich","dich","ihn","sie","es","uns","euch"],
     sets: [
       [
-        { q:"Ich warte am Bahnhof. Kannst du ____ bitte abholen?", options:["mich","dich","ihn","uns"], answer:0, explain:"ich → mich. Ich (Subjekt) werde zum Objekt." },
-        { q:"Du hast Geburtstag! Ich besuche ____ heute Abend.", options:["mich","dich","sie","euch"], answer:1, explain:"du → dich. Du bist das Ziel der Aktion." },
-        { q:"Er ist neu in der Klasse. Wir kennen ____ nicht.", options:["sie","es","ihn","uns"], answer:2, explain:"er (maskulin) → ihn im Akkusativ." },
-        { q:"Sie (Anna) wohnt in Berlin. Ich besuche ____ nächste Woche.", options:["sie","ihn","es","euch"], answer:0, explain:"sie bleibt 'sie' im Akkusativ." },
-        { q:"Es (das Kind) schläft. Die Mutter trägt ____ ins Bett.", options:["ihn","sie","es","uns"], answer:2, explain:"Neutrum bleibt 'es' im Akkusativ." },
-        { q:"Wir kommen nicht zur Party. Frank hat ____ nicht eingeladen.", options:["uns","euch","sie","mich"], answer:0, explain:"wir → uns." },
-        { q:"Ihr seid meine besten Freunde. Ich vermisse ____ sehr.", options:["uns","sie","euch","dich"], answer:2, explain:"ihr → euch." },
-        { q:"Sie (die Kinder) spielen im Garten. Ich sehe ____ jeden Tag.", options:["ihn","sie","es","uns"], answer:1, explain:"sie (Plural) → sie. Sehen + Akkusativ." },
-        { q:"Er ist mein Bruder. Ich liebe ____.", options:["sie","ihn","es","uns"], answer:1, explain:"er → ihn. Lieben braucht Akkusativ." },
-        { q:"Du spielst sehr gut. Der Trainer lobt ____ oft.", options:["mich","dich","ihn","euch"], answer:1, explain:"du → dich." }
+        { sentence:"Ich warte am Bahnhof. Kannst du ____ abholen?", answer:"mich", explain:"ich → mich" },
+        { sentence:"Du hast Geburtstag. Ich besuche ____ heute Abend.", answer:"dich", explain:"du → dich" },
+        { sentence:"Er ist neu hier. Wir kennen ____ noch nicht.", answer:"ihn", explain:"er (maskulin) → ihn" },
+        { sentence:"Anna wohnt in Berlin. Ich besuche ____ bald.", answer:"sie", explain:"sie bleibt sie" },
+        { sentence:"Das Kind schläft. Die Mutter trägt ____ ins Bett.", answer:"es", explain:"es (Neutrum) → es" },
+        { sentence:"Frank macht eine Party. Er hat ____ nicht eingeladen. (wir)", answer:"uns", explain:"wir → uns" },
+        { sentence:"Ihr seid meine Freunde. Ich vermisse ____ sehr.", answer:"euch", explain:"ihr → euch" },
+        { sentence:"Die Kinder spielen. Ich sehe ____ jeden Tag.", answer:"sie", explain:"sie (Plural) → sie" }
       ],
       [
-        { q:"Ich stehe vor der Tür. Siehst du ____ nicht?", options:["mich","dich","ihn","uns"], answer:0, explain:"ich → mich. Sehen + Akkusativ." },
-        { q:"Sie singt sehr schön. Wir hören ____ gern.", options:["ihn","sie","es","euch"], answer:1, explain:"sie (sg.) → sie. Hören + Akkusativ." },
-        { q:"Er wartet draußen. Bitte ruf ____ herein!", options:["sie","ihn","es","uns"], answer:1, explain:"er → ihn. Hereinrufen + Akkusativ." },
-        { q:"Es (das Buch) ist toll. Ich lese ____ jeden Abend.", options:["ihn","sie","es","uns"], answer:2, explain:"Das Buch (neutral) = es." },
-        { q:"Wir sind deine Freunde. Du kennst ____ gut.", options:["uns","euch","sie","mich"], answer:0, explain:"wir → uns. Kennen + Akkusativ." },
-        { q:"Ihr macht viel Lärm. Niemand hört ____.", options:["uns","sie","euch","dich"], answer:2, explain:"ihr → euch. Hören + Akkusativ." },
-        { q:"Sie (Plural) arbeiten hier. Der Chef kennt ____ gut.", options:["ihn","sie","es","uns"], answer:1, explain:"sie (Plural) → sie." },
-        { q:"Sie ist meine Lehrerin. Ich mag ____ sehr.", options:["sie","ihn","es","euch"], answer:0, explain:"sie → sie. Mögen + Akkusativ." },
-        { q:"Er (der Hund) ist niedlich. Wir lieben ____.", options:["sie","ihn","es","uns"], answer:1, explain:"der Hund ist maskulin → ihn." },
-        { q:"Wir warten schon eine Stunde. Der Kellner hat ____ vergessen!", options:["uns","euch","sie","mich"], answer:0, explain:"wir → uns." }
+        { sentence:"Ich stehe vor der Tür. Siehst du ____ nicht?", answer:"mich", explain:"ich → mich" },
+        { sentence:"Du spielst gut. Der Trainer lobt ____ oft.", answer:"dich", explain:"du → dich" },
+        { sentence:"Der Hund ist niedlich. Wir lieben ____.", answer:"ihn", explain:"der Hund → er → ihn" },
+        { sentence:"Sie singt schön. Wir hören ____ gern.", answer:"sie", explain:"sie (Sg.) → sie" },
+        { sentence:"Das Buch ist toll. Ich lese ____ jeden Abend.", answer:"es", explain:"das Buch → es" },
+        { sentence:"Wir sind deine Freunde. Du kennst ____ gut.", answer:"uns", explain:"wir → uns" },
+        { sentence:"Ihr macht Lärm. Niemand hört ____.", answer:"euch", explain:"ihr → euch" },
+        { sentence:"Meine Eltern wohnen weit weg. Ich besuche ____ selten.", answer:"sie", explain:"die Eltern (Plural) → sie" }
       ],
       [
-        { q:"Das ist meine neue Handynummer. Ruf ____ doch mal an! (mich)", options:["mich","dich","ihn","uns"], answer:0, explain:"ich → mich. Anrufen + Akkusativ." },
-        { q:"Du bist krank. Der Arzt untersucht ____ jetzt.", options:["mich","dich","sie","euch"], answer:1, explain:"du → dich." },
-        { q:"Der Kuchen sieht lecker aus. Ich esse ____ sofort.", options:["ihn","sie","es","uns"], answer:0, explain:"der Kuchen (maskulin) → ihn." },
-        { q:"Die Musik ist schön. Ich höre ____ jeden Morgen.", options:["ihn","sie","es","euch"], answer:1, explain:"die Musik (feminin) → sie." },
-        { q:"Das Auto ist kaputt. Der Mechaniker repariert ____.", options:["ihn","sie","es","uns"], answer:2, explain:"das Auto (neutral) → es." },
-        { q:"Wir sind neu hier. Zeigst du ____ die Stadt?", options:["uns","euch","sie","mich"], answer:0, explain:"wir → uns." },
-        { q:"Ihr seid spät dran. Ich warte auf ____.", options:["uns","sie","euch","dich"], answer:2, explain:"ihr → euch. warten auf + Akkusativ." },
-        { q:"Die Gäste kommen heute. Wir holen ____ vom Flughafen ab.", options:["ihn","sie","es","uns"], answer:1, explain:"die Gäste (Plural) → sie." },
-        { q:"Mein Freund ist traurig. Ich tröste ____.", options:["sie","ihn","es","euch"], answer:1, explain:"er → ihn." },
-        { q:"Ich habe eine Frage. Hörst du ____ überhaupt?", options:["mich","dich","ihn","uns"], answer:0, explain:"ich → mich." }
+        { sentence:"Ich bin müde. Lass ____ bitte schlafen.", answer:"mich", explain:"ich → mich" },
+        { sentence:"Du bist krank. Der Arzt untersucht ____ jetzt.", answer:"dich", explain:"du → dich" },
+        { sentence:"Der Kuchen sieht lecker aus. Ich esse ____ sofort.", answer:"ihn", explain:"der Kuchen → ihn" },
+        { sentence:"Die Musik ist schön. Ich höre ____ jeden Morgen.", answer:"sie", explain:"die Musik → sie" },
+        { sentence:"Das Auto ist kaputt. Der Mechaniker repariert ____.", answer:"es", explain:"das Auto → es" },
+        { sentence:"Wir sind neu hier. Zeigst du ____ die Stadt?", answer:"uns", explain:"wir → uns" },
+        { sentence:"Ihr seid spät dran. Ich warte auf ____.", answer:"euch", explain:"ihr → euch" },
+        { sentence:"Die Gäste kommen heute. Wir holen ____ vom Flughafen ab.", answer:"sie", explain:"die Gäste (Plural) → sie" }
       ],
       [
-        { q:"Du hast einen Fehler gemacht. Niemand kritisiert ____ dafür.", options:["mich","dich","ihn","euch"], answer:1, explain:"du → dich." },
-        { q:"Der Film war super. Ich kann ____ nur empfehlen.", options:["ihn","sie","es","uns"], answer:0, explain:"der Film (maskulin) → ihn." },
-        { q:"Die Blumen sind schön. Ich gieße ____ jeden Tag.", options:["ihn","sie","es","euch"], answer:1, explain:"die Blumen (Plural) → sie." },
-        { q:"Das Fenster ist offen. Kannst du ____ bitte schließen?", options:["ihn","sie","es","uns"], answer:2, explain:"das Fenster (neutral) → es." },
-        { q:"Wir haben Hunger. Lädst du ____ zum Essen ein?", options:["uns","euch","sie","mich"], answer:0, explain:"wir → uns. einladen + Akkusativ." },
-        { q:"Ihr habt das toll gemacht. Alle loben ____.", options:["uns","sie","euch","dich"], answer:2, explain:"ihr → euch." },
-        { q:"Meine Eltern wohnen weit weg. Ich besuche ____ selten.", options:["ihn","sie","es","uns"], answer:1, explain:"die Eltern (Plural) → sie." },
-        { q:"Die Touristen sind verloren. Ein Mann bringt ____ zum Hotel.", options:["ihn","es","sie","euch"], answer:2, explain:"die Touristen (Plural) → sie." },
-        { q:"Ich bin müde. Lass ____ bitte schlafen.", options:["mich","dich","ihn","uns"], answer:0, explain:"ich → mich." },
-        { q:"Er ist mein bester Freund. Ich treffe ____ heute.", options:["sie","ihn","es","euch"], answer:1, explain:"er → ihn. treffen + Akkusativ." }
+        { sentence:"Ich habe eine Frage. Hörst du ____ überhaupt?", answer:"mich", explain:"ich → mich" },
+        { sentence:"Du hast einen Fehler gemacht. Niemand kritisiert ____.", answer:"dich", explain:"du → dich" },
+        { sentence:"Der Film war super. Ich kann ____ nur empfehlen.", answer:"ihn", explain:"der Film → ihn" },
+        { sentence:"Die Blumen sind schön. Ich gieße ____ jeden Tag.", answer:"sie", explain:"die Blumen (Plural) → sie" },
+        { sentence:"Das Fenster ist offen. Kannst du ____ schließen?", answer:"es", explain:"das Fenster → es" },
+        { sentence:"Wir haben Hunger. Lädst du ____ zum Essen ein?", answer:"uns", explain:"wir → uns" },
+        { sentence:"Ihr habt das toll gemacht. Alle loben ____.", answer:"euch", explain:"ihr → euch" },
+        { sentence:"Die Touristen sind verloren. Ein Mann bringt ____ zum Hotel.", answer:"sie", explain:"die Touristen (Plural) → sie" }
       ]
     ]
   });
