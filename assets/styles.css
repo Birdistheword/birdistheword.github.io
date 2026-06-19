@@ -163,7 +163,8 @@ a { color: var(--accent); }
   border: 2px solid var(--gray-200); border-radius: var(--radius);
   cursor: pointer; transition: border-color .15s, background .15s;
 }
-.option:hover { border-color: var(--accent-mid); }
+.option:not(:disabled):hover { border-color: var(--accent-mid); }
+.option:disabled { cursor: default; }
 .option.correct { background: var(--correct-light); border-color: var(--correct); color: var(--correct); }
 .option.wrong   { background: var(--wrong-light);   border-color: var(--wrong);   color: var(--wrong); }
 
@@ -300,6 +301,76 @@ a { color: var(--accent); }
 .mem-card.matched .mem-front {
   background: var(--correct-light); border-color: var(--correct); color: var(--correct);
 }
+
+/* ---- Shared result overlay (quiz / sort) ---- */
+.game-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.game-overlay[hidden] { display: none; }
+.game-result {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); padding: 36px 40px; text-align: center;
+  max-width: 420px; width: 100%;
+}
+.game-stars { font-size: 3rem; color: var(--accent); line-height: 1; margin-bottom: 12px; }
+.game-result h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+.game-result p  { color: var(--gray-600); font-weight: 700; margin-bottom: 22px; }
+
+/* ---- Quiz & Sort shared bar ---- */
+.quiz, .sort { max-width: 640px; margin: 0 auto; }
+.quiz-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; font-weight: 800; color: var(--gray-600);
+}
+.quiz-bar b { color: var(--accent); }
+.quiz [data-question] { margin-bottom: 18px; }
+.quiz [data-next], .sort [data-next] { margin-top: 16px; }
+
+/* ---- Sort ---- */
+.sort-item {
+  font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 800;
+  text-align: center; padding: 18px 0 24px; color: var(--gray-800);
+}
+.sort-buckets {
+  display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.sort-bucket { text-align: center; }
+
+/* ---- Flashcards ---- */
+.flash { max-width: 520px; margin: 0 auto; text-align: center; }
+.flash-card {
+  perspective: 1000px; cursor: pointer;
+  width: 100%; max-width: 460px; margin: 0 auto;
+  aspect-ratio: 3 / 2;
+}
+.flash-inner {
+  display: block; position: relative; width: 100%; height: 100%;
+  transition: transform .5s cubic-bezier(.2,.9,.3,1);
+  transform-style: preserve-3d;
+}
+.flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+.flash-face {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 24px;
+  border-radius: var(--radius-lg); backface-visibility: hidden;
+  box-shadow: var(--shadow); font-weight: 700;
+}
+.flash-front { background: var(--accent); color: #fff; font-size: clamp(1.4rem, 5vw, 2rem); }
+.flash-back  {
+  background: var(--surface); color: var(--gray-800);
+  border: 2px solid var(--accent-mid); transform: rotateY(180deg);
+  font-size: clamp(0.95rem, 3vw, 1.15rem); line-height: 1.5;
+}
+.flash-hint { color: var(--gray-400); font-weight: 700; font-size: 0.85rem; margin-top: 12px; }
+.flash-controls {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin-top: 8px; font-weight: 800; color: var(--gray-600);
+}
+.flash-tools { margin-top: 14px; }
 
 /* Result overlay */
 .mem-overlay {
