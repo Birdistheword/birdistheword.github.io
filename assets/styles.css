@@ -243,6 +243,82 @@ a { color: var(--accent); }
 .exercise-card .ex-meta  { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
 
 /* ============================================================
+   GAME ENGINE — Memory
+   ============================================================ */
+.mem-stats {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  justify-content: center; margin-bottom: 22px;
+  font-weight: 800; color: var(--gray-600);
+}
+.mem-stat { font-size: 1.05rem; }
+.mem-stat b { color: var(--accent); }
+.mem-reset { margin-left: 4px; padding: 8px 16px; font-size: 0.85rem; }
+
+.mem-board {
+  display: grid;
+  grid-template-columns: repeat(var(--mem-cols, 4), 1fr);
+  gap: 12px;
+  max-width: 760px; margin: 0 auto;
+}
+@media (max-width: 560px) { .mem-board { --mem-cols: 3 !important; gap: 8px; } }
+
+.mem-card {
+  display: block; width: 100%; margin: 0; padding: 0;
+  background: none; border: none; font-family: inherit; cursor: pointer;
+  aspect-ratio: 3 / 2; min-height: 84px;
+  perspective: 800px;
+}
+.mem-card-inner {
+  display: block; position: relative; width: 100%; height: 100%;
+  transition: transform .4s cubic-bezier(.2,.9,.3,1);
+  transform-style: preserve-3d;
+}
+.mem-card.revealed .mem-card-inner,
+.mem-card.matched  .mem-card-inner { transform: rotateY(180deg); }
+
+.mem-face {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 8px;
+  border-radius: var(--radius); backface-visibility: hidden;
+  font-weight: 700; font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+  line-height: 1.25; overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.mem-back {
+  background: var(--accent); color: #fff;
+  font-size: 1.6rem; font-weight: 800;
+}
+.mem-front {
+  background: var(--surface); color: var(--gray-800);
+  border: 2px solid var(--accent-mid);
+  transform: rotateY(180deg);
+}
+/* Distinguish the word (term) from its description */
+.mem-term .mem-front { color: var(--accent); font-weight: 800; }
+.mem-def  .mem-front { color: var(--gray-800); font-weight: 600; }
+.mem-card.matched .mem-front {
+  background: var(--correct-light); border-color: var(--correct); color: var(--correct);
+}
+
+/* Result overlay */
+.mem-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.mem-overlay[hidden] { display: none; }
+.mem-result {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); padding: 36px 40px; text-align: center;
+  max-width: 420px; width: 100%;
+}
+.mem-stars { font-size: 3rem; color: var(--accent); line-height: 1; margin-bottom: 12px; }
+.mem-star-empty { color: var(--gray-200); }
+.mem-result h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+.mem-result p  { color: var(--gray-600); font-weight: 700; margin-bottom: 22px; }
+
+/* ============================================================
    Small screens
    ============================================================ */
 @media (max-width: 600px) {
