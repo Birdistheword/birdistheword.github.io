@@ -724,7 +724,6 @@ function fillGame(selector, options) {
   if (options.bank && bankEl) {
     bankEl.innerHTML = options.bank.map(w => `<span class="fill-word">${w}</span>`).join("");
   }
-  let verbCorrect = false;
   const rowEl = root.querySelector("[data-row]");
   const explainEl = root.querySelector("[data-explain]");
   const checkBtn = root.querySelector("[data-check]");
@@ -766,10 +765,8 @@ function fillGame(selector, options) {
     const item = items[idx];
     const inputs = [...rowEl.querySelectorAll(".fill-input")];
     let allOk = true;
-    verbCorrect = false;
     inputs.forEach((inp, i) => {
       const ok = norm(inp.value) === norm(item.answers[i]);
-      if (options.bankGap === i) verbCorrect = ok;
       inp.disabled = true;
       inp.classList.add(ok ? "correct" : "wrong");
       if (!ok) {
@@ -789,7 +786,9 @@ function fillGame(selector, options) {
   }
 
   function markUsed() {
-    if (options.bankGap == null || !verbCorrect || !bankEl) return;
+    // Mark the sentence's CORRECT verb as used, whether or not the
+    // learner typed it right — so the bank shows what has been covered.
+    if (options.bankGap == null || !bankEl) return;
     const w = items[idx].bankWord;
     if (!w) return;
     const chip = bankEl.querySelector(`.fill-word[data-word="${CSS.escape(w)}"]`);
