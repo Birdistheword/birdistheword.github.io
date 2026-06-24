@@ -179,7 +179,7 @@ function memoryGame(selector, options) {
         first.classList.remove("revealed");
         second.classList.remove("revealed");
         resetTurn();
-      }, 900);
+      }, 2000);
     }
   }
   function resetTurn() { first = null; second = null; lock = false; }
