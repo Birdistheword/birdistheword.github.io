@@ -666,3 +666,333 @@ function dragDropGame(selector, options) {
   wireSetBar(root, sets.length, loadSet, () => currentSet);
   loadSet(0);
 }
+
+/* ============================================================
+   fillGame(selector, options)
+   Type-in-the-blank. One sentence at a time, ONE OR MORE gaps
+   (mark each gap with ____ ). A reference word bank can be shown
+   on top. "Prüfen" checks every blank, reveals the correct form
+   for any miss, then "Weiter →". Compare is trimmed + case-insensitive.
+   options = {
+     bank?: [ "backen", ... ],   // STATIC reference chips (shown for every set)
+     bankLabel?: "Verben im Infinitiv",
+     bankGap?: <index>,          // DYNAMIC bank: per set, built from each item's
+                                 //   `bankWord`. The chip for an item turns green
+                                 //   ("used") on "Weiter" once gap[bankGap] is correct.
+     items: [ { sentence, answers:[ ...one per gap... ], bankWord?, explain? } ]  // single set
+     // OR sets: [ [ ...items ], ... ]
+     shuffle?: true,             // shuffle sentence order (default true)
+     messages?: { three, two, one }
+   }
+   ============================================================ */
+function fillGame(selector, options) {
+  const root = document.querySelector(selector);
+  if (!root) { console.error("fillGame: no element for", selector); return; }
+  const sets = options.sets ? options.sets : [options.items || []];
+  const messages = options.messages || {
+    three: "Ausgezeichnet! Fast alles richtig.",
+    two:   "Gut gemacht!",
+    one:   "Weiter üben!",
+  };
+  const norm = s => (s || "").trim().toLowerCase().replace(/\s+/g, " ");
+
+  let currentSet = 0, items = [], idx = 0, score = 0, answered = false;
+
+  root.classList.add("fill");
+  root.innerHTML = `
+    ${setBarHTML(sets.length)}
+    <div class="quiz-bar">
+      <span>Satz <b data-q>1</b> / <span data-total>0</span></span>
+      <span>Punkte <b data-score>0</b></span>
+    </div>
+    ${(options.bank || options.bankGap != null) ? `
+      <div class="fill-bank">
+        <span class="fill-bank-label">${options.bankLabel || "Wortbank"}</span>
+        <div class="fill-bank-words" data-bank></div>
+      </div>` : ""}
+    <div class="card">
+      <div class="fill-row" data-row></div>
+      <div class="hint" data-explain hidden></div>
+      <div class="fill-actions">
+        <button class="btn btn-primary" data-check>Prüfen</button>
+        <button class="btn btn-primary" data-next hidden>Weiter →</button>
+      </div>
+    </div>
+    ${gameOverlayHTML()}`;
+
+  const bankEl = root.querySelector("[data-bank]");
+  if (options.bank && bankEl) {
+    bankEl.innerHTML = options.bank.map(w => `<span class="fill-word">${w}</span>`).join("");
+  }
+  let verbCorrect = false;
+  const rowEl = root.querySelector("[data-row]");
+  const explainEl = root.querySelector("[data-explain]");
+  const checkBtn = root.querySelector("[data-check]");
+  const nextBtn = root.querySelector("[data-next]");
+  const qNum = root.querySelector("[data-q]");
+  const totalEl = root.querySelector("[data-total]");
+  const scoreEl = root.querySelector("[data-score]");
+
+  function render() {
+    const item = items[idx];
+    answered = false;
+    qNum.textContent = idx + 1;
+    explainEl.hidden = true;
+    nextBtn.hidden = true;
+    checkBtn.hidden = false;
+    rowEl.innerHTML = "";
+    const parts = item.sentence.split("____");
+    parts.forEach((part, i) => {
+      rowEl.appendChild(document.createTextNode(part));
+      if (i < parts.length - 1) {
+        const inp = document.createElement("input");
+        inp.type = "text";
+        inp.className = "fill-input";
+        inp.dataset.gap = i;
+        inp.autocomplete = "off";
+        inp.autocapitalize = "off";
+        inp.spellcheck = false;
+        inp.setAttribute("lang", "de");
+        inp.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+        rowEl.appendChild(inp);
+      }
+    });
+    const first = rowEl.querySelector(".fill-input");
+    if (first) first.focus();
+  }
+
+  function check() {
+    if (answered) return;
+    const item = items[idx];
+    const inputs = [...rowEl.querySelectorAll(".fill-input")];
+    let allOk = true;
+    verbCorrect = false;
+    inputs.forEach((inp, i) => {
+      const ok = norm(inp.value) === norm(item.answers[i]);
+      if (options.bankGap === i) verbCorrect = ok;
+      inp.disabled = true;
+      inp.classList.add(ok ? "correct" : "wrong");
+      if (!ok) {
+        allOk = false;
+        const sol = document.createElement("span");
+        sol.className = "fill-sol";
+        sol.textContent = item.answers[i];
+        inp.after(sol);
+      }
+    });
+    answered = true;
+    if (allOk) { score++; scoreEl.textContent = score; }
+    explainEl.innerHTML = (allOk ? "Richtig. " : "") + (item.explain || "");
+    explainEl.hidden = false;
+    checkBtn.hidden = true;
+    nextBtn.hidden = false;
+  }
+
+  function markUsed() {
+    if (options.bankGap == null || !verbCorrect || !bankEl) return;
+    const w = items[idx].bankWord;
+    if (!w) return;
+    const chip = bankEl.querySelector(`.fill-word[data-word="${CSS.escape(w)}"]`);
+    if (chip) chip.classList.add("used");
+  }
+
+  checkBtn.addEventListener("click", check);
+  nextBtn.addEventListener("click", () => {
+    markUsed();
+    if (idx < items.length - 1) { idx++; render(); }
+    else {
+      const stars = starsByRatio(score, items.length);
+      showGameOverlay(root, stars,
+        stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+        `Richtig: ${score} / ${items.length}`);
+    }
+  });
+
+  function buildBank() {
+    if (options.bankGap == null || !bankEl) return;
+    const uniq = [];
+    items.forEach(it => { if (it.bankWord && !uniq.includes(it.bankWord)) uniq.push(it.bankWord); });
+    uniq.sort((a, b) => a.localeCompare(b, "de"));
+    bankEl.innerHTML = uniq.map(w => `<span class="fill-word" data-word="${w}">${w}</span>`).join("");
+  }
+
+  function loadSet(i) {
+    currentSet = i;
+    items = options.shuffle === false ? sets[i].slice() : shuffle(sets[i]);
+    idx = 0; score = 0; scoreEl.textContent = "0";
+    totalEl.textContent = items.length;
+    updateSetLabel(root, i);
+    buildBank();
+    root.querySelector("[data-overlay]").hidden = true;
+    render();
+  }
+  root.querySelector("[data-again]").addEventListener("click", () => loadSet(currentSet));
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
+}
+
+/* ============================================================
+   orderGame(selector, options)
+   Tap-to-build word order. A bank of word tiles (shuffled, may
+   include WRONG-form distractors). Tap a tile to drop it onto the
+   answer line in order; tap a placed tile to send it back. "Prüfen"
+   compares the assembled sentence to `answer` (extra unused tiles
+   are ignored, so distractors are allowed). Mouse + touch friendly
+   (plain clicks, no dragging needed).
+   options = {
+     items: [ { prompt?, tiles:[ ... ], answer:"…", end?:".", explain? } ]
+     // OR sets: [ [ ...items ], ... ]
+     // `end` is fixed trailing punctuation shown after the line and
+     //  NOT part of the tiles. `answer` is the sentence without it.
+     shuffle?: true,            // shuffle item order (default true; tiles always shuffled)
+     messages?: { three, two, one }
+   }
+   ============================================================ */
+function orderGame(selector, options) {
+  const root = document.querySelector(selector);
+  if (!root) { console.error("orderGame: no element for", selector); return; }
+  const sets = options.sets ? options.sets : [options.items || []];
+  const messages = options.messages || {
+    three: "Perfekt gebaut!",
+    two:   "Gut gemacht!",
+    one:   "Weiter üben!",
+  };
+  const norm = s => (s || "").trim().replace(/\s+/g, " ");
+
+  let currentSet = 0, items = [], idx = 0, score = 0, answered = false;
+  let placed = [], available = [];
+
+  root.classList.add("order");
+  root.innerHTML = `
+    ${setBarHTML(sets.length)}
+    <div class="quiz-bar">
+      <span>Aufgabe <b data-q>1</b> / <span data-total>0</span></span>
+      <span>Punkte <b data-score>0</b></span>
+    </div>
+    <div class="card">
+      <div class="order-prompt" data-prompt></div>
+      <div class="order-line" data-line></div>
+      <div class="order-bank" data-bank></div>
+      <div class="hint" data-explain hidden></div>
+      <div class="order-actions">
+        <button class="btn btn-ghost btn-sm" data-clear>Zurücksetzen</button>
+        <button class="btn btn-primary" data-check>Prüfen</button>
+        <button class="btn btn-primary" data-next hidden>Weiter →</button>
+      </div>
+    </div>
+    ${gameOverlayHTML()}`;
+
+  const promptEl = root.querySelector("[data-prompt]");
+  const lineEl = root.querySelector("[data-line]");
+  const bankEl = root.querySelector("[data-bank]");
+  const explainEl = root.querySelector("[data-explain]");
+  const clearBtn = root.querySelector("[data-clear]");
+  const checkBtn = root.querySelector("[data-check]");
+  const nextBtn = root.querySelector("[data-next]");
+  const qNum = root.querySelector("[data-q]");
+  const totalEl = root.querySelector("[data-total]");
+  const scoreEl = root.querySelector("[data-score]");
+
+  function draw() {
+    const item = items[idx];
+    lineEl.innerHTML = "";
+    if (placed.length === 0) {
+      const ph = document.createElement("span");
+      ph.className = "order-placeholder";
+      ph.textContent = "Tippe die Wörter der Reihe nach an …";
+      lineEl.appendChild(ph);
+    } else {
+      placed.forEach(tile => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "order-tile in-line";
+        b.textContent = tile.text;
+        if (!answered) b.addEventListener("click", () => unplace(tile));
+        lineEl.appendChild(b);
+      });
+    }
+    if (item.end) {
+      const e = document.createElement("span");
+      e.className = "order-line-end";
+      e.textContent = item.end;
+      lineEl.appendChild(e);
+    }
+    bankEl.innerHTML = "";
+    available.forEach(tile => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "order-tile";
+      b.textContent = tile.text;
+      if (!answered) b.addEventListener("click", () => place(tile));
+      bankEl.appendChild(b);
+    });
+  }
+  function place(tile)   { available = available.filter(t => t !== tile); placed.push(tile); draw(); }
+  function unplace(tile) { placed = placed.filter(t => t !== tile); available.push(tile); draw(); }
+
+  function render() {
+    const item = items[idx];
+    answered = false;
+    qNum.textContent = idx + 1;
+    promptEl.innerHTML = item.prompt || "";
+    promptEl.hidden = !item.prompt;
+    explainEl.hidden = true;
+    nextBtn.hidden = true;
+    checkBtn.hidden = false;
+    clearBtn.hidden = false;
+    lineEl.className = "order-line";
+    placed = [];
+    available = shuffle(item.tiles.map((t, i) => ({ text: t, id: i })));
+    draw();
+  }
+
+  function check() {
+    if (answered || placed.length === 0) return;
+    const item = items[idx];
+    const ok = norm(placed.map(t => t.text).join(" ")) === norm(item.answer);
+    answered = true;
+    lineEl.classList.add(ok ? "correct" : "wrong");
+    if (ok) {
+      score++; scoreEl.textContent = score;
+      explainEl.innerHTML = "Richtig. " + (item.explain || "");
+    } else {
+      explainEl.innerHTML = `Richtig ist: <b>${item.answer}${item.end || ""}</b>`
+        + (item.explain ? " — " + item.explain : "");
+    }
+    explainEl.hidden = false;
+    checkBtn.hidden = true;
+    clearBtn.hidden = true;
+    nextBtn.hidden = false;
+    draw();
+  }
+
+  clearBtn.addEventListener("click", () => {
+    if (answered) return;
+    available = available.concat(placed);
+    placed = [];
+    draw();
+  });
+  checkBtn.addEventListener("click", check);
+  nextBtn.addEventListener("click", () => {
+    if (idx < items.length - 1) { idx++; render(); }
+    else {
+      const stars = starsByRatio(score, items.length);
+      showGameOverlay(root, stars,
+        stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+        `Richtig: ${score} / ${items.length}`);
+    }
+  });
+
+  function loadSet(i) {
+    currentSet = i;
+    items = options.shuffle === false ? sets[i].slice() : shuffle(sets[i]);
+    idx = 0; score = 0; scoreEl.textContent = "0";
+    totalEl.textContent = items.length;
+    updateSetLabel(root, i);
+    root.querySelector("[data-overlay]").hidden = true;
+    render();
+  }
+  root.querySelector("[data-again]").addEventListener("click", () => loadSet(currentSet));
+  wireSetBar(root, sets.length, loadSet, () => currentSet);
+  loadSet(0);
+}

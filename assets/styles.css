@@ -485,6 +485,84 @@ details.fold[open] .fold-ico { transform: rotate(45deg); color: var(--accent); b
 .mem-result h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
 .mem-result p  { color: var(--gray-600); font-weight: 700; margin-bottom: 22px; }
 
+/* ---- Fill-in-the-blank (type into gaps) ---- */
+.fill { max-width: 640px; margin: 0 auto; }
+.fill-bank {
+  background: var(--gray-100); border-radius: var(--radius-lg);
+  padding: 14px 16px; margin-bottom: 16px;
+}
+.fill-bank-label {
+  display: block; text-align: center; margin-bottom: 10px;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--gray-400);
+}
+.fill-bank-words { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.fill-word {
+  font-weight: 800; font-size: 0.9rem; padding: 6px 14px; border-radius: 999px;
+  background: var(--surface); color: var(--accent); border: 2px solid var(--accent-mid);
+  transition: background .2s, border-color .2s, color .2s, opacity .2s;
+}
+.fill-word.used {
+  background: var(--correct-light); border-color: var(--correct); color: var(--correct);
+  opacity: 0.75;
+}
+.fill-row {
+  font-size: 1.2rem; font-weight: 700; line-height: 2.6;
+  color: var(--gray-800); text-align: center;
+}
+.fill-input {
+  font-family: inherit; font-weight: 800; font-size: 1rem; text-align: center;
+  width: 7em; max-width: 55vw; margin: 0 4px; padding: 4px 8px;
+  border: none; border-bottom: 2.5px dashed var(--accent-mid);
+  background: var(--accent-light); color: var(--accent);
+  border-radius: 8px 8px 0 0; vertical-align: middle;
+}
+.fill-input:focus { outline: none; border-bottom-color: var(--accent); background: #fff; }
+.fill-input.correct { background: var(--correct-light); border-bottom-color: var(--correct); color: var(--correct); }
+.fill-input.wrong   { background: var(--wrong-light);   border-bottom-color: var(--wrong);   color: var(--wrong); }
+.fill-sol {
+  color: var(--correct); font-weight: 800; font-size: 0.95rem;
+  margin: 0 4px; white-space: nowrap;
+}
+.fill-actions { text-align: center; margin-top: 18px; }
+
+/* ---- Word-order builder (tap to assemble) ---- */
+.order { max-width: 640px; margin: 0 auto; }
+.order-prompt {
+  font-size: 1.05rem; font-weight: 700; color: var(--gray-600);
+  text-align: center; margin-bottom: 14px; line-height: 1.5;
+}
+.order-prompt[hidden] { display: none; }
+.order-prompt b { color: var(--accent); }
+.order-line {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center;
+  min-height: 64px; padding: 14px; margin-bottom: 16px;
+  border: 2.5px dashed var(--accent-mid); border-radius: var(--radius-lg);
+  background: var(--accent-light);
+}
+.order-line.correct { border-style: solid; border-color: var(--correct); background: var(--correct-light); }
+.order-line.wrong   { border-style: solid; border-color: var(--wrong);   background: var(--wrong-light); }
+.order-line-end { font-size: 1.3rem; font-weight: 800; color: var(--gray-600); align-self: center; }
+.order-placeholder { color: var(--gray-400); font-weight: 700; font-size: 0.95rem; }
+.order-bank {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  min-height: 40px; padding: 16px; margin-bottom: 14px;
+  background: var(--gray-100); border-radius: var(--radius-lg);
+}
+.order-tile {
+  font-family: inherit; font-weight: 800; font-size: 1rem;
+  padding: 10px 18px; border-radius: 999px; cursor: pointer;
+  background: var(--accent); color: #fff; border: 2px solid var(--accent);
+  box-shadow: var(--shadow);
+  transition: transform .12s, box-shadow .12s;
+  -webkit-user-select: none; user-select: none;
+}
+.order-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.order-tile.in-line { background: var(--surface); color: var(--accent); border-color: var(--accent-mid); }
+.order-actions {
+  display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap;
+}
+
 /* ============================================================
    Small screens
    ============================================================ */

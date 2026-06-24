@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akkusativ — Übung 039 — Deutsch</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="theme-purple">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>Akkusativ — Übung 039</h1>
+    <span class="subtitle">Verben, Fragen &amp; Satzbau · A1</span>
+  </div>
+  <a class="back-link" href="../index.html">← Übersicht</a>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <h2>So funktioniert der Akkusativ</h2>
+    <p>Das <b>Akkusativobjekt</b> ist die Person oder Sache, auf die sich das Verb
+       richtet. Nur der maskuline Artikel ändert sich im Akkusativ:</p>
+    <details class="fold">
+      <summary>Unbestimmte Artikel im Akkusativ <span class="fold-ico">+</span></summary>
+      <div class="fold-inner">
+        <table class="ptable">
+          <thead>
+            <tr><th>maskulin</th><th>feminin</th><th>neutral</th><th>Plural</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pd">einen</td>
+              <td>eine</td>
+              <td>ein</td>
+              <td>— / keine</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="hint">Merke: <b>der → den/einen</b>. Bei <b>feminin (die → eine)</b>
+          und <b>neutral (das → ein)</b> bleibt der Artikel gleich.</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== A) Passende Verben einsetzen ===== -->
+  <div class="card">
+    <span class="badge">Teil A</span>
+    <h2>Passende Verben einsetzen</h2>
+    <p>Setze das passende <b>Verb</b> (richtig konjugiert) und den unbestimmten
+       <b>Artikel</b> ein. Oben siehst du nur die Verben dieses Sets — jedes Verb
+       wird <b>grün</b>, sobald du es richtig benutzt hast. Vier Sets mit je 10 Sätzen.</p>
+  </div>
+  <div id="game-a"></div>
+
+  <!-- ===== B) Ergänzungsfragen stellen ===== -->
+  <div class="card">
+    <span class="badge">Teil B</span>
+    <h2>Ergänzungsfragen stellen</h2>
+    <p>Bau die W-Frage: Frag nach dem <b>Subjekt</b> mit <b>Wer …?</b> und nach dem
+       <b>Akkusativobjekt</b> mit <b>Was …?</b> (Sache) oder <b>Wen …?</b> (Person).
+       Tippe die Wörter in der richtigen Reihenfolge an.</p>
+    <div class="hint">Beispiel: <i>Michael isst eine Birne.</i> →
+       <b>Wer</b> isst eine Birne? · <b>Was</b> isst Michael?</div>
+  </div>
+  <div id="game-b"></div>
+
+  <!-- ===== C) Sätze bauen ===== -->
+  <div class="card">
+    <span class="badge">Teil C</span>
+    <h2>Sätze bauen</h2>
+    <p>Ordne die Satzglieder, <b>konjugiere das Verb</b> und <b>dekliniere den Artikel</b>.
+       Im Wortvorrat liegen auch falsche Formen (mal der Infinitiv, mal eine falsche
+       Konjugation) — wähle die richtige.</p>
+    <div class="hint">Beispiel: <i>Das Mädchen / ein Kugelschreiber / brauchen</i> →
+       Das Mädchen <b>braucht einen</b> Kugelschreiber.</div>
+  </div>
+  <div id="game-c"></div>
+
+  <!-- ===== D) Fragewort einsetzen ===== -->
+  <div class="card">
+    <span class="badge">Teil D</span>
+    <h2>Das richtige Fragewort einsetzen</h2>
+    <p>Lies den Satz und ergänze das passende <b>Fragewort</b> in der Frage. Frag nach
+       dem <b>Subjekt</b> mit <b>Wer</b>, nach einer <b>Sache</b> im Akkusativ mit
+       <b>Was</b> und nach einer <b>Person</b> im Akkusativ mit <b>Wen</b>.
+       Tipp ein und drück „Prüfen“.</p>
+  </div>
+  <div id="game-d"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word · Deutsch lernen</footer>
+
+<script src="../assets/engine.js"></script>
+<script>
+/* ---------- A) Passende Verben + Artikel (typed blanks) ---------- */
+/* bankGap:0 → the per-set bank is built from each item's `bankWord`
+   (the infinitive); the chip turns green once that verb is entered right. */
+fillGame("#game-a", {
+  bankGap: 0,
+  bankLabel: "Verben im Infinitiv (dieses Set)",
+  sets: [
+    /* Set 1 — original worksheet sentences */
+    [
+      { sentence: "Mein Vater ____ jeden Tag ____ Flasche Bier.", answers: ["trinkt", "eine"], bankWord: "trinken",
+        explain: "trinken → trinkt. die Flasche ist feminin → eine." },
+      { sentence: "Sylvia ____ schon seit 3 Wochen ____ Diät.", answers: ["macht", "eine"], bankWord: "machen",
+        explain: "machen → macht. die Diät ist feminin → eine." },
+      { sentence: "Der Mann ____ schon wieder ____ Zigarette.", answers: ["raucht", "eine"], bankWord: "rauchen",
+        explain: "rauchen → raucht. die Zigarette ist feminin → eine." },
+      { sentence: "Frau Haller ____ nur ____ Bruder.", answers: ["hat", "einen"], bankWord: "haben",
+        explain: "haben → hat. der Bruder ist maskulin → einen." },
+      { sentence: "Meine Schwester ____ abends gern ____ Buch.", answers: ["liest", "ein"], bankWord: "lesen",
+        explain: "lesen → liest. das Buch ist neutral → ein." },
+      { sentence: "Sabine ____ ____ neuen Tisch.", answers: ["braucht", "einen"], bankWord: "brauchen",
+        explain: "brauchen → braucht. der Tisch ist maskulin → einen." },
+      { sentence: "Heute Abend ____ ich ____ Freundin von mir.", answers: ["besuche", "eine"], bankWord: "besuchen",
+        explain: "besuchen → ich besuche. die Freundin ist feminin → eine." },
+      { sentence: "Das Kind ____ ____ Apfel.", answers: ["isst", "einen"], bankWord: "essen",
+        explain: "essen → isst. der Apfel ist maskulin → einen." },
+      { sentence: "Der Bäcker ____ ____ Kuchen.", answers: ["backt", "einen"], bankWord: "backen",
+        explain: "backen → backt. der Kuchen ist maskulin → einen." },
+      { sentence: "Thomas ____ gerade ____ CD von den Prinzen.", answers: ["hört", "eine"], bankWord: "hören",
+        explain: "hören → hört. die CD ist feminin → eine." },
+    ],
+    /* Set 2 */
+    [
+      { sentence: "Anna ____ ____ Rock.", answers: ["kauft", "einen"], bankWord: "kaufen",
+        explain: "kaufen → kauft. der Rock ist maskulin → einen." },
+      { sentence: "Der Lehrer ____ ____ Satz.", answers: ["schreibt", "einen"], bankWord: "schreiben",
+        explain: "schreiben → schreibt. der Satz ist maskulin → einen." },
+      { sentence: "Mein Bruder ____ ____ Wohnung.", answers: ["sucht", "eine"], bankWord: "suchen",
+        explain: "suchen → sucht. die Wohnung ist feminin → eine." },
+      { sentence: "Das Mädchen ____ ____ Bild.", answers: ["malt", "ein"], bankWord: "malen",
+        explain: "malen → malt. das Bild ist neutral → ein." },
+      { sentence: "Der Junge ____ ____ Stift.", answers: ["nimmt", "einen"], bankWord: "nehmen",
+        explain: "nehmen → nimmt. der Stift ist maskulin → einen." },
+      { sentence: "Meine Mutter ____ ____ Suppe.", answers: ["kocht", "eine"], bankWord: "kochen",
+        explain: "kochen → kocht. die Suppe ist feminin → eine." },
+      { sentence: "Der Tourist ____ ____ Kirche.", answers: ["fotografiert", "eine"], bankWord: "fotografieren",
+        explain: "fotografieren → fotografiert. die Kirche ist feminin → eine." },
+      { sentence: "Die Frau ____ ____ Mantel.", answers: ["trägt", "einen"], bankWord: "tragen",
+        explain: "tragen → trägt. der Mantel ist maskulin → einen." },
+      { sentence: "Der Schüler ____ ____ Fenster.", answers: ["öffnet", "ein"], bankWord: "öffnen",
+        explain: "öffnen → öffnet. das Fenster ist neutral → ein." },
+      { sentence: "Peter ____ ____ Schlüssel.", answers: ["findet", "einen"], bankWord: "finden",
+        explain: "finden → findet. der Schlüssel ist maskulin → einen." },
+    ],
+    /* Set 3 */
+    [
+      { sentence: "Der Hund ____ ____ Ball.", answers: ["holt", "einen"], bankWord: "holen",
+        explain: "holen → holt. der Ball ist maskulin → einen." },
+      { sentence: "Die Studentin ____ ____ Sprache.", answers: ["lernt", "eine"], bankWord: "lernen",
+        explain: "lernen → lernt. die Sprache ist feminin → eine." },
+      { sentence: "Onkel Karl ____ ____ Bus.", answers: ["fährt", "einen"], bankWord: "fahren",
+        explain: "fahren → fährt. der Bus ist maskulin → einen." },
+      { sentence: "Das Kind ____ ____ Haus.", answers: ["baut", "ein"], bankWord: "bauen",
+        explain: "bauen → baut. das Haus ist neutral → ein." },
+      { sentence: "Der Kellner ____ ____ Pizza.", answers: ["bringt", "eine"], bankWord: "bringen",
+        explain: "bringen → bringt. die Pizza ist feminin → eine." },
+      { sentence: "Meine Oma ____ ____ Baum.", answers: ["pflanzt", "einen"], bankWord: "pflanzen",
+        explain: "pflanzen → pflanzt. der Baum ist maskulin → einen." },
+      { sentence: "Der Mann ____ ____ Auto.", answers: ["repariert", "ein"], bankWord: "reparieren",
+        explain: "reparieren → repariert. das Auto ist neutral → ein." },
+      { sentence: "Lisa ____ ____ Salat.", answers: ["bestellt", "einen"], bankWord: "bestellen",
+        explain: "bestellen → bestellt. der Salat ist maskulin → einen." },
+      { sentence: "Der Vater ____ ____ Hemd.", answers: ["wäscht", "ein"], bankWord: "waschen",
+        explain: "waschen → wäscht. das Hemd ist neutral → ein." },
+      { sentence: "Die Katze ____ ____ Maus.", answers: ["fängt", "eine"], bankWord: "fangen",
+        explain: "fangen → fängt. die Maus ist feminin → eine." },
+    ],
+    /* Set 4 */
+    [
+      { sentence: "Der Schüler ____ ____ Buch.", answers: ["vergisst", "ein"], bankWord: "vergessen",
+        explain: "vergessen → vergisst. das Buch ist neutral → ein." },
+      { sentence: "Die Verkäuferin ____ ____ Ring.", answers: ["verkauft", "einen"], bankWord: "verkaufen",
+        explain: "verkaufen → verkauft. der Ring ist maskulin → einen." },
+      { sentence: "Mein Freund ____ ____ Freundin.", answers: ["trifft", "eine"], bankWord: "treffen",
+        explain: "treffen → trifft. die Freundin ist feminin → eine." },
+      { sentence: "Der Gärtner ____ ____ Blume.", answers: ["gießt", "eine"], bankWord: "gießen",
+        explain: "gießen → gießt. die Blume ist feminin → eine." },
+      { sentence: "Das Mädchen ____ ____ Stern.", answers: ["zeichnet", "einen"], bankWord: "zeichnen",
+        explain: "zeichnen → zeichnet. der Stern ist maskulin → einen." },
+      { sentence: "Die Lehrerin ____ ____ Regel.", answers: ["erklärt", "eine"], bankWord: "erklären",
+        explain: "erklären → erklärt. die Regel ist feminin → eine." },
+      { sentence: "Der Koch ____ ____ Kuchen.", answers: ["schneidet", "einen"], bankWord: "schneiden",
+        explain: "schneiden → schneidet. der Kuchen ist maskulin → einen." },
+      { sentence: "Tom ____ ____ Geschenk.", answers: ["packt", "ein"], bankWord: "packen",
+        explain: "packen → packt. das Geschenk ist neutral → ein." },
+      { sentence: "Die Frau ____ ____ Arzt.", answers: ["ruft", "einen"], bankWord: "rufen",
+        explain: "rufen → ruft. der Arzt ist maskulin → einen." },
+      { sentence: "Der Junge ____ ____ Stein.", answers: ["wirft", "einen"], bankWord: "werfen",
+        explain: "werfen → wirft. der Stein ist maskulin → einen." },
+    ],
+  ],
+});
+
+/* ---------- B) Ergänzungsfragen (word order) ---------- */
+orderGame("#game-b", {
+  shuffle: false,
+  sets: [
+    /* Set 1 — statements 11–15 */
+    [
+      { prompt: "«Heike liebt mich nicht mehr.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "liebt", "dich", "nicht", "mehr", "Wen"],
+        answer: "Wer liebt dich nicht mehr", end: "?",
+        explain: "Das Subjekt fragt man mit Wer. Achtung: mich → dich." },
+      { prompt: "«Heike liebt mich nicht mehr.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "liebt", "Heike", "nicht", "mehr", "Was"],
+        answer: "Wen liebt Heike nicht mehr", end: "?",
+        explain: "Eine Person im Akkusativ → Wen." },
+
+      { prompt: "«Die Hausfrau kocht eine Suppe.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "kocht", "eine", "Suppe", "Was"],
+        answer: "Wer kocht eine Suppe", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Die Hausfrau kocht eine Suppe.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "kocht", "die", "Hausfrau", "Wen"],
+        answer: "Was kocht die Hausfrau", end: "?",
+        explain: "Eine Sache im Akkusativ → Was." },
+
+      { prompt: "«Sabine schließt das Fenster.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "schließt", "das", "Fenster", "Was"],
+        answer: "Wer schließt das Fenster", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Sabine schließt das Fenster.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "schließt", "Sabine", "Wen"],
+        answer: "Was schließt Sabine", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Mein Chef hat immer Glück.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "hat", "immer", "Glück", "Was"],
+        answer: "Wer hat immer Glück", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Mein Chef hat immer Glück.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "hat", "dein", "Chef", "immer", "Wen"],
+        answer: "Was hat dein Chef immer", end: "?",
+        explain: "Eine Sache → Was. mein → dein." },
+
+      { prompt: "«Die Kinder lernen Schwimmen.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "lernt", "Schwimmen", "Was"],
+        answer: "Wer lernt Schwimmen", end: "?",
+        explain: "Wer ist Singular → lernt." },
+      { prompt: "«Die Kinder lernen Schwimmen.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "lernen", "die", "Kinder", "Wen"],
+        answer: "Was lernen die Kinder", end: "?",
+        explain: "Eine Sache → Was." },
+    ],
+    /* Set 2 — statements 16–20 */
+    [
+      { prompt: "«Der Junge versteht es nicht.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "versteht", "es", "nicht", "Was"],
+        answer: "Wer versteht es nicht", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Der Junge versteht es nicht.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "versteht", "der", "Junge", "nicht", "Wen"],
+        answer: "Was versteht der Junge nicht", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Die Mädchen trinken Wasser.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "trinkt", "Wasser", "Was"],
+        answer: "Wer trinkt Wasser", end: "?",
+        explain: "Wer ist Singular → trinkt." },
+      { prompt: "«Die Mädchen trinken Wasser.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "trinken", "die", "Mädchen", "Wen"],
+        answer: "Was trinken die Mädchen", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Ludwig schreibt einen Brief.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "schreibt", "einen", "Brief", "Was"],
+        answer: "Wer schreibt einen Brief", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Ludwig schreibt einen Brief.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "schreibt", "Ludwig", "Wen"],
+        answer: "Was schreibt Ludwig", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Udo und Kai grüßen mich nicht.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "grüßt", "dich", "nicht", "Was"],
+        answer: "Wer grüßt dich nicht", end: "?",
+        explain: "Wer ist Singular → grüßt. mich → dich." },
+      { prompt: "«Udo und Kai grüßen mich nicht.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "grüßen", "Udo", "und", "Kai", "nicht", "Was"],
+        answer: "Wen grüßen Udo und Kai nicht", end: "?",
+        explain: "Personen → Wen." },
+
+      { prompt: "«Doris putzt die Treppe nicht.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "putzt", "die", "Treppe", "nicht", "Was"],
+        answer: "Wer putzt die Treppe nicht", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Doris putzt die Treppe nicht.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "putzt", "Doris", "nicht", "Wen"],
+        answer: "Was putzt Doris nicht", end: "?",
+        explain: "Eine Sache → Was." },
+    ],
+    /* Set 3 — new statements */
+    [
+      { prompt: "«Der Schüler liest ein Buch.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "liest", "ein", "Buch", "Was"],
+        answer: "Wer liest ein Buch", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Der Schüler liest ein Buch.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "liest", "der", "Schüler", "Wen"],
+        answer: "Was liest der Schüler", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Die Frau ruft den Arzt.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "ruft", "den", "Arzt", "Was"],
+        answer: "Wer ruft den Arzt", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Die Frau ruft den Arzt.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "ruft", "die", "Frau", "Was"],
+        answer: "Wen ruft die Frau", end: "?",
+        explain: "Eine Person → Wen." },
+
+      { prompt: "«Die Touristen fotografieren das Schloss.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "fotografiert", "das", "Schloss", "Was"],
+        answer: "Wer fotografiert das Schloss", end: "?",
+        explain: "Wer ist Singular → fotografiert." },
+      { prompt: "«Die Touristen fotografieren das Schloss.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "fotografieren", "die", "Touristen", "Wen"],
+        answer: "Was fotografieren die Touristen", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Der Vater sucht seinen Sohn.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "sucht", "seinen", "Sohn", "Was"],
+        answer: "Wer sucht seinen Sohn", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Der Vater sucht seinen Sohn.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "sucht", "der", "Vater", "Was"],
+        answer: "Wen sucht der Vater", end: "?",
+        explain: "Eine Person → Wen." },
+
+      { prompt: "«Das Mädchen mag den Lehrer.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "mag", "den", "Lehrer", "Was"],
+        answer: "Wer mag den Lehrer", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Das Mädchen mag den Lehrer.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "mag", "das", "Mädchen", "Was"],
+        answer: "Wen mag das Mädchen", end: "?",
+        explain: "Eine Person → Wen." },
+    ],
+    /* Set 4 — new statements */
+    [
+      { prompt: "«Die Kinder trinken Limonade.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "trinkt", "Limonade", "Was"],
+        answer: "Wer trinkt Limonade", end: "?",
+        explain: "Wer ist Singular → trinkt." },
+      { prompt: "«Die Kinder trinken Limonade.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "trinken", "die", "Kinder", "Wen"],
+        answer: "Was trinken die Kinder", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Der Junge besucht seine Oma.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "besucht", "seine", "Oma", "Was"],
+        answer: "Wer besucht seine Oma", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Der Junge besucht seine Oma.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "besucht", "der", "Junge", "Was"],
+        answer: "Wen besucht der Junge", end: "?",
+        explain: "Eine Person → Wen." },
+
+      { prompt: "«Die Lehrerin erklärt die Regel.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "erklärt", "die", "Regel", "Was"],
+        answer: "Wer erklärt die Regel", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Die Lehrerin erklärt die Regel.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "erklärt", "die", "Lehrerin", "Wen"],
+        answer: "Was erklärt die Lehrerin", end: "?",
+        explain: "Eine Sache → Was." },
+
+      { prompt: "«Mein Freund kauft einen Computer.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "kauft", "einen", "Computer", "Was"],
+        answer: "Wer kauft einen Computer", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Mein Freund kauft einen Computer.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Was", "kauft", "dein", "Freund", "Wen"],
+        answer: "Was kauft dein Freund", end: "?",
+        explain: "Eine Sache → Was. mein → dein." },
+
+      { prompt: "«Die Polizei sucht den Dieb.»<br>Frag nach dem <b>Subjekt</b> (Nominativ).",
+        tiles: ["Wer", "sucht", "den", "Dieb", "Was"],
+        answer: "Wer sucht den Dieb", end: "?",
+        explain: "Das Subjekt → Wer." },
+      { prompt: "«Die Polizei sucht den Dieb.»<br>Frag nach dem <b>Akkusativobjekt</b>.",
+        tiles: ["Wen", "sucht", "die", "Polizei", "Was"],
+        answer: "Wen sucht die Polizei", end: "?",
+        explain: "Eine Person → Wen." },
+    ],
+  ],
+});
+
+/* ---------- C) Sätze bauen (word order + Formwahl) ---------- */
+/* Verb distractor varies: sometimes the infinitive, sometimes a wrong conjugation. */
+orderGame("#game-c", {
+  sets: [
+    /* Set 1 — original worksheet sentences */
+    [
+      { tiles: ["Der Junge", "stiehlt", "stehlt", "einen", "ein", "Bleistift"],
+        answer: "Der Junge stiehlt einen Bleistift", end: ".",
+        explain: "stehlen → stiehlt (e → ie). der Bleistift → einen." },
+      { tiles: ["Die Schülerin", "putzt", "putzen", "die", "den", "Tafel"],
+        answer: "Die Schülerin putzt die Tafel", end: ".",
+        explain: "putzen → putzt. die Tafel ist feminin → die bleibt." },
+      { tiles: ["Karin", "versteht", "verstehst", "manche", "Leute", "nicht"],
+        answer: "Karin versteht manche Leute nicht", end: ".",
+        explain: "verstehen → versteht. nicht steht am Satzende." },
+      { tiles: ["Der Sohn", "fragt", "fragen", "seinen", "sein", "Vater"],
+        answer: "Der Sohn fragt seinen Vater", end: ".",
+        explain: "fragen → fragt. der Vater ist maskulin → seinen." },
+      { tiles: ["Elvira", "hat", "habt", "keine", "Geschwister"],
+        answer: "Elvira hat keine Geschwister", end: ".",
+        explain: "haben → hat. keine + Plural." },
+      { tiles: ["Fridolin", "sucht", "suchen", "seinen", "sein", "Bruder"],
+        answer: "Fridolin sucht seinen Bruder", end: ".",
+        explain: "suchen → sucht. der Bruder ist maskulin → seinen." },
+      { tiles: ["Das Kind", "kauft", "kaufst", "einen", "ein", "Ball"],
+        answer: "Das Kind kauft einen Ball", end: ".",
+        explain: "kaufen → kauft. der Ball ist maskulin → einen." },
+      { tiles: ["Marco", "wäscht", "waschen", "den", "der", "Wagen"],
+        answer: "Marco wäscht den Wagen", end: ".",
+        explain: "waschen → wäscht (a → ä). der Wagen → den Wagen." },
+      { tiles: ["Wir", "machen", "macht", "unsere", "Hausaufgaben"],
+        answer: "Wir machen unsere Hausaufgaben", end: ".",
+        explain: "wir → machen. unsere + Plural." },
+      { tiles: ["Er", "sieht", "sehen", "einen", "ein", "Vogel"],
+        answer: "Er sieht einen Vogel", end: ".",
+        explain: "sehen → sieht (e → ie). der Vogel → einen." },
+    ],
+    /* Set 2 */
+    [
+      { tiles: ["Der Mann", "liest", "lest", "eine", "einen", "Zeitung"],
+        answer: "Der Mann liest eine Zeitung", end: ".",
+        explain: "lesen → liest. die Zeitung → eine." },
+      { tiles: ["Die Frau", "trägt", "tragen", "einen", "ein", "Hut"],
+        answer: "Die Frau trägt einen Hut", end: ".",
+        explain: "tragen → trägt. der Hut → einen." },
+      { tiles: ["Das Kind", "nimmt", "nehmt", "einen", "ein", "Löffel"],
+        answer: "Das Kind nimmt einen Löffel", end: ".",
+        explain: "nehmen → nimmt. der Löffel → einen." },
+      { tiles: ["Der Lehrer", "schließt", "schließen", "den", "der", "Schrank"],
+        answer: "Der Lehrer schließt den Schrank", end: ".",
+        explain: "schließen → schließt. der Schrank → den." },
+      { tiles: ["Meine Mutter", "kocht", "kochst", "einen", "ein", "Tee"],
+        answer: "Meine Mutter kocht einen Tee", end: ".",
+        explain: "kochen → kocht. der Tee → einen." },
+      { tiles: ["Der Junge", "wirft", "werfen", "den", "der", "Ball"],
+        answer: "Der Junge wirft den Ball", end: ".",
+        explain: "werfen → wirft. der Ball → den." },
+      { tiles: ["Die Studentin", "schreibt", "schreibst", "einen", "ein", "Aufsatz"],
+        answer: "Die Studentin schreibt einen Aufsatz", end: ".",
+        explain: "schreiben → schreibt. der Aufsatz → einen." },
+      { tiles: ["Wir", "besuchen", "besucht", "einen", "ein", "Freund"],
+        answer: "Wir besuchen einen Freund", end: ".",
+        explain: "wir → besuchen. der Freund → einen." },
+      { tiles: ["Der Vater", "repariert", "reparieren", "das", "den", "Fahrrad"],
+        answer: "Der Vater repariert das Fahrrad", end: ".",
+        explain: "reparieren → repariert. das Fahrrad bleibt das." },
+      { tiles: ["Das Mädchen", "fängt", "fangt", "den", "der", "Hund"],
+        answer: "Das Mädchen fängt den Hund", end: ".",
+        explain: "fangen → fängt (a → ä). der Hund → den." },
+    ],
+    /* Set 3 */
+    [
+      { tiles: ["Der Koch", "schneidet", "schneiden", "das", "den", "Brot"],
+        answer: "Der Koch schneidet das Brot", end: ".",
+        explain: "schneiden → schneidet. das Brot bleibt das." },
+      { tiles: ["Die Katze", "sieht", "seht", "einen", "ein", "Vogel"],
+        answer: "Die Katze sieht einen Vogel", end: ".",
+        explain: "sehen → sieht. der Vogel → einen." },
+      { tiles: ["Mein Bruder", "isst", "esst", "eine", "einen", "Banane"],
+        answer: "Mein Bruder isst eine Banane", end: ".",
+        explain: "essen → isst. die Banane → eine." },
+      { tiles: ["Der Schüler", "vergisst", "vergessen", "den", "der", "Termin"],
+        answer: "Der Schüler vergisst den Termin", end: ".",
+        explain: "vergessen → vergisst. der Termin → den." },
+      { tiles: ["Die Oma", "strickt", "strickst", "einen", "ein", "Pullover"],
+        answer: "Die Oma strickt einen Pullover", end: ".",
+        explain: "stricken → strickt. der Pullover → einen." },
+      { tiles: ["Das Kind", "trinkt", "trinkst", "einen", "ein", "Saft"],
+        answer: "Das Kind trinkt einen Saft", end: ".",
+        explain: "trinken → trinkt. der Saft → einen." },
+      { tiles: ["Der Mann", "fährt", "fahren", "das", "den", "Auto"],
+        answer: "Der Mann fährt das Auto", end: ".",
+        explain: "fahren → fährt. das Auto bleibt das." },
+      { tiles: ["Die Frau", "kauft", "kaufst", "eine", "einen", "Tasche"],
+        answer: "Die Frau kauft eine Tasche", end: ".",
+        explain: "kaufen → kauft. die Tasche → eine." },
+      { tiles: ["Wir", "lernen", "lernt", "die", "den", "Grammatik"],
+        answer: "Wir lernen die Grammatik", end: ".",
+        explain: "wir → lernen. die Grammatik bleibt die." },
+      { tiles: ["Der Hund", "sucht", "suchen", "einen", "ein", "Knochen"],
+        answer: "Der Hund sucht einen Knochen", end: ".",
+        explain: "suchen → sucht. der Knochen → einen." },
+    ],
+    /* Set 4 */
+    [
+      { tiles: ["Der Junge", "liebt", "liebst", "seinen", "sein", "Hund"],
+        answer: "Der Junge liebt seinen Hund", end: ".",
+        explain: "lieben → liebt. der Hund → seinen." },
+      { tiles: ["Die Lehrerin", "korrigiert", "korrigieren", "den", "der", "Test"],
+        answer: "Die Lehrerin korrigiert den Test", end: ".",
+        explain: "korrigieren → korrigiert. der Test → den." },
+      { tiles: ["Mein Vater", "pflanzt", "pflanzst", "einen", "ein", "Baum"],
+        answer: "Mein Vater pflanzt einen Baum", end: ".",
+        explain: "pflanzen → pflanzt. der Baum → einen." },
+      { tiles: ["Das Baby", "wirft", "werfen", "den", "der", "Teller"],
+        answer: "Das Baby wirft den Teller", end: ".",
+        explain: "werfen → wirft. der Teller → den." },
+      { tiles: ["Die Kinder", "essen", "esst", "einen", "ein", "Kuchen"],
+        answer: "Die Kinder essen einen Kuchen", end: ".",
+        explain: "die Kinder → essen. der Kuchen → einen." },
+      { tiles: ["Der Tourist", "sucht", "suchen", "das", "den", "Hotel"],
+        answer: "Der Tourist sucht das Hotel", end: ".",
+        explain: "suchen → sucht. das Hotel bleibt das." },
+      { tiles: ["Die Frau", "trifft", "trefft", "eine", "einen", "Kollegin"],
+        answer: "Die Frau trifft eine Kollegin", end: ".",
+        explain: "treffen → trifft. die Kollegin → eine." },
+      { tiles: ["Mein Onkel", "baut", "bauen", "ein", "einen", "Boot"],
+        answer: "Mein Onkel baut ein Boot", end: ".",
+        explain: "bauen → baut. das Boot → ein." },
+      { tiles: ["Der Schüler", "liest", "lest", "einen", "ein", "Roman"],
+        answer: "Der Schüler liest einen Roman", end: ".",
+        explain: "lesen → liest. der Roman → einen." },
+      { tiles: ["Die Verkäuferin", "zählt", "zählen", "das", "den", "Geld"],
+        answer: "Die Verkäuferin zählt das Geld", end: ".",
+        explain: "zählen → zählt. das Geld bleibt das." },
+    ],
+  ],
+});
+
+/* ---------- D) Fragewort einsetzen (B als fillGame) ---------- */
+/* New statements (not from Part B). One blank = the question word.
+   Wer = Subjekt · Was = Sache (Akkusativ) · Wen = Person (Akkusativ). */
+fillGame("#game-d", {
+  bank: ["Wer", "Was", "Wen"],
+  bankLabel: "Fragewörter",
+  sets: [
+    /* Set 1 */
+    [
+      { sentence: "Markus trinkt einen Kaffee. — ____ trinkt einen Kaffee?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Markus trinkt einen Kaffee. — ____ trinkt Markus?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Die Oma sucht ihre Brille. — ____ sucht ihre Brille?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Oma sucht ihre Brille. — ____ sucht die Oma?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Der Chef lobt den Praktikanten. — ____ lobt den Praktikanten?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Chef lobt den Praktikanten. — ____ lobt der Chef?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+      { sentence: "Die Bäckerin backt ein Brot. — ____ backt ein Brot?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Bäckerin backt ein Brot. — ____ backt die Bäckerin?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Das Kind ärgert seinen Bruder. — ____ ärgert seinen Bruder?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Das Kind ärgert seinen Bruder. — ____ ärgert das Kind?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+    ],
+    /* Set 2 */
+    [
+      { sentence: "Der Maler streicht die Wand. — ____ streicht die Wand?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Maler streicht die Wand. — ____ streicht der Maler?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Die Schülerin fragt die Lehrerin. — ____ fragt die Lehrerin?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Schülerin fragt die Lehrerin. — ____ fragt die Schülerin?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+      { sentence: "Mein Nachbar wäscht sein Auto. — ____ wäscht sein Auto?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Mein Nachbar wäscht sein Auto. — ____ wäscht dein Nachbar?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was. mein → dein." },
+      { sentence: "Die Katze jagt die Maus. — ____ jagt die Maus?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Katze jagt die Maus. — ____ jagt die Katze?", answers: ["Was"],
+        explain: "Tiere fragt man mit Was → Was." },
+      { sentence: "Der Kellner bedient den Gast. — ____ bedient den Gast?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Kellner bedient den Gast. — ____ bedient der Kellner?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+    ],
+    /* Set 3 */
+    [
+      { sentence: "Die Studentin schreibt eine E-Mail. — ____ schreibt eine E-Mail?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Studentin schreibt eine E-Mail. — ____ schreibt die Studentin?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Der Vater tröstet das Baby. — ____ tröstet das Baby?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Vater tröstet das Baby. — ____ tröstet der Vater?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+      { sentence: "Die Frau öffnet die Tür. — ____ öffnet die Tür?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Frau öffnet die Tür. — ____ öffnet die Frau?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Der Junge besiegt seinen Gegner. — ____ besiegt seinen Gegner?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Junge besiegt seinen Gegner. — ____ besiegt der Junge?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+      { sentence: "Die Touristin fotografiert die Brücke. — ____ fotografiert die Brücke?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Touristin fotografiert die Brücke. — ____ fotografiert die Touristin?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+    ],
+    /* Set 4 */
+    [
+      { sentence: "Der Arzt untersucht den Patienten. — ____ untersucht den Patienten?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Arzt untersucht den Patienten. — ____ untersucht der Arzt?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+      { sentence: "Die Kinder bauen eine Sandburg. — ____ baut eine Sandburg?", answers: ["Wer"],
+        explain: "Subjektfrage: Wer + Singular → Wer baut." },
+      { sentence: "Die Kinder bauen eine Sandburg. — ____ bauen die Kinder?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+      { sentence: "Mein Onkel repariert die Uhr. — ____ repariert die Uhr?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Mein Onkel repariert die Uhr. — ____ repariert dein Onkel?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was. mein → dein." },
+      { sentence: "Die Polizistin verfolgt den Dieb. — ____ verfolgt den Dieb?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Die Polizistin verfolgt den Dieb. — ____ verfolgt die Polizistin?", answers: ["Wen"],
+        explain: "Akkusativobjekt, eine Person → Wen." },
+      { sentence: "Der Lehrer erklärt die Aufgabe. — ____ erklärt die Aufgabe?", answers: ["Wer"],
+        explain: "Frage nach dem Subjekt → Wer." },
+      { sentence: "Der Lehrer erklärt die Aufgabe. — ____ erklärt der Lehrer?", answers: ["Was"],
+        explain: "Akkusativobjekt, eine Sache → Was." },
+    ],
+  ],
+});
+</script>
+</body>
+</html>
