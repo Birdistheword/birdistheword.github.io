@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5 · Wörter in die Lücke — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>5 &middot; Wörter in die Lücke</h1>
+    <span class="subtitle">Ziehen &amp; Ablegen &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <!-- ===== A) Welches Verb? ===== -->
+  <div class="card">
+    <span class="badge">Teil A</span>
+    <h2>Welches Verb?</h2>
+    <p>Zieh das richtige Verb in die Lücke. Alle Sätze fangen mit <b>ich</b> an.</p>
+    <table class="table">
+      <thead><tr><th>Verb</th><th>ich</th></tr></thead>
+      <tbody>
+        <tr><td>heißen</td><td>ich heiße</td></tr>
+        <tr><td>kommen</td><td>ich komme</td></tr>
+        <tr><td>wohnen</td><td>ich wohne</td></tr>
+        <tr><td>sein</td><td>ich bin</td></tr>
+        <tr><td>sprechen</td><td>ich spreche</td></tr>
+        <tr><td>haben</td><td>ich habe</td></tr>
+        <tr><td>arbeiten</td><td>ich arbeite</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="game-a"></div>
+
+  <!-- ===== B) Welches Fragewort? ===== -->
+  <div class="card">
+    <span class="badge">Teil B</span>
+    <h2>Welches Fragewort?</h2>
+    <table class="table">
+      <thead><tr><th>Fragewort</th><th>fragt nach</th></tr></thead>
+      <tbody>
+        <tr><td><b>Wie</b></td><td>Name, Alter, Nummer</td></tr>
+        <tr><td><b>Woher</b></td><td>Land, Stadt (aus …)</td></tr>
+        <tr><td><b>Wo</b></td><td>Ort (in …)</td></tr>
+        <tr><td><b>Wann</b></td><td>Zeit, Tag, Monat</td></tr>
+        <tr><td><b>Was</b></td><td>Sache, Beruf</td></tr>
+        <tr><td><b>Welche</b></td><td>Auswahl (welche Sprachen?)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="game-b"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* ---------- A) Verben in der ich-Form ---------- */
+/* Der Chip-Vorrat gilt für alle Sets — deshalb nur die sieben ich-Formen. */
+dragDropGame("#game-a", {
+  words: ["heiße", "komme", "wohne", "bin", "spreche", "habe", "arbeite"],
+  sets: [
+    /* Set 1 — Name & Begrüßung */
+    [
+      { sentence: "Hallo, ich ____ Deniz.", answer: "heiße", explain: "heißen -> ich heiße." },
+      { sentence: "Ich ____ Deniz Turkay.", answer: "heiße", explain: "Vorname und Nachname: auch heißen." },
+      { sentence: "Ich ____ neu hier.", answer: "bin", explain: "sein -> ich bin." },
+      { sentence: "Ich ____ Wissenschaftler.", answer: "bin", explain: "Beruf: ich bin …" },
+      { sentence: "Ich ____ aus Istanbul.", answer: "komme", explain: "aus + Stadt -> kommen." },
+      { sentence: "Ich ____ jetzt in Köln.", answer: "wohne", explain: "in + Stadt -> wohnen." },
+    ],
+    /* Set 2 — Herkunft & Wohnort */
+    [
+      { sentence: "Ich ____ aus der Türkei.", answer: "komme", explain: "aus + Land -> kommen." },
+      { sentence: "Ich ____ aus Izmir.", answer: "komme", explain: "aus + Stadt -> kommen." },
+      { sentence: "Ich ____ in Köln.", answer: "wohne", explain: "in + Stadt -> wohnen." },
+      { sentence: "Ich ____ in der Bahnhofstraße 7.", answer: "wohne", explain: "in + Straße -> wohnen." },
+      { sentence: "Ich ____ seit drei Monaten hier.", answer: "bin", explain: "seit … hier sein." },
+      { sentence: "Ich ____ hier eine Wohnung.", answer: "habe", explain: "haben -> ich habe." },
+    ],
+    /* Set 3 — Alter & Familie */
+    [
+      { sentence: "Ich ____ 35 Jahre alt.", answer: "bin", explain: "Alter: ich bin … Jahre alt." },
+      { sentence: "Ich ____ im Mai Geburtstag.", answer: "habe", explain: "Geburtstag haben." },
+      { sentence: "Ich ____ einen Bruder.", answer: "habe", explain: "haben -> ich habe." },
+      { sentence: "Ich ____ zwei Schwestern.", answer: "habe", explain: "haben -> ich habe." },
+      { sentence: "Ich ____ nicht 40.", answer: "bin", explain: "Alter -> sein." },
+      { sentence: "Ich ____ aus einer großen Familie.", answer: "komme", explain: "aus … -> kommen." },
+    ],
+    /* Set 4 — Sprachen & Arbeit */
+    [
+      { sentence: "Ich ____ Türkisch.", answer: "spreche", explain: "Sprachen -> sprechen." },
+      { sentence: "Ich ____ ein bisschen Deutsch.", answer: "spreche", explain: "Sprachen -> sprechen." },
+      { sentence: "Ich ____ auch Englisch.", answer: "spreche", explain: "Sprachen -> sprechen." },
+      { sentence: "Ich ____ an der Universität.", answer: "arbeite", explain: "an der Uni arbeiten." },
+      { sentence: "Ich ____ jeden Tag im Labor.", answer: "arbeite", explain: "im Labor arbeiten." },
+      { sentence: "Ich ____ viele Termine.", answer: "habe", explain: "haben -> ich habe." },
+    ],
+  ],
+});
+
+/* ---------- B) Fragewörter ---------- */
+dragDropGame("#game-b", {
+  words: ["Wie", "Woher", "Wo", "Wann", "Was", "Welche"],
+  sets: [
+    /* Set 1 — Name & Begrüßung */
+    [
+      { sentence: "____ heißen Sie?", answer: "Wie", explain: "Name -> Wie." },
+      { sentence: "____ ist Ihr Name?", answer: "Wie", explain: "Name -> Wie." },
+      { sentence: "____ geht es Ihnen?", answer: "Wie", explain: "Feste Frage: Wie geht es Ihnen?" },
+      { sentence: "____ machen Sie beruflich?", answer: "Was", explain: "Beruf -> Was." },
+      { sentence: "____ kommen Sie?", answer: "Woher", explain: "kommen aus … -> Woher." },
+      { sentence: "____ wohnen Sie?", answer: "Wo", explain: "wohnen in … -> Wo." },
+    ],
+    /* Set 2 — Herkunft & Wohnort */
+    [
+      { sentence: "____ kommen Sie?", answer: "Woher", explain: "aus … -> Woher." },
+      { sentence: "____ kommt Frau Weber?", answer: "Woher", explain: "aus … -> Woher." },
+      { sentence: "____ wohnen Sie genau?", answer: "Wo", explain: "in … -> Wo." },
+      { sentence: "____ wohnt Ihre Familie?", answer: "Wo", explain: "in … -> Wo." },
+      { sentence: "____ ist Ihre Adresse?", answer: "Wie", explain: "Adresse und Nummer -> Wie." },
+      { sentence: "____ ist das?", answer: "Was", explain: "Sache -> Was." },
+    ],
+    /* Set 3 — Alter & Zeit */
+    [
+      { sentence: "____ alt sind Sie?", answer: "Wie", explain: "Wie alt …?" },
+      { sentence: "____ haben Sie Geburtstag?", answer: "Wann", explain: "Zeit -> Wann." },
+      { sentence: "____ ist Ihre Telefonnummer?", answer: "Wie", explain: "Nummer -> Wie." },
+      { sentence: "____ alt ist Ihr Bruder?", answer: "Wie", explain: "Wie alt …?" },
+      { sentence: "____ kommt der Bus?", answer: "Wann", explain: "Zeit -> Wann." },
+      { sentence: "____ ist Ihr Büro?", answer: "Wo", explain: "Ort -> Wo." },
+    ],
+    /* Set 4 — Sprachen & Arbeit */
+    [
+      { sentence: "____ Sprachen sprechen Sie?", answer: "Welche", explain: "Auswahl -> Welche." },
+      { sentence: "____ sprechen Sie zu Hause?", answer: "Was", explain: "Sache -> Was." },
+      { sentence: "____ machen Sie am Wochenende?", answer: "Was", explain: "Sache -> Was." },
+      { sentence: "____ Universität ist das?", answer: "Welche", explain: "Auswahl -> Welche." },
+      { sentence: "____ heißt Ihre Kollegin?", answer: "Wie", explain: "Name -> Wie." },
+      { sentence: "____ beginnt das Meeting?", answer: "Wann", explain: "Zeit -> Wann." },
+    ],
+  ],
+});
+</script>
+</body>
+</html>

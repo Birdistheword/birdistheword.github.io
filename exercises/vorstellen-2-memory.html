@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2 · Was passt zusammen? — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>2 &middot; Was passt zusammen?</h1>
+    <span class="subtitle">Memory: Frage und Antwort &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <span class="badge">Schritt 2</span>
+    <h2>So geht es</h2>
+    <p>Dreh zwei Karten um. Finde die <b>Frage</b> und die passende
+       <b>Antwort</b>.</p>
+    <div class="hint">Set 1: Name &middot; Set 2: Herkunft &middot; Set 3: Alter &middot; Set 4: Sprachen &amp; Arbeit</div>
+  </div>
+
+  <div id="game"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* Kurze Karten (Frage links, Antwort rechts) — lange Sätze passen
+   sonst nicht auf ein Memory-Kärtchen. 6 Paare = 12 Karten, 4 Spalten. */
+memoryGame("#game", {
+  columns: 4,
+  sets: [
+    /* Set 1 — Name & Begrüßung */
+    [
+      ["Wie heißen Sie?",       "Ich heiße Deniz Turkay."],
+      ["Wie ist Ihr Name?",     "Mein Name ist Turkay."],
+      ["Wie geht es Ihnen?",    "Danke, gut."],
+      ["Sind Sie Herr Demir?",  "Nein, ich bin Herr Turkay."],
+      ["Freut mich!",           "Freut mich auch!"],
+      ["Bis morgen!",           "Auf Wiedersehen!"],
+    ],
+    /* Set 2 — Herkunft & Wohnort */
+    [
+      ["Woher kommen Sie?",      "Ich komme aus der Türkei."],
+      ["Wo wohnen Sie?",         "Ich wohne in Köln."],
+      ["Kommen Sie aus Izmir?",  "Ja, aus Izmir."],
+      ["Wohnen Sie in München?", "Nein, in Köln."],
+      ["Woher kommt Frau Weber?", "Sie kommt aus Deutschland."],
+      ["Sind Sie neu hier?",     "Ja, ich bin neu."],
+    ],
+    /* Set 3 — Alter & Zahlen */
+    [
+      ["Wie alt sind Sie?",       "Ich bin 35 Jahre alt."],
+      ["Wie alt ist Ihr Bruder?", "Er ist 38."],
+      ["Wann haben Sie Geburtstag?", "Im Mai."],
+      ["Wie ist Ihre Nummer?",    "0176 22 33 44"],
+      ["drei und vier",           "sieben"],
+      ["Was kommt nach neun?",    "zehn"],
+    ],
+    /* Set 4 — Sprachen & Arbeit */
+    [
+      ["Welche Sprachen sprechen Sie?", "Türkisch und Englisch."],
+      ["Sprechen Sie Deutsch?",   "Ja, ein bisschen."],
+      ["Was machen Sie beruflich?", "Ich bin Wissenschaftler."],
+      ["Wo arbeiten Sie?",        "An der Universität."],
+      ["Woran forschen Sie?",     "An Solarzellen."],
+      ["Was ist Ihr Hobby?",      "Ich fahre gern Fahrrad."],
+    ],
+  ],
+});
+</script>
+</body>
+</html>

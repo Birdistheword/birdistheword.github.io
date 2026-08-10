@@ -228,10 +228,12 @@ function memoryGame(selector, options) {
 /* ============================================================
    quizGame(selector, options)
    options = {
-     questions: [ { q, options:[...], answer:<index>, explain? } ]  // single set
+     questions: [ { q, options:[...], answer:<index>, explain?, img? } ]  // single set
      // OR  sets: [ [ ...questions ], ... ]
      shuffle?: true, messages?: { three, two, one }
    }
+   `img` is optional raw SVG markup shown above the question — for items
+   where a picture, not the sentence, carries the information.
    ============================================================ */
 function quizGame(selector, options) {
   const root = document.querySelector(selector);
@@ -253,6 +255,7 @@ function quizGame(selector, options) {
       <span>Punkte <b data-score>0</b></span>
     </div>
     <div class="card">
+      <div class="quiz-media" data-media hidden></div>
       <h2 data-question></h2>
       <div data-options></div>
       <div class="hint" data-explain hidden></div>
@@ -260,6 +263,7 @@ function quizGame(selector, options) {
     </div>
     ${gameOverlayHTML()}`;
 
+  const mediaEl = root.querySelector("[data-media]");
   const qEl = root.querySelector("[data-question]");
   const optsEl = root.querySelector("[data-options]");
   const explainEl = root.querySelector("[data-explain]");
@@ -272,6 +276,8 @@ function quizGame(selector, options) {
     const item = questions[idx];
     answered = false;
     qNum.textContent = idx + 1;
+    mediaEl.innerHTML = item.img || "";
+    mediaEl.hidden = !item.img;
     qEl.textContent = item.q;
     explainEl.hidden = true;
     nextBtn.hidden = true;

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 · Welche Antwort passt? — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>4 &middot; Welche Antwort passt?</h1>
+    <span class="subtitle">Quiz &amp; Lesen &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <!-- ===== A) Frage und Antwort ===== -->
+  <div class="card">
+    <span class="badge">Teil A</span>
+    <h2>Frage und Antwort</h2>
+    <p>Oben steht eine Frage oder eine Antwort. Wähle, was passt.</p>
+    <div class="hint">Set 1 und 3: Welche <b>Antwort</b> passt? &middot;
+      Set 2 und 4: Welche <b>Frage</b> passt?</div>
+  </div>
+  <div id="game-a"></div>
+
+  <!-- ===== B) Vier Kollegen stellen sich vor ===== -->
+  <div class="card">
+    <span class="badge">Teil B</span>
+    <h2>Vier Menschen stellen sich vor</h2>
+    <p>Lies den Text. Dann beantworte die Fragen. <b>Text 1 gehört zu Set 1</b>,
+       Text 2 zu Set 2 und so weiter.</p>
+
+    <details class="fold">
+      <summary>Text 1 &middot; Elif Demir <span class="fold-ico">+</span></summary>
+      <div class="fold-inner">
+        <p>Hallo! Ich heiße Elif Demir. Ich bin 29 Jahre alt. Ich komme aus Izmir.
+           Jetzt wohne ich in Köln. Ich bin Doktorandin und arbeite an der
+           Universität. Ich spreche Türkisch und ein bisschen Deutsch.</p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary>Text 2 &middot; Lukas Berger <span class="fold-ico">+</span></summary>
+      <div class="fold-inner">
+        <p>Guten Tag. Mein Name ist Lukas Berger. Ich bin 42 Jahre alt.
+           Ich komme aus Österreich. Ich wohne in Hamburg. Ich bin Professor für
+           Chemie. Ich spreche Deutsch und Englisch.</p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary>Text 3 &middot; Mehmet Demir <span class="fold-ico">+</span></summary>
+      <div class="fold-inner">
+        <p>Hallo, ich bin Mehmet Demir. Ich bin 38. Ich komme aus Ankara und wohne
+           in München. Ich bin Ingenieur. Meine Frau heißt Selin. Mein Hobby ist
+           Schwimmen.</p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary>Text 4 &middot; Anna Weber <span class="fold-ico">+</span></summary>
+      <div class="fold-inner">
+        <p>Guten Tag. Ich heiße Anna Weber. Ich bin 45 Jahre alt. Ich komme aus
+           Deutschland. Ich wohne in Berlin. Ich bin Ärztin. Ich habe einen Sohn.</p>
+      </div>
+    </details>
+  </div>
+  <div id="game-b"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* ---------- A) Frage <-> Antwort zuordnen ---------- */
+/* Die Antwortposition wechselt bewusst — quizGame mischt nur die Fragen,
+   nicht die Optionen. */
+quizGame("#game-a", {
+  sets: [
+    /* Set 1 — Welche Antwort passt? (Name & Begrüßung) */
+    [
+      { q: "Wie heißen Sie?",
+        options: ["Ich komme aus der Türkei.", "Ich heiße Deniz Turkay.", "Ich bin 35."],
+        answer: 1, explain: "heißen fragt nach dem Namen." },
+      { q: "Wie ist Ihr Name?",
+        options: ["Mein Name ist Elif Demir.", "Mein Hobby ist Radfahren.", "Ich wohne in Köln."],
+        answer: 0, explain: "Name -> Name." },
+      { q: "Wie geht es Ihnen?",
+        options: ["Aus der Türkei.", "Ich bin Ingenieur.", "Danke, gut."],
+        answer: 2, explain: "Wie geht es Ihnen? -> gut / nicht so gut." },
+      { q: "Sind Sie Herr Demir?",
+        options: ["Nein, ich bin Herr Turkay.", "Nein, aus Ankara.", "Nein, 35 Jahre."],
+        answer: 0, explain: "Die Frage geht um den Namen." },
+      { q: "Guten Morgen!",
+        options: ["Auf Wiedersehen!", "Guten Morgen!", "Danke, gut."],
+        answer: 1, explain: "Auf eine Begrüßung folgt die Begrüßung." },
+      { q: "Freut mich!",
+        options: ["Bis morgen!", "Ich heiße Deniz.", "Freut mich auch!"],
+        answer: 2, explain: "Feste Antwort: Freut mich auch." },
+      { q: "Sind Sie neu hier?",
+        options: ["Ja, ich bin neu.", "Ja, ich bin 35.", "Ja, Türkisch."],
+        answer: 0, explain: "neu -> neu." },
+      { q: "Auf Wiedersehen!",
+        options: ["Guten Tag!", "Auf Wiedersehen, bis morgen!", "Ich komme aus Izmir."],
+        answer: 1, explain: "Abschied -> Abschied." },
+    ],
+    /* Set 2 — Welche Frage passt? (Herkunft & Wohnort) */
+    [
+      { q: "Antwort: Ich komme aus der Türkei.",
+        options: ["Wo wohnen Sie?", "Woher kommen Sie?", "Wie alt sind Sie?"],
+        answer: 1, explain: "aus + Land -> Woher?" },
+      { q: "Antwort: Ich wohne in Köln.",
+        options: ["Wo wohnen Sie?", "Woher kommen Sie?", "Wie heißen Sie?"],
+        answer: 0, explain: "in + Stadt -> Wo?" },
+      { q: "Antwort: Ja, aus Izmir.",
+        options: ["Wohnen Sie in Izmir?", "Kommen Sie aus Izmir?", "Sind Sie Izmir?"],
+        answer: 1, explain: "aus -> kommen." },
+      { q: "Antwort: Nein, ich wohne in Köln.",
+        options: ["Kommen Sie aus Köln?", "Wohnen Sie in München?", "Heißen Sie Köln?"],
+        answer: 1, explain: "wohnen -> wohnen, und die Antwort ist Nein: eine andere Stadt." },
+      { q: "Antwort: In der Bahnhofstraße 7.",
+        options: ["Woher kommen Sie?", "Wie alt sind Sie?", "Wo wohnen Sie genau?"],
+        answer: 2, explain: "Die Straße ist der genaue Wohnort." },
+      { q: "Antwort: Frau Weber kommt aus Deutschland.",
+        options: ["Woher kommt Frau Weber?", "Wo wohnt Frau Weber?", "Wie heißt Frau Weber?"],
+        answer: 0, explain: "aus + Land -> Woher?" },
+      { q: "Antwort: Ja, ich bin neu in Deutschland.",
+        options: ["Wohnen Sie hier?", "Sind Sie neu hier?", "Kommen Sie aus Deutschland?"],
+        answer: 1, explain: "neu -> neu." },
+      { q: "Antwort: Seit drei Monaten.",
+        options: ["Wie lange sind Sie schon hier?", "Wo wohnen Sie?", "Wie alt sind Sie?"],
+        answer: 0, explain: "seit + Zeit -> Wie lange?" },
+    ],
+    /* Set 3 — Welche Antwort passt? (Alter & Zahlen) */
+    [
+      { q: "Wie alt sind Sie?",
+        options: ["Ich bin Ingenieur.", "Ich komme aus Ankara.", "Ich bin 35 Jahre alt."],
+        answer: 2, explain: "alt -> Jahre." },
+      { q: "Wie alt ist Ihr Bruder?",
+        options: ["Er ist 38 Jahre alt.", "Sie ist 38 Jahre alt.", "Ich bin 38 Jahre alt."],
+        answer: 0, explain: "der Bruder -> er." },
+      { q: "Wie alt ist Ihre Schwester?",
+        options: ["Er ist 32.", "Sie ist 32.", "Es ist 32."],
+        answer: 1, explain: "die Schwester -> sie." },
+      { q: "Sind Sie 40?",
+        options: ["Nein, ich bin 35.", "Nein, ich heiße Deniz.", "Nein, aus Izmir."],
+        answer: 0, explain: "Die Frage geht um das Alter." },
+      { q: "Wann haben Sie Geburtstag?",
+        options: ["In Köln.", "Im Mai.", "Mit 35."],
+        answer: 1, explain: "Wann -> Monat oder Datum." },
+      { q: "Wie ist Ihre Telefonnummer?",
+        options: ["Bahnhofstraße 7.", "Ich bin 35.", "0176 22 33 44"],
+        answer: 2, explain: "Nummer -> Zahlen." },
+      { q: "Was kommt nach neun?",
+        options: ["acht", "zehn", "sieben"],
+        answer: 1, explain: "acht, neun, zehn." },
+      { q: "drei und vier ist …",
+        options: ["sieben", "fünf", "acht"],
+        answer: 0, explain: "3 + 4 = 7." },
+    ],
+    /* Set 4 — Welche Frage passt? (Sprachen & Arbeit) */
+    [
+      { q: "Antwort: Ich spreche Türkisch und Englisch.",
+        options: ["Woher kommen Sie?", "Welche Sprachen sprechen Sie?", "Was machen Sie beruflich?"],
+        answer: 1, explain: "Sprachen -> sprechen." },
+      { q: "Antwort: Ja, ein bisschen.",
+        options: ["Sprechen Sie Deutsch?", "Wie heißen Sie?", "Wo wohnen Sie?"],
+        answer: 0, explain: "ein bisschen passt zu einer Ja/Nein-Frage." },
+      { q: "Antwort: Ich bin Wissenschaftler.",
+        options: ["Wie alt sind Sie?", "Wo wohnen Sie?", "Was machen Sie beruflich?"],
+        answer: 2, explain: "Was machen Sie beruflich? fragt nach dem Beruf." },
+      { q: "Antwort: Ich arbeite an der Universität.",
+        options: ["Wo arbeiten Sie?", "Wie alt sind Sie?", "Woher kommen Sie?"],
+        answer: 0, explain: "arbeiten -> Wo arbeiten Sie?" },
+      { q: "Antwort: Ich forsche an Solarzellen.",
+        options: ["Woran forschen Sie?", "Wo wohnen Sie?", "Wie heißen Sie?"],
+        answer: 0, explain: "forschen an … -> Woran?" },
+      { q: "Antwort: Ja, ich habe einen Bruder.",
+        options: ["Haben Sie Geschwister?", "Sind Sie Ingenieur?", "Wie heißt Ihr Bruder?"],
+        answer: 0, explain: "Geschwister = Bruder und Schwester." },
+      { q: "Antwort: Ich fahre gern Fahrrad.",
+        options: ["Was machen Sie beruflich?", "Was ist Ihr Hobby?", "Wie alt sind Sie?"],
+        answer: 1, explain: "Fahrrad fahren ist ein Hobby." },
+      { q: "Antwort: T - U - R - K - A - Y",
+        options: ["Wie alt sind Sie?", "Wie heißen Sie?", "Wie schreibt man das?"],
+        answer: 2, explain: "Buchstaben -> schreiben." },
+    ],
+  ],
+});
+
+/* ---------- B) Leseverstehen: vier Kurztexte ---------- */
+/* Set-Nummer = Text-Nummer im Klapptext oben. */
+quizGame("#game-b", {
+  shuffle: false,
+  sets: [
+    /* Set 1 — Elif Demir */
+    [
+      { q: "Text 1: Wie heißt die Frau?",
+        options: ["Anna Weber", "Elif Demir", "Selin Turkay"], answer: 1 },
+      { q: "Text 1: Wie alt ist Elif?",
+        options: ["29 Jahre", "38 Jahre", "45 Jahre"], answer: 0 },
+      { q: "Text 1: Woher kommt Elif?",
+        options: ["Aus Köln.", "Aus Ankara.", "Aus Izmir."], answer: 2 },
+      { q: "Text 1: Was macht Elif beruflich?",
+        options: ["Sie ist Doktorandin.", "Sie ist Ärztin.", "Sie ist Ingenieurin."], answer: 0 },
+      { q: "Text 1: Welche Sprachen spricht Elif?",
+        options: ["Deutsch und Englisch.", "Türkisch und ein bisschen Deutsch.", "Nur Türkisch."], answer: 1 },
+    ],
+    /* Set 2 — Lukas Berger */
+    [
+      { q: "Text 2: Wie ist sein Name?",
+        options: ["Lukas Berger", "Mehmet Demir", "Deniz Turkay"], answer: 0 },
+      { q: "Text 2: Wie alt ist Lukas?",
+        options: ["24 Jahre", "42 Jahre", "45 Jahre"], answer: 1 },
+      { q: "Text 2: Woher kommt Lukas?",
+        options: ["Aus Deutschland.", "Aus der Türkei.", "Aus Österreich."], answer: 2 },
+      { q: "Text 2: Was macht Lukas?",
+        options: ["Er ist Professor.", "Er ist Arzt.", "Er ist Ingenieur."], answer: 0 },
+      { q: "Text 2: Wo wohnt Lukas?",
+        options: ["In Wien.", "In Hamburg.", "In München."], answer: 1 },
+    ],
+    /* Set 3 — Mehmet Demir */
+    [
+      { q: "Text 3: Wie heißt der Mann?",
+        options: ["Lukas Berger", "Deniz Turkay", "Mehmet Demir"], answer: 2 },
+      { q: "Text 3: Wie alt ist Mehmet?",
+        options: ["38", "29", "48"], answer: 0 },
+      { q: "Text 3: Wo wohnt Mehmet?",
+        options: ["In Ankara.", "In München.", "In Köln."], answer: 1 },
+      { q: "Text 3: Wie heißt seine Frau?",
+        options: ["Anna", "Elif", "Selin"], answer: 2 },
+      { q: "Text 3: Was ist sein Hobby?",
+        options: ["Radfahren", "Schwimmen", "Musik"], answer: 1 },
+    ],
+    /* Set 4 — Anna Weber */
+    [
+      { q: "Text 4: Wie heißt die Frau?",
+        options: ["Anna Weber", "Elif Demir", "Selin Demir"], answer: 0 },
+      { q: "Text 4: Wie alt ist Frau Weber?",
+        options: ["29 Jahre", "45 Jahre", "42 Jahre"], answer: 1 },
+      { q: "Text 4: Woher kommt sie?",
+        options: ["Aus Österreich.", "Aus der Türkei.", "Aus Deutschland."], answer: 2 },
+      { q: "Text 4: Was macht sie beruflich?",
+        options: ["Sie ist Ärztin.", "Sie ist Professorin.", "Sie ist Doktorandin."], answer: 0 },
+      { q: "Text 4: Hat sie Kinder?",
+        options: ["Nein.", "Ja, einen Sohn.", "Ja, zwei Töchter."], answer: 1 },
+    ],
+  ],
+});
+</script>
+</body>
+</html>

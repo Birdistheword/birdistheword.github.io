@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1 · Frage und Antwort — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>1 &middot; Frage und Antwort</h1>
+    <span class="subtitle">Karteikarten &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <span class="badge">Schritt 1</span>
+    <h2>So geht es</h2>
+    <p>Vorne steht die <b>Frage</b>. Klicke die Karte &mdash; hinten steht deine
+       <b>Antwort</b>. Lies laut mit.</p>
+    <div class="hint">Set 1: Name &middot; Set 2: Herkunft &middot; Set 3: Alter &middot; Set 4: Sprachen &amp; Arbeit</div>
+  </div>
+
+  <div id="game"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* Karten in didaktischer Reihenfolge -> shuffle aus. Vorne die Frage,
+   hinten Deniz' eigene Antwort. Im Institut und bei fremden Leuten
+   überwiegt die Sie-Form. */
+flashcardGame("#game", {
+  shuffle: false,
+  sets: [
+    /* Set 1 — Name & Begrüßung */
+    [
+      { front: "Hallo!",                   back: "Hallo! Ich bin Deniz." },
+      { front: "Guten Tag!",               back: "Guten Tag!" },
+      { front: "Wie heißt du?",            back: "Ich heiße Deniz." },
+      { front: "Wie ist Ihr Name?",        back: "Mein Name ist Deniz Turkay." },
+      { front: "Sind Sie Herr Demir?",     back: "Nein, ich bin Herr Turkay." },
+      { front: "Wie geht es Ihnen?",       back: "Danke, gut. Und Ihnen?" },
+      { front: "Freut mich!",              back: "Freut mich auch!" },
+      { front: "Auf Wiedersehen!",         back: "Auf Wiedersehen! Bis morgen!" },
+    ],
+    /* Set 2 — Herkunft & Wohnort */
+    [
+      { front: "Woher kommen Sie?",        back: "Ich komme aus der Türkei." },
+      { front: "Kommen Sie aus Istanbul?", back: "Ja, ich komme aus Istanbul." },
+      { front: "Woher kommt Frau Weber?",  back: "Frau Weber kommt aus Deutschland." },
+      { front: "Wo wohnen Sie?",           back: "Ich wohne in Köln." },
+      { front: "Wo genau?",                back: "In der Bahnhofstraße 7." },
+      { front: "Wohnen Sie in München?",   back: "Nein, ich wohne in Köln." },
+      { front: "Sind Sie neu hier?",       back: "Ja, ich bin neu in Deutschland." },
+      { front: "Wie lange sind Sie schon hier?", back: "Seit drei Monaten." },
+    ],
+    /* Set 3 — Alter & Zahlen */
+    [
+      { front: "Wie alt sind Sie?",        back: "Ich bin 35 Jahre alt." },
+      { front: "Sind Sie 40?",             back: "Nein, ich bin 35." },
+      { front: "Wie alt ist Ihr Bruder?",  back: "Er ist 38 Jahre alt." },
+      { front: "Wie alt ist Ihre Schwester?", back: "Sie ist 32 Jahre alt." },
+      { front: "Wann haben Sie Geburtstag?", back: "Im Mai." },
+      { front: "Wie ist Ihre Telefonnummer?", back: "0176 22 33 44" },
+      { front: "eins, zwei, drei, …",      back: "vier, fünf, sechs, sieben" },
+      { front: "Was kommt nach neun?",     back: "zehn" },
+    ],
+    /* Set 4 — Sprachen & Arbeit */
+    [
+      { front: "Welche Sprachen sprechen Sie?", back: "Ich spreche Türkisch und Englisch." },
+      { front: "Sprechen Sie Deutsch?",    back: "Ja, ein bisschen." },
+      { front: "Was machen Sie beruflich?", back: "Ich bin Wissenschaftler." },
+      { front: "Wo arbeiten Sie?",         back: "Ich arbeite an der Universität." },
+      { front: "Woran forschen Sie?",      back: "Ich forsche an Solarzellen." },
+      { front: "Haben Sie Geschwister?",   back: "Ja, ich habe einen Bruder." },
+      { front: "Was ist Ihr Hobby?",       back: "Ich fahre gern Fahrrad." },
+      { front: "Wie schreibt man das?",    back: "T - U - R - K - A - Y" },
+    ],
+  ],
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 · Ich stelle mich vor — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+<style>
+  /* Nur für den Steckbrief-Generator — der Rest kommt aus styles.css */
+  .sb-input {
+    font-family: inherit; font-weight: 800; font-size: 1rem; width: 100%;
+    padding: 8px 12px; border: 2px solid var(--gray-200); border-radius: 10px;
+    background: var(--gray-100); color: var(--gray-800);
+  }
+  .sb-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .sb-out { font-size: 1.15rem; font-weight: 700; line-height: 2.1; color: var(--gray-800); }
+  .sb-out b { color: var(--accent); }
+  .sb-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+</style>
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>7 &middot; Ich stelle mich vor</h1>
+    <span class="subtitle">Schreiben &amp; sprechen &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <!-- ===== A) Verben schreiben ===== -->
+  <div class="card">
+    <span class="badge">Teil A</span>
+    <h2>Schreib das Verb</h2>
+    <p>Jetzt ohne Hilfe: <b>tippe</b> die richtige Form und drück „Prüfen“.</p>
+    <div class="table-scroll">
+    <table class="table">
+      <thead><tr><th></th><th>ich</th><th>du</th><th>er / sie</th><th>Sie</th></tr></thead>
+      <tbody>
+        <tr><td>heißen</td><td>heiße</td><td>heißt</td><td>heißt</td><td>heißen</td></tr>
+        <tr><td>kommen</td><td>komme</td><td>kommst</td><td>kommt</td><td>kommen</td></tr>
+        <tr><td>wohnen</td><td>wohne</td><td>wohnst</td><td>wohnt</td><td>wohnen</td></tr>
+        <tr><td>sein</td><td>bin</td><td>bist</td><td>ist</td><td>sind</td></tr>
+        <tr><td>sprechen</td><td>spreche</td><td>sprichst</td><td>spricht</td><td>sprechen</td></tr>
+        <tr><td>haben</td><td>habe</td><td>hast</td><td>hat</td><td>haben</td></tr>
+        <tr><td>arbeiten</td><td>arbeite</td><td>arbeitest</td><td>arbeitet</td><td>arbeiten</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="hint">Set 1: ich &middot; Set 2: Sie &middot; Set 3: er/sie &middot; Set 4: Dialog mit du</div>
+  </div>
+  <div id="game"></div>
+
+  <!-- ===== B) Steckbrief ===== -->
+  <div class="card">
+    <span class="badge">Teil B</span>
+    <h2>Mein Steckbrief</h2>
+    <p>Schreib deine Informationen in die Felder. Unten steht dann dein Text.
+       <b>Lies ihn laut vor.</b></p>
+
+    <table class="table">
+      <tbody>
+        <tr><td>Vorname</td><td><input class="sb-input" id="sb-vorname" type="text" placeholder="Deniz" autocomplete="off"></td></tr>
+        <tr><td>Nachname</td><td><input class="sb-input" id="sb-nachname" type="text" placeholder="Turkay" autocomplete="off"></td></tr>
+        <tr><td>Alter</td><td><input class="sb-input" id="sb-alter" type="text" inputmode="numeric" placeholder="35" autocomplete="off"></td></tr>
+        <tr><td>Land</td><td><input class="sb-input" id="sb-land" type="text" placeholder="der Türkei" autocomplete="off"></td></tr>
+        <tr><td>Stadt</td><td><input class="sb-input" id="sb-stadt" type="text" placeholder="Köln" autocomplete="off"></td></tr>
+        <tr><td>Sprachen</td><td><input class="sb-input" id="sb-sprachen" type="text" placeholder="Türkisch und Englisch" autocomplete="off"></td></tr>
+        <tr><td>Beruf</td><td><input class="sb-input" id="sb-beruf" type="text" placeholder="Wissenschaftler" autocomplete="off"></td></tr>
+        <tr><td>Arbeitsort</td><td><input class="sb-input" id="sb-arbeit" type="text" placeholder="an der Universität" autocomplete="off"></td></tr>
+        <tr><td>Forschung</td><td><input class="sb-input" id="sb-forschung" type="text" placeholder="Solarzellen" autocomplete="off"></td></tr>
+        <tr><td>Geschwister</td><td><input class="sb-input" id="sb-familie" type="text" placeholder="einen Bruder" autocomplete="off"></td></tr>
+        <tr><td>Hobby</td><td><input class="sb-input" id="sb-hobby" type="text" placeholder="Fahrrad fahren" autocomplete="off"></td></tr>
+      </tbody>
+    </table>
+
+    <div class="sb-actions">
+      <button class="btn btn-ghost" id="sb-beispiel" type="button">Beispiel einsetzen</button>
+      <button class="btn btn-ghost" id="sb-leeren" type="button">Leeren</button>
+      <button class="btn btn-primary" id="sb-drucken" type="button">Drucken</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Das sage ich</h2>
+    <div class="sb-out" id="sb-text"></div>
+  </div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* ---------- A) Verbformen tippen ---------- */
+fillGame("#game", {
+  sets: [
+    /* Set 1 — ich: die eigenen Antworten */
+    [
+      { sentence: "Wie heißen Sie? — Ich ____ Deniz.", answers: ["heiße"], explain: "ich heiße" },
+      { sentence: "Woher kommen Sie? — Ich ____ aus der Türkei.", answers: ["komme"], explain: "ich komme" },
+      { sentence: "Wo wohnen Sie? — Ich ____ in Köln.", answers: ["wohne"], explain: "ich wohne" },
+      { sentence: "Wie alt sind Sie? — Ich ____ 35 Jahre alt.", answers: ["bin"], explain: "ich bin" },
+      { sentence: "Welche Sprachen sprechen Sie? — Ich ____ Türkisch.", answers: ["spreche"], explain: "ich spreche" },
+      { sentence: "Haben Sie Geschwister? — Ja, ich ____ einen Bruder.", answers: ["habe"], explain: "ich habe" },
+      { sentence: "Was machen Sie beruflich? — Ich ____ Wissenschaftler.", answers: ["bin"], explain: "Beruf mit sein." },
+      { sentence: "Wo arbeiten Sie? — Ich ____ an der Universität.", answers: ["arbeite"], explain: "ich arbeite" },
+    ],
+    /* Set 2 — Sie: die höfliche Frage */
+    [
+      { sentence: "Wie ____ Sie?", answers: ["heißen"], explain: "Sie heißen" },
+      { sentence: "Woher ____ Sie?", answers: ["kommen"], explain: "Sie kommen" },
+      { sentence: "Wo ____ Sie?", answers: ["wohnen"], explain: "Sie wohnen" },
+      { sentence: "Wie alt ____ Sie?", answers: ["sind"], explain: "Sie sind" },
+      { sentence: "Welche Sprachen ____ Sie?", answers: ["sprechen"], explain: "Sie sprechen" },
+      { sentence: "____ Sie Geschwister?", answers: ["Haben"], explain: "Sie haben — in der Frage steht das Verb vorn." },
+      { sentence: "Was ____ Sie beruflich?", answers: ["machen"], explain: "Sie machen" },
+      { sentence: "____ Sie neu hier?", answers: ["Sind"], explain: "Sie sind — in der Frage steht das Verb vorn." },
+    ],
+    /* Set 3 — er / sie: über Kollegen sprechen */
+    [
+      { sentence: "Das ist Elif. Sie ____ aus Izmir.", answers: ["kommt"], explain: "sie kommt" },
+      { sentence: "Elif ____ jetzt in Köln.", answers: ["wohnt"], explain: "sie wohnt" },
+      { sentence: "Sie ____ 29 Jahre alt.", answers: ["ist"], explain: "sie ist" },
+      { sentence: "Das ist Mehmet. Er ____ Mehmet Demir.", answers: ["heißt"], explain: "er heißt" },
+      { sentence: "Er ____ in München.", answers: ["wohnt"], explain: "er wohnt" },
+      { sentence: "Er ____ zwei Schwestern.", answers: ["hat"], explain: "er hat" },
+      { sentence: "Frau Weber ____ Ärztin.", answers: ["ist"], explain: "sie ist" },
+      { sentence: "Sie ____ Deutsch und Englisch.", answers: ["spricht"], explain: "sie spricht (e wird i)" },
+    ],
+    /* Set 4 — Dialog mit du: unter Kollegen */
+    [
+      { sentence: "Hallo! Wie ____ du? — Ich ____ Deniz.", answers: ["heißt", "heiße"], explain: "du heißt / ich heiße" },
+      { sentence: "Woher ____ du? — Ich ____ aus der Türkei.", answers: ["kommst", "komme"], explain: "du kommst / ich komme" },
+      { sentence: "Wo ____ du? — Ich ____ in Köln.", answers: ["wohnst", "wohne"], explain: "du wohnst / ich wohne" },
+      { sentence: "Wie alt ____ du? — Ich ____ 35.", answers: ["bist", "bin"], explain: "du bist / ich bin" },
+      { sentence: "____ du Deutsch? — Ja, ein bisschen.", answers: ["Sprichst"], explain: "du sprichst (e wird i)" },
+      { sentence: "____ du Geschwister? — Ja, ich ____ einen Bruder.", answers: ["Hast", "habe"], explain: "du hast / ich habe" },
+      { sentence: "Was ____ du beruflich? — Ich ____ Wissenschaftler.", answers: ["machst", "bin"], explain: "du machst / ich bin" },
+      { sentence: "Wo ____ du? — Ich ____ an der Universität.", answers: ["arbeitest", "arbeite"], explain: "du arbeitest / ich arbeite" },
+    ],
+  ],
+});
+
+/* ---------- B) Steckbrief-Generator ---------- */
+(function () {
+  const felder = ["vorname", "nachname", "alter", "land", "stadt", "sprachen",
+                  "beruf", "arbeit", "forschung", "familie", "hobby"];
+  const input = {};
+  felder.forEach(f => { input[f] = document.getElementById("sb-" + f); });
+  const out = document.getElementById("sb-text");
+
+  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const val = f => input[f].value.trim();
+  const teil = s => "<b>" + esc(s) + "</b>";
+
+  function bauen() {
+    const saetze = [];
+    const name = [val("vorname"), val("nachname")].filter(Boolean).join(" ");
+
+    saetze.push(name ? "Hallo! Ich heiße " + teil(name) + "." : "Hallo!");
+    if (val("alter"))     saetze.push("Ich bin " + teil(val("alter")) + " Jahre alt.");
+    if (val("land"))      saetze.push("Ich komme aus " + teil(val("land")) + ".");
+    if (val("stadt"))     saetze.push("Ich wohne in " + teil(val("stadt")) + ".");
+    if (val("sprachen"))  saetze.push("Ich spreche " + teil(val("sprachen")) + ".");
+    if (val("beruf"))     saetze.push("Ich bin " + teil(val("beruf")) + ".");
+    if (val("arbeit"))    saetze.push("Ich arbeite " + teil(val("arbeit")) + ".");
+    if (val("forschung")) saetze.push("Ich forsche an " + teil(val("forschung")) + ".");
+    if (val("familie"))   saetze.push("Ich habe " + teil(val("familie")) + ".");
+    if (val("hobby"))     saetze.push("Mein Hobby ist " + teil(val("hobby")) + ".");
+    saetze.push("Freut mich!");
+
+    out.innerHTML = saetze.join("<br>");
+  }
+
+  felder.forEach(f => input[f].addEventListener("input", bauen));
+
+  document.getElementById("sb-beispiel").addEventListener("click", () => {
+    const beispiel = {
+      vorname: "Deniz", nachname: "Turkay", alter: "35", land: "der Türkei",
+      stadt: "Köln", sprachen: "Türkisch und Englisch", beruf: "Wissenschaftler",
+      arbeit: "an der Universität", forschung: "Solarzellen",
+      familie: "einen Bruder", hobby: "Fahrrad fahren",
+    };
+    felder.forEach(f => { input[f].value = beispiel[f]; });
+    bauen();
+  });
+
+  document.getElementById("sb-leeren").addEventListener("click", () => {
+    felder.forEach(f => { input[f].value = ""; });
+    bauen();
+    input.vorname.focus();
+  });
+
+  document.getElementById("sb-drucken").addEventListener("click", () => window.print());
+
+  bauen();
+})();
+</script>
+</body>
+</html>

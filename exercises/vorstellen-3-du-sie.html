@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3 · du oder Sie? — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>3 &middot; du oder Sie?</h1>
+    <span class="subtitle">Situationen erkennen &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <span class="badge">Schritt 3</span>
+    <h2>Wen sprichst du wie an?</h2>
+    <table class="table">
+      <thead><tr><th>du</th><th>Sie</th></tr></thead>
+      <tbody>
+        <tr><td>Kollegen, Freunde, Familie</td><td>Amt, Professor, Vermieter, Arzt, fremde Leute</td></tr>
+        <tr><td>Hallo! / Hi!</td><td>Guten Tag! / Guten Morgen!</td></tr>
+        <tr><td>Wie heiß<b>t</b> <b>du</b>?</td><td>Wie heiß<b>en</b> <b>Sie</b>?</td></tr>
+        <tr><td>Woher komm<b>st</b> <b>du</b>?</td><td>Woher komm<b>en</b> <b>Sie</b>?</td></tr>
+        <tr><td><b>dein</b> Name &middot; Wie geht es <b>dir</b>?</td><td><b>Ihr</b> Name &middot; Wie geht es <b>Ihnen</b>?</td></tr>
+      </tbody>
+    </table>
+    <div class="hint">Die Regel steht nicht im Satz — sie steht in der <b>Situation</b>.
+      <b>Sie</b> schreibt man immer groß.</div>
+  </div>
+
+  <!-- ===== A) Situationen: formell oder informell? ===== -->
+  <div class="card">
+    <span class="badge">Teil A</span>
+    <h2>Welcher Satz passt zur Situation?</h2>
+    <p>Schau dir das Bild an. <b>Wen</b> siehst du? Beide Sätze bedeuten dasselbe —
+       nur einer passt zu dieser Situation.</p>
+  </div>
+  <div id="game-a"></div>
+
+  <!-- ===== B) Das Gegenstück bauen ===== -->
+  <div class="card">
+    <span class="badge">Teil B</span>
+    <h2>Bau das Gegenstück</h2>
+    <p>Du bekommst eine <b>Frage</b> oder eine <b>Antwort</b>. Klick aus den
+       Wörtern das zusammen, was fehlt.</p>
+    <div class="hint">Steht oben eine Frage, baust du die Antwort. Steht oben eine
+      Antwort, baust du die Frage.</div>
+  </div>
+  <div id="game-b"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* ============================================================
+   Situationsbilder — schlichte Inline-SVGs, damit die Seite ohne
+   Bilddateien auskommt. Boden liegt bei y = 92.
+   ============================================================ */
+const person = (x, kopfY, ton) =>
+  `<circle cx="${x}" cy="${kopfY}" r="11" fill="var(--accent)"/>` +
+  `<path d="M${x - 17} 92 L${x - 10} ${kopfY + 14} L${x + 10} ${kopfY + 14} L${x + 17} 92 Z"` +
+  ` fill="${ton || "var(--accent-mid)"}"/>`;
+
+const svg = (label, inhalt) =>
+  `<svg viewBox="0 0 200 110" role="img" aria-label="${label}">` +
+  `<rect x="0" y="92" width="200" height="18" fill="var(--gray-200)"/>${inhalt}</svg>`;
+
+const BILD = {
+  /* Behörde: Schalter mit Sachbearbeiterin */
+  amt: svg("Amt: Schalter mit Sachbearbeiterin",
+    `<rect x="6" y="8" width="108" height="84" rx="6" fill="#fff" stroke="var(--accent-mid)" stroke-width="3"/>
+     <rect x="20" y="16" width="80" height="13" rx="3" fill="var(--accent)"/>
+     ${person(60, 50)}
+     <rect x="6" y="70" width="108" height="9" rx="4" fill="var(--accent)"/>
+     <rect x="6" y="79" width="108" height="13" fill="var(--accent-mid)"/>
+     ${person(158, 40)}`),
+
+  /* Büro des Professors */
+  buero: svg("Büro: Professor am Schreibtisch",
+    `<rect x="6" y="10" width="42" height="82" rx="4" fill="#fff" stroke="var(--accent-mid)" stroke-width="3"/>
+     <path d="M8 36h38M8 60h38" stroke="var(--accent-mid)" stroke-width="3"/>
+     ${person(96, 44)}
+     <rect x="60" y="70" width="94" height="9" rx="4" fill="var(--accent)"/>
+     <rect x="66" y="79" width="7" height="13" fill="var(--accent-mid)"/>
+     <rect x="141" y="79" width="7" height="13" fill="var(--accent-mid)"/>
+     ${person(176, 38)}`),
+
+  /* Kaffeeküche: zwei Kollegen mit Tassen */
+  kaffee: svg("Kaffeeküche: zwei Kollegen mit Tassen",
+    `<path d="M62 24c0-6 4-9 8-5M132 24c0-6 4-9 8-5" stroke="var(--accent-mid)" stroke-width="3" fill="none" stroke-linecap="round"/>
+     ${person(70, 42)}${person(130, 42)}
+     <rect x="20" y="72" width="160" height="8" rx="4" fill="var(--accent)"/>
+     <rect x="76" y="56" width="18" height="16" rx="3" fill="#fff" stroke="var(--accent)" stroke-width="3"/>
+     <rect x="106" y="56" width="18" height="16" rx="3" fill="#fff" stroke="var(--accent)" stroke-width="3"/>`),
+
+  /* Party bei Freunden */
+  party: svg("Party: Wimpel und zwei Freunde mit Gläsern",
+    `<path d="M6 14h188" stroke="var(--accent-mid)" stroke-width="2"/>
+     <path d="M24 14l10 16 10-16zM84 14l10 16 10-16zM144 14l10 16 10-16z" fill="var(--accent-mid)"/>
+     ${person(66, 46)}${person(134, 46)}
+     <path d="M88 62h16l-4 14h-8zM96 62h16l-4 14h-8z" fill="#fff" stroke="var(--accent)" stroke-width="3"/>`),
+
+  /* Konferenz: fremde Fachleute, Handschlag */
+  konferenz: svg("Konferenz: Handschlag mit Namensschildern",
+    `<rect x="30" y="6" width="140" height="16" rx="4" fill="var(--accent)"/>
+     ${person(62, 40)}${person(138, 40)}
+     <rect x="52" y="58" width="14" height="10" rx="2" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+     <rect x="134" y="58" width="14" height="10" rx="2" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+     <rect x="86" y="62" width="28" height="9" rx="4" fill="var(--accent)"/>`),
+
+  /* Labor: Kollegen bei der Arbeit */
+  labor: svg("Labor: zwei Kollegen mit Kolben",
+    `${person(56, 40)}${person(116, 40)}
+     <rect x="14" y="76" width="172" height="8" rx="4" fill="var(--accent)"/>
+     <path d="M156 44h20l12 32h-44z" fill="#fff" stroke="var(--accent)" stroke-width="3"/>
+     <path d="M150 62h36l6 14h-48z" fill="var(--accent-mid)"/>
+     <circle cx="164" cy="52" r="3" fill="var(--accent-mid)"/>
+     <circle cx="173" cy="45" r="2" fill="var(--accent-mid)"/>`),
+
+  /* Nachbarin an der Wohnungstür */
+  tuer: svg("Wohnungstür: die Nachbarin",
+    `<rect x="14" y="6" width="76" height="86" rx="4" fill="#fff" stroke="var(--accent-mid)" stroke-width="3"/>
+     <circle cx="80" cy="52" r="4" fill="var(--accent)"/>
+     ${person(50, 46)}
+     ${person(150, 40)}`),
+
+  /* Vortrag vor Publikum */
+  vortrag: svg("Vortrag: Leinwand und Publikum",
+    `<rect x="10" y="6" width="112" height="58" rx="4" fill="#fff" stroke="var(--accent-mid)" stroke-width="3"/>
+     <path d="M22 52l22-20 18 14 26-26" stroke="var(--accent)" stroke-width="4" fill="none" stroke-linecap="round"/>
+     ${person(160, 40)}
+     <rect x="10" y="72" width="26" height="20" rx="3" fill="var(--accent-mid)"/>
+     <rect x="44" y="72" width="26" height="20" rx="3" fill="var(--accent-mid)"/>
+     <rect x="78" y="72" width="26" height="20" rx="3" fill="var(--accent-mid)"/>`),
+
+  /* Wohnungsbesichtigung beim Vermieter */
+  wohnung: svg("Wohnung: Haus und Schlüssel",
+    `<path d="M12 48L54 14l42 34z" fill="var(--accent)"/>
+     <rect x="24" y="48" width="60" height="44" fill="#fff" stroke="var(--accent-mid)" stroke-width="3"/>
+     <rect x="46" y="64" width="18" height="28" fill="var(--accent-mid)"/>
+     <circle cx="118" cy="40" r="9" fill="none" stroke="var(--accent)" stroke-width="5"/>
+     <path d="M126 40h22M142 40v8" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
+     ${person(166, 44)}`),
+
+  /* Mensa mit Kollegen */
+  mensa: svg("Mensa: Mittagessen mit Kollegen",
+    `${person(66, 34)}${person(134, 34)}
+     <rect x="18" y="70" width="164" height="9" rx="4" fill="var(--accent)"/>
+     <rect x="30" y="79" width="8" height="13" fill="var(--accent-mid)"/>
+     <rect x="162" y="79" width="8" height="13" fill="var(--accent-mid)"/>
+     <ellipse cx="70" cy="66" rx="18" ry="6" fill="#fff" stroke="var(--accent)" stroke-width="3"/>
+     <ellipse cx="130" cy="66" rx="18" ry="6" fill="#fff" stroke="var(--accent)" stroke-width="3"/>`),
+
+  /* Freizeit: Radtour mit Freunden */
+  fahrrad: svg("Freizeit: Fahrrad",
+    `${person(160, 40)}
+     <circle cx="46" cy="70" r="20" fill="none" stroke="var(--accent)" stroke-width="5"/>
+     <circle cx="110" cy="70" r="20" fill="none" stroke="var(--accent)" stroke-width="5"/>
+     <path d="M46 70l22-28h22l-30 28zM78 70h32l-20-28" stroke="var(--accent)" stroke-width="4" fill="none" stroke-linejoin="round"/>
+     <path d="M62 40h18" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>`),
+
+  /* Arztpraxis */
+  arzt: svg("Arztpraxis: Ärztin und Patient",
+    `<rect x="10" y="10" width="52" height="52" rx="8" fill="#fff" stroke="var(--accent-mid)" stroke-width="3"/>
+     <path d="M30 24h12v10h10v12H42v10H30V46H20V34h10z" fill="var(--accent)"/>
+     ${person(102, 40, "#fff")}
+     <path d="M85 92 L92 54 L112 54 L119 92 Z" fill="none" stroke="var(--accent-mid)" stroke-width="3"/>
+     ${person(164, 40)}`),
+};
+
+/* ---------- A) Formell oder informell? ---------- */
+/* Die Antwort steht NICHT im Satz — nur im Bild. Deshalb wechselt die
+   Position der richtigen Option von Aufgabe zu Aufgabe. */
+quizGame("#game-a", {
+  sets: [
+    /* Set 1 — Name & Begrüßung */
+    [
+      { img: BILD.amt, q: "Beim Amt. Du stellst dich vor.",
+        options: ["Guten Tag, mein Name ist Deniz Turkay.", "Hallo, ich bin Deniz."],
+        answer: 0, explain: "Amt = fremde Leute = formell: Guten Tag + mein Name ist …" },
+      { img: BILD.kaffee, q: "In der Kaffeeküche. Ein neuer Kollege.",
+        options: ["Guten Tag, mein Name ist Turkay.", "Hallo, ich bin Deniz."],
+        answer: 1, explain: "Kollegen sagen zueinander du. Hallo reicht." },
+      { img: BILD.konferenz, q: "Auf der Konferenz. Eine fremde Professorin.",
+        options: ["Hi, ich bin der Deniz.", "Freut mich, mein Name ist Turkay."],
+        answer: 1, explain: "Fremde Fachleute = formell." },
+      { img: BILD.party, q: "Auf einer Party bei Freunden.",
+        options: ["Hallo, ich bin Deniz.", "Guten Tag, mein Name ist Deniz Turkay."],
+        answer: 0, explain: "Party = privat = informell." },
+      { img: BILD.tuer, q: "Die neue Nachbarin steht vor der Tür.",
+        options: ["Guten Tag, ich bin Ihr neuer Nachbar.", "Hi, ich bin dein neuer Nachbar."],
+        answer: 0, explain: "Nachbarn siezt man am Anfang." },
+      { img: BILD.buero, q: "Beim Professor im Büro.",
+        options: ["Hallo, wie geht's?", "Guten Tag, wie geht es Ihnen?"],
+        answer: 1, explain: "Professor = formell = Ihnen." },
+    ],
+    /* Set 2 — Herkunft & Wohnort */
+    [
+      { img: BILD.konferenz, q: "Konferenz: Du fragst eine fremde Wissenschaftlerin.",
+        options: ["Woher kommen Sie?", "Woher kommst du?"],
+        answer: 0, explain: "Fremde Person = Sie = kommen." },
+      { img: BILD.kaffee, q: "Kaffeepause mit dem Kollegen.",
+        options: ["Woher kommst du?", "Woher kommen Sie?"],
+        answer: 0, explain: "Kollege = du = kommst." },
+      { img: BILD.tuer, q: "Der Nachbar im Treppenhaus.",
+        options: ["Wohnst du auch hier?", "Wohnen Sie auch hier?"],
+        answer: 1, explain: "Nachbar = Sie = wohnen." },
+      { img: BILD.party, q: "Party: Du lernst jemanden kennen.",
+        options: ["Wo wohnen Sie?", "Wo wohnst du?"],
+        answer: 1, explain: "Party = du = wohnst." },
+      { img: BILD.wohnung, q: "Wohnungsbesichtigung beim Vermieter.",
+        options: ["Wohnen Sie auch in diesem Haus?", "Wohnst du auch in diesem Haus?"],
+        answer: 0, explain: "Vermieter = Sie = wohnen." },
+      { img: BILD.labor, q: "Im Labor mit der Doktorandin.",
+        options: ["Kommen Sie aus Izmir?", "Kommst du aus Izmir?"],
+        answer: 1, explain: "Kollegin im Labor = du = kommst." },
+    ],
+    /* Set 3 — Alter, Zeit & Kontakt */
+    [
+      { img: BILD.konferenz, q: "Konferenz: Ihr tauscht Kontaktdaten.",
+        options: ["Wie ist deine Telefonnummer?", "Wie ist Ihre Telefonnummer?"],
+        answer: 1, explain: "Fremde Person = Ihre Telefonnummer." },
+      { img: BILD.mensa, q: "Mensa: Dein Kollege hat bald Geburtstag.",
+        options: ["Wann hast du Geburtstag?", "Wann haben Sie Geburtstag?"],
+        answer: 0, explain: "Kollege = du = hast." },
+      { img: BILD.arzt, q: "In der Praxis. Du fragst die Ärztin.",
+        options: ["Haben Sie am Montag Zeit?", "Hast du am Montag Zeit?"],
+        answer: 0, explain: "Ärztin = Sie = haben." },
+      { img: BILD.party, q: "Party: Ihr redet über das Alter.",
+        options: ["Wie alt sind Sie?", "Wie alt bist du?"],
+        answer: 1, explain: "Privat = du = bist." },
+      { img: BILD.buero, q: "Du brauchst einen Termin beim Professor.",
+        options: ["Wann hast du Zeit?", "Wann haben Sie Zeit?"],
+        answer: 1, explain: "Professor = Sie = haben." },
+      { img: BILD.fahrrad, q: "Radtour mit Freunden am Sonntag.",
+        options: ["Fährst du auch mit?", "Fahren Sie auch mit?"],
+        answer: 0, explain: "Freunde = du = fährst." },
+    ],
+    /* Set 4 — Sprachen & Arbeit */
+    [
+      { img: BILD.vortrag, q: "Nach dem Vortrag. Du fragst die Rednerin.",
+        options: ["Sprechen Sie Englisch?", "Sprichst du Englisch?"],
+        answer: 0, explain: "Fremde Rednerin = Sie = sprechen." },
+      { img: BILD.labor, q: "Im Labor mit dem Kollegen.",
+        options: ["Arbeiten Sie auch an Solarzellen?", "Arbeitest du auch an Solarzellen?"],
+        answer: 1, explain: "Kollege = du = arbeitest." },
+      { img: BILD.konferenz, q: "Konferenz: eine fremde Professorin.",
+        options: ["Woran forschst du?", "Woran forschen Sie?"],
+        answer: 1, explain: "Fremde Person = Sie = forschen." },
+      { img: BILD.mensa, q: "Mittagspause mit der Kollegin.",
+        options: ["Was machst du am Wochenende?", "Was machen Sie am Wochenende?"],
+        answer: 0, explain: "Kollegin = du = machst." },
+      { img: BILD.amt, q: "Beim Amt. Du verstehst das Formular nicht.",
+        options: ["Sprichst du Englisch?", "Sprechen Sie Englisch?"],
+        answer: 1, explain: "Amt = Sie = sprechen." },
+      { img: BILD.buero, q: "Der Professor stellt dir seine neue Doktorandin vor.",
+        options: ["Guten Tag, freut mich!", "Na, alles klar?"],
+        answer: 0, explain: "Beim Professor bleibst du formell." },
+    ],
+  ],
+});
+
+/* ---------- B) Das Gegenstück bauen ---------- */
+/* Mal ist die Frage vorgegeben und die Antwort fehlt, mal umgekehrt. */
+orderGame("#game-b", {
+  sets: [
+    /* Set 1 — Name & Begrüßung */
+    [
+      { prompt: "Man fragt dich: <b>«Wie heißen Sie?»</b><br>Antworte.",
+        tiles: ["Ich", "heiße", "Deniz", "Turkay"], answer: "Ich heiße Deniz Turkay", end: ".",
+        explain: "Ich + heiße + Name." },
+      { prompt: "Du hörst: <b>«Mein Name ist Elif Demir.»</b><br>Wie war die Frage?",
+        tiles: ["Wie", "ist", "Ihr", "Name", "dein"], answer: "Wie ist Ihr Name", end: "?",
+        explain: "Mein Name -> Ihr Name (formell)." },
+      { prompt: "Man fragt dich: <b>«Wie geht es Ihnen?»</b><br>Antworte.",
+        tiles: ["Danke,", "gut", "Und", "Ihnen"], answer: "Danke, gut", end: ".",
+        explain: "Kurze feste Antwort: Danke, gut." },
+      { prompt: "Du hörst: <b>«Nein, ich bin Herr Turkay.»</b><br>Wie war die Frage?",
+        tiles: ["Sind", "Sie", "Herr", "Demir"], answer: "Sind Sie Herr Demir", end: "?",
+        explain: "Ja/Nein-Frage: das Verb steht vorn." },
+      { prompt: "Man fragt dich: <b>«Sind Sie neu hier?»</b><br>Antworte.",
+        tiles: ["Ja,", "ich", "bin", "neu", "in", "Deutschland"],
+        answer: "Ja, ich bin neu in Deutschland", end: ".",
+        explain: "Ja + ganzer Satz." },
+      { prompt: "Du hörst: <b>«Ich heiße Deniz.»</b><br>Wie war die Frage?",
+        tiles: ["Wie", "heißt", "du", "heißen"], answer: "Wie heißt du", end: "?",
+        explain: "Ich heiße -> Wie heißt du?" },
+    ],
+    /* Set 2 — Herkunft & Wohnort */
+    [
+      { prompt: "Man fragt dich: <b>«Woher kommen Sie?»</b><br>Antworte.",
+        tiles: ["Ich", "komme", "aus", "der", "Türkei"], answer: "Ich komme aus der Türkei", end: ".",
+        explain: "kommen aus + Land." },
+      { prompt: "Du hörst: <b>«Ich wohne in Köln.»</b><br>Wie war die Frage?",
+        tiles: ["Wo", "wohnen", "Sie", "Woher"], answer: "Wo wohnen Sie", end: "?",
+        explain: "in + Stadt -> Wo?" },
+      { prompt: "Man fragt dich: <b>«Wo wohnen Sie genau?»</b><br>Antworte.",
+        tiles: ["In", "der", "Bahnhofstraße", "7"], answer: "In der Bahnhofstraße 7", end: ".",
+        explain: "Straße + Hausnummer." },
+      { prompt: "Du hörst: <b>«Ja, ich komme aus Istanbul.»</b><br>Wie war die Frage?",
+        tiles: ["Kommen", "Sie", "aus", "Istanbul", "Wo"], answer: "Kommen Sie aus Istanbul", end: "?",
+        explain: "Ja/Nein-Frage: das Verb steht vorn." },
+      { prompt: "Man fragt dich: <b>«Wie lange sind Sie schon hier?»</b><br>Antworte.",
+        tiles: ["Seit", "drei", "Monaten", "Vor"], answer: "Seit drei Monaten", end: ".",
+        explain: "seit + Zeitraum." },
+      { prompt: "Du hörst: <b>«Nein, ich wohne in Köln.»</b><br>Wie war die Frage?",
+        tiles: ["Wohnen", "Sie", "in", "München"], answer: "Wohnen Sie in München", end: "?",
+        explain: "Nein -> die Frage nannte eine andere Stadt." },
+    ],
+    /* Set 3 — Alter & Zahlen */
+    [
+      { prompt: "Man fragt dich: <b>«Wie alt sind Sie?»</b><br>Antworte.",
+        tiles: ["Ich", "bin", "35", "Jahre", "alt"], answer: "Ich bin 35 Jahre alt", end: ".",
+        explain: "sein + Zahl + Jahre alt." },
+      { prompt: "Du hörst: <b>«Er ist 38 Jahre alt.»</b><br>Wie war die Frage?",
+        tiles: ["Wie", "alt", "ist", "Ihr", "Bruder", "sind"],
+        answer: "Wie alt ist Ihr Bruder", end: "?",
+        explain: "Er -> Ihr Bruder." },
+      { prompt: "Man fragt dich: <b>«Wann haben Sie Geburtstag?»</b><br>Antworte.",
+        tiles: ["Im", "Mai", "Am"], answer: "Im Mai", end: ".",
+        explain: "Monate mit im: im Mai." },
+      { prompt: "Du hörst: <b>«0176 22 33 44»</b><br>Wie war die Frage?",
+        tiles: ["Wie", "ist", "Ihre", "Telefonnummer", "Wo"],
+        answer: "Wie ist Ihre Telefonnummer", end: "?",
+        explain: "Nummer -> Wie ist …?" },
+      { prompt: "Man fragt dich: <b>«Haben Sie Geschwister?»</b><br>Antworte.",
+        tiles: ["Ja,", "ich", "habe", "einen", "Bruder"], answer: "Ja, ich habe einen Bruder", end: ".",
+        explain: "haben + Person." },
+      { prompt: "Du hörst: <b>«Nein, ich bin 35.»</b><br>Wie war die Frage?",
+        tiles: ["Sind", "Sie", "40", "Wie"], answer: "Sind Sie 40", end: "?",
+        explain: "Nein -> die Frage nannte eine andere Zahl." },
+    ],
+    /* Set 4 — Sprachen & Arbeit */
+    [
+      { prompt: "Man fragt dich: <b>«Welche Sprachen sprechen Sie?»</b><br>Antworte.",
+        tiles: ["Ich", "spreche", "Türkisch", "und", "Englisch"],
+        answer: "Ich spreche Türkisch und Englisch", end: ".",
+        explain: "sprechen + Sprachen." },
+      { prompt: "Du hörst: <b>«Ich arbeite an der Universität.»</b><br>Wie war die Frage?",
+        tiles: ["Wo", "arbeiten", "Sie", "Was"], answer: "Wo arbeiten Sie", end: "?",
+        explain: "an der Universität = Ort -> Wo?" },
+      { prompt: "Man fragt dich: <b>«Was machen Sie beruflich?»</b><br>Antworte.",
+        tiles: ["Ich", "bin", "Wissenschaftler"], answer: "Ich bin Wissenschaftler", end: ".",
+        explain: "Beruf mit sein." },
+      { prompt: "Du hörst: <b>«Ich forsche an Solarzellen.»</b><br>Wie war die Frage?",
+        tiles: ["Woran", "forschen", "Sie", "Wo"], answer: "Woran forschen Sie", end: "?",
+        explain: "forschen an + Thema -> Woran?" },
+      { prompt: "Man fragt dich: <b>«Sprechen Sie Deutsch?»</b><br>Antworte.",
+        tiles: ["Ja,", "ein bisschen", "Nein"], answer: "Ja, ein bisschen", end: ".",
+        explain: "Kurze Antwort reicht." },
+      { prompt: "Du hörst: <b>«Ich fahre gern Fahrrad.»</b><br>Wie war die Frage?",
+        tiles: ["Was", "ist", "Ihr", "Hobby", "Wie"], answer: "Was ist Ihr Hobby", end: "?",
+        explain: "Hobby -> Was ist Ihr Hobby?" },
+    ],
+  ],
+});
+</script>
+</body>
+</html>

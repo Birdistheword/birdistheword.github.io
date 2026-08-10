@@ -152,6 +152,9 @@ a { color: var(--accent); }
 }
 .table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); }
 .table tr:last-child td { border-bottom: none; }
+/* Wrap a wide table in this so IT scrolls instead of the whole page. */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll > .table { min-width: max-content; }
 
 /* ============================================================
    Quiz options (multiple choice)
@@ -336,6 +339,13 @@ a { color: var(--accent); }
 }
 .quiz-bar b { color: var(--accent); }
 .quiz [data-question] { margin-bottom: 18px; }
+/* Optional picture above a quiz question (item.img) */
+.quiz-media { max-width: 300px; margin: 0 auto 18px; }
+.quiz-media[hidden] { display: none; }
+.quiz-media svg {
+  display: block; width: 100%; height: auto;
+  background: var(--gray-100); border-radius: var(--radius-lg);
+}
 .quiz [data-next], .sort [data-next] { margin-top: 16px; }
 
 /* ---- Sort ---- */

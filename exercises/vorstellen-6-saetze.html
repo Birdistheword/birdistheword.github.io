@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6 · Sätze bauen — Sich vorstellen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+</head>
+
+<body class="theme-blue">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>6 &middot; Sätze bauen</h1>
+    <span class="subtitle">Wortstellung &middot; A1</span>
+  </div>
+  <a class="back-link" href="vorstellen.html">&larr; Sich vorstellen</a>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <span class="badge">Schritt 6</span>
+    <h2>Das Verb steht an Position 2</h2>
+    <p>Im deutschen Satz steht das Verb fast immer an der <b>zweiten</b> Stelle.
+       In der Frage steht es an Position <b>1</b> oder direkt nach dem Fragewort.</p>
+    <table class="table">
+      <thead><tr><th>1</th><th>2 (Verb)</th><th>3 …</th></tr></thead>
+      <tbody>
+        <tr><td>Ich</td><td><b>heiße</b></td><td>Deniz.</td></tr>
+        <tr><td>Jetzt</td><td><b>wohne</b></td><td>ich in Köln.</td></tr>
+        <tr><td>Wie</td><td><b>heißen</b></td><td>Sie?</td></tr>
+        <tr><td><b>Kommen</b></td><td>Sie</td><td>aus Izmir?</td></tr>
+      </tbody>
+    </table>
+    <div class="hint">Set 1: Aussagesätze &middot; Set 2: W-Fragen &middot;
+      Set 3: Ja/Nein-Fragen &middot; Set 4: längere Sätze</div>
+  </div>
+
+  <div id="game"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+orderGame("#game", {
+  sets: [
+    /* Set 1 — Aussagesätze in der Ich-Form */
+    [
+      { prompt: "Sag deinen <b>Namen</b>.",
+        tiles: ["Ich", "heiße", "Deniz"], answer: "Ich heiße Deniz", end: ".",
+        explain: "Ich + Verb + Name." },
+      { prompt: "Sag deinen <b>vollen Namen</b>.",
+        tiles: ["Mein", "Name", "ist", "Deniz", "Turkay"], answer: "Mein Name ist Deniz Turkay", end: ".",
+        explain: "Mein Name ist … — das Verb ist ist." },
+      { prompt: "Sag dein <b>Land</b>.",
+        tiles: ["Ich", "komme", "aus", "der", "Türkei"], answer: "Ich komme aus der Türkei", end: ".",
+        explain: "kommen aus + Land." },
+      { prompt: "Sag deine <b>Stadt</b>.",
+        tiles: ["Ich", "wohne", "in", "Köln"], answer: "Ich wohne in Köln", end: ".",
+        explain: "wohnen in + Stadt." },
+      { prompt: "Sag dein <b>Alter</b>.",
+        tiles: ["Ich", "bin", "35", "Jahre", "alt"], answer: "Ich bin 35 Jahre alt", end: ".",
+        explain: "sein + Zahl + Jahre alt." },
+      { prompt: "Sag deine <b>Sprache</b>.",
+        tiles: ["Ich", "spreche", "Türkisch"], answer: "Ich spreche Türkisch", end: ".",
+        explain: "sprechen + Sprache." },
+      { prompt: "Sag deinen <b>Beruf</b>.",
+        tiles: ["Ich", "bin", "Wissenschaftler"], answer: "Ich bin Wissenschaftler", end: ".",
+        explain: "Beruf: ich bin …" },
+      { prompt: "Sag, <b>wo du arbeitest</b>.",
+        tiles: ["Ich", "arbeite", "an", "der", "Universität"], answer: "Ich arbeite an der Universität", end: ".",
+        explain: "arbeiten an der + Ort." },
+    ],
+    /* Set 2 — W-Fragen mit Sie */
+    [
+      { prompt: "Frag nach dem <b>Namen</b>.",
+        tiles: ["Wie", "heißen", "Sie"], answer: "Wie heißen Sie", end: "?",
+        explain: "Fragewort + Verb + Sie." },
+      { prompt: "Frag nach dem <b>Namen</b> (andere Form).",
+        tiles: ["Wie", "ist", "Ihr", "Name"], answer: "Wie ist Ihr Name", end: "?",
+        explain: "Wie ist Ihr Name?" },
+      { prompt: "Frag nach dem <b>Land</b>.",
+        tiles: ["Woher", "kommen", "Sie"], answer: "Woher kommen Sie", end: "?",
+        explain: "Woher + kommen." },
+      { prompt: "Frag nach der <b>Stadt</b>.",
+        tiles: ["Wo", "wohnen", "Sie"], answer: "Wo wohnen Sie", end: "?",
+        explain: "Wo + wohnen." },
+      { prompt: "Frag nach dem <b>Alter</b>.",
+        tiles: ["Wie", "alt", "sind", "Sie"], answer: "Wie alt sind Sie", end: "?",
+        explain: "Wie alt + sein." },
+      { prompt: "Frag nach den <b>Sprachen</b>.",
+        tiles: ["Welche", "Sprachen", "sprechen", "Sie"], answer: "Welche Sprachen sprechen Sie", end: "?",
+        explain: "Welche + Nomen + Verb + Sie." },
+      { prompt: "Frag nach dem <b>Beruf</b>.",
+        tiles: ["Was", "machen", "Sie", "beruflich"], answer: "Was machen Sie beruflich", end: "?",
+        explain: "Was + machen + beruflich." },
+      { prompt: "Frag nach dem <b>Geburtstag</b>.",
+        tiles: ["Wann", "haben", "Sie", "Geburtstag"], answer: "Wann haben Sie Geburtstag", end: "?",
+        explain: "Wann + haben." },
+    ],
+    /* Set 3 — Ja/Nein-Fragen: das Verb steht ganz vorn */
+    [
+      { prompt: "Frag: Türkei? Das <b>Verb</b> steht ganz vorn.",
+        tiles: ["Kommen", "Sie", "aus", "der", "Türkei"], answer: "Kommen Sie aus der Türkei", end: "?",
+        explain: "Ohne Fragewort steht das Verb an Position 1." },
+      { prompt: "Frag: Köln?",
+        tiles: ["Wohnen", "Sie", "in", "Köln"], answer: "Wohnen Sie in Köln", end: "?",
+        explain: "Verb + Sie + Rest." },
+      { prompt: "Frag: 35 Jahre?",
+        tiles: ["Sind", "Sie", "35", "Jahre", "alt"], answer: "Sind Sie 35 Jahre alt", end: "?",
+        explain: "Verb + Sie + Rest." },
+      { prompt: "Frag: Deutsch?",
+        tiles: ["Sprechen", "Sie", "Deutsch"], answer: "Sprechen Sie Deutsch", end: "?",
+        explain: "Verb + Sie + Sprache." },
+      { prompt: "Frag: Geschwister?",
+        tiles: ["Haben", "Sie", "Geschwister"], answer: "Haben Sie Geschwister", end: "?",
+        explain: "Verb + Sie + Nomen." },
+      { prompt: "Frag: neu hier?",
+        tiles: ["Sind", "Sie", "neu", "hier"], answer: "Sind Sie neu hier", end: "?",
+        explain: "Verb + Sie + Rest." },
+      { prompt: "Frag: Herr Demir?",
+        tiles: ["Heißen", "Sie", "Demir"], answer: "Heißen Sie Demir", end: "?",
+        explain: "Verb + Sie + Name." },
+      { prompt: "Frag: an der Uni?",
+        tiles: ["Arbeiten", "Sie", "an", "der", "Universität"], answer: "Arbeiten Sie an der Universität", end: "?",
+        explain: "Verb + Sie + Rest." },
+    ],
+    /* Set 4 — längere Sätze, auch mit Umstellung */
+    [
+      { prompt: "Zwei Informationen mit <b>und</b>.",
+        tiles: ["Ich", "komme", "aus", "der", "Türkei", "und", "wohne", "in", "Köln"],
+        answer: "Ich komme aus der Türkei und wohne in Köln", end: ".",
+        explain: "Nach und kommt das zweite Verb." },
+      { prompt: "Name und Alter.",
+        tiles: ["Ich", "heiße", "Deniz", "und", "ich", "bin", "35"],
+        answer: "Ich heiße Deniz und ich bin 35", end: ".",
+        explain: "Zwei kleine Sätze mit und." },
+      { prompt: "Zwei Sprachen.",
+        tiles: ["Ich", "spreche", "Türkisch", "und", "ein bisschen", "Deutsch"],
+        answer: "Ich spreche Türkisch und ein bisschen Deutsch", end: ".",
+        explain: "ein bisschen = nicht viel." },
+      { prompt: "Der Satz fängt mit <b>Jetzt</b> an. Wo steht das Verb?",
+        tiles: ["Jetzt", "wohne", "ich", "in", "Köln"],
+        answer: "Jetzt wohne ich in Köln", end: ".",
+        explain: "Das Verb bleibt an Position 2 — ich rutscht dahinter." },
+      { prompt: "Der Satz fängt mit der <b>Zeit</b> an.",
+        tiles: ["Seit", "drei", "Monaten", "bin", "ich", "in", "Deutschland"],
+        answer: "Seit drei Monaten bin ich in Deutschland", end: ".",
+        explain: "Zeit zuerst, dann das Verb, dann ich." },
+      { prompt: "Sag etwas über deinen <b>Bruder</b>.",
+        tiles: ["Mein", "Bruder", "ist", "38", "Jahre", "alt"],
+        answer: "Mein Bruder ist 38 Jahre alt", end: ".",
+        explain: "Mein Bruder = er -> ist." },
+      { prompt: "Sag, <b>woran du forschst</b>.",
+        tiles: ["Ich", "forsche", "an", "Solarzellen"],
+        answer: "Ich forsche an Solarzellen", end: ".",
+        explain: "forschen an + Thema." },
+      { prompt: "Sag dein <b>Hobby</b>.",
+        tiles: ["Ich", "fahre", "gern", "Fahrrad"],
+        answer: "Ich fahre gern Fahrrad", end: ".",
+        explain: "gern steht vor dem Nomen." },
+    ],
+  ],
+});
+</script>
+</body>
+</html>
