@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Possessivartikel — Deutsch A1</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=20260810">
+<style>
+  .write-row{display:flex;gap:8px;margin-top:16px}
+  .write-input{
+    flex:1;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:600;
+    padding:10px 16px;border:2.5px solid var(--border,#e0e0e0);border-radius:10px;
+    outline:none;transition:border-color .2s;background:#fff;min-width:0;
+  }
+  .write-input:focus{border-color:var(--accent)}
+  .write-input.correct{border-color:#2a9d5c;background:#e6f7ee;color:#1a6b3a}
+  .write-input.wrong{border-color:#d93f3f;background:#fdeaea;color:#a02020}
+  .write-hint{color:var(--muted,#888);font-size:.95rem;margin-top:4px}
+  .icon-pair{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    justify-content:center;margin:20px 0 8px;
+  }
+  .icon-object{
+    width:80px;height:80px;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.05);color:var(--accent);
+  }
+  .icon-object svg{width:48px;height:48px}
+  .icon-plus,.icon-equals{font-size:1.4rem;font-weight:800;color:var(--muted,#aaa)}
+  .icon-person{
+    padding:10px 22px;border-radius:100px;font-weight:800;
+    font-size:1.1rem;color:#fff;min-width:50px;text-align:center;
+  }
+  .icon-obj-label{
+    text-align:center;font-weight:700;font-size:.85rem;
+    color:var(--muted,#888);margin-bottom:12px;
+  }
+  .icon-answer{flex:1;min-width:140px}
+</style>
+</head>
+
+<body class="theme-green">
+
+<header class="site-header">
+  <div class="brand">
+    <h1>Possessivartikel</h1>
+    <span class="subtitle">mein, dein, sein, ihr &hellip; &middot; A1</span>
+  </div>
+  <a class="back-link" href="../index.html">&larr; &Uuml;bersicht</a>
+</header>
+
+<main class="container">
+
+  <!-- ===== Aufgabe 1: Sortierspiel — Nominativ ===== -->
+  <div class="card">
+    <span class="badge">Aufgabe 1</span>
+    <h2>mein oder meine? &mdash; Nominativ</h2>
+    <p>Sortiere die Nomen: Ist es <b>mein</b> (der/das) oder <b>meine</b> (die/Plural)?</p>
+    <table class="table">
+      <thead><tr><th>Artikel</th><th>Possessiv</th><th>Beispiel</th></tr></thead>
+      <tbody>
+        <tr><td><b>der</b></td><td>mein</td><td>mein Vater</td></tr>
+        <tr><td><b>das</b></td><td>mein</td><td>mein Auto</td></tr>
+        <tr><td><b>die</b></td><td>meine</td><td>meine Mutter</td></tr>
+        <tr><td><b>Plural</b></td><td>meine</td><td>meine Eltern</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="game-sort"></div>
+
+  <!-- ===== Aufgabe 2: Drag & Drop — Nominativ ===== -->
+  <div class="card">
+    <span class="badge">Aufgabe 2</span>
+    <h2>L&uuml;ckens&auml;tze &mdash; Nominativ</h2>
+    <p>Zieh den richtigen Possessivartikel in die L&uuml;cke.</p>
+    <table class="table">
+      <thead><tr><th></th><th>der / das</th><th>die / Plural</th></tr></thead>
+      <tbody>
+        <tr><td><b>ich</b></td><td>mein</td><td>meine</td></tr>
+        <tr><td><b>du</b></td><td>dein</td><td>deine</td></tr>
+        <tr><td><b>er/es</b></td><td>sein</td><td>seine</td></tr>
+        <tr><td><b>sie</b></td><td>ihr</td><td>ihre</td></tr>
+        <tr><td><b>wir</b></td><td>unser</td><td>unsere</td></tr>
+        <tr><td><b>ihr</b></td><td>euer</td><td>eure</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="game-dd"></div>
+
+  <!-- ===== Aufgabe 3: Quiz — Akkusativ ===== -->
+  <div class="card">
+    <span class="badge">Aufgabe 3</span>
+    <h2>Akkusativ &mdash; meinen, deinen &hellip;</h2>
+    <p>Im Akkusativ &auml;ndert sich nur <b>maskulin</b> (der): mein &rarr; mein<b>en</b>.</p>
+    <table class="table">
+      <thead><tr><th></th><th>Nominativ</th><th>Akkusativ</th></tr></thead>
+      <tbody>
+        <tr><td><b>der</b> Bruder</td><td>mein Bruder</td><td>mein<b>en</b> Bruder</td></tr>
+        <tr><td><b>das</b> Auto</td><td>mein Auto</td><td>mein Auto</td></tr>
+        <tr><td><b>die</b> Schwester</td><td>meine Schwester</td><td>meine Schwester</td></tr>
+        <tr><td><b>Plural</b></td><td>meine Kinder</td><td>meine Kinder</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="game-quiz"></div>
+
+  <!-- ===== Aufgabe 4: Schreibübung — Nominativ ===== -->
+  <div class="card">
+    <span class="badge">Aufgabe 4</span>
+    <h2>Schreib&uuml;bung &mdash; Nominativ</h2>
+    <p>Schreib den richtigen Possessivartikel in das Feld. Der Hinweis zeigt dir die Person und den Artikel.</p>
+  </div>
+  <div id="game-write"></div>
+
+  <!-- ===== Aufgabe 5: Bilder & Personen ===== -->
+  <div class="card">
+    <span class="badge">Aufgabe 5</span>
+    <h2>Wem geh&ouml;rt das?</h2>
+    <p>Du siehst einen Gegenstand und eine Person: <b>ich</b>, <b>du</b>, <b>er</b>, <b>sie</b>, <b>wir</b> oder <b>ihr</b>. Schreib den Possessivartikel <b>und</b> das Nomen, z.B. <b>sein Hund</b>.</p>
+  </div>
+  <div id="game-icon"></div>
+
+</main>
+
+<footer class="site-footer">Bird is the Word &middot; Deutsch lernen</footer>
+
+<script src="../assets/engine.js?v=20260810"></script>
+<script>
+/* ================================================================
+   Aufgabe 1 — Sortierspiel: mein oder meine? (Nominativ)
+   ================================================================ */
+sortGame("#game-sort", {
+  buckets: [{ label: "mein" }, { label: "meine" }],
+  sets: [
+    [
+      { text: "Vater (der)", bucket: 0, explain: "der Vater -> mein" },
+      { text: "Mutter (die)", bucket: 1, explain: "die Mutter -> meine" },
+      { text: "Auto (das)", bucket: 0, explain: "das Auto -> mein" },
+      { text: "Schwester (die)", bucket: 1, explain: "die Schwester -> meine" },
+      { text: "Handy (das)", bucket: 0, explain: "das Handy -> mein" },
+      { text: "Eltern (Plural)", bucket: 1, explain: "die Eltern -> meine" },
+      { text: "Bruder (der)", bucket: 0, explain: "der Bruder -> mein" },
+      { text: "Wohnung (die)", bucket: 1, explain: "die Wohnung -> meine" },
+      { text: "Kind (das)", bucket: 0, explain: "das Kind -> mein" },
+      { text: "Opa (der)", bucket: 0, explain: "der Opa -> mein" },
+      { text: "Oma (die)", bucket: 1, explain: "die Oma -> meine" },
+      { text: "Garten (der)", bucket: 0, explain: "der Garten -> mein" },
+      { text: "Küche (die)", bucket: 1, explain: "die Küche -> meine" },
+      { text: "Zimmer (das)", bucket: 0, explain: "das Zimmer -> mein" },
+      { text: "Familie (die)", bucket: 1, explain: "die Familie -> meine" },
+    ],
+    [
+      { text: "Hund (der)", bucket: 0, explain: "der Hund -> mein" },
+      { text: "Katze (die)", bucket: 1, explain: "die Katze -> meine" },
+      { text: "Buch (das)", bucket: 0, explain: "das Buch -> mein" },
+      { text: "Tasche (die)", bucket: 1, explain: "die Tasche -> meine" },
+      { text: "Schlüssel (der)", bucket: 0, explain: "der Schlüssel -> mein" },
+      { text: "Brille (die)", bucket: 1, explain: "die Brille -> meine" },
+      { text: "Kinder (Plural)", bucket: 1, explain: "die Kinder -> meine" },
+      { text: "Fahrrad (das)", bucket: 0, explain: "das Fahrrad -> mein" },
+      { text: "Rucksack (der)", bucket: 0, explain: "der Rucksack -> mein" },
+      { text: "Jacke (die)", bucket: 1, explain: "die Jacke -> meine" },
+      { text: "Uhr (die)", bucket: 1, explain: "die Uhr -> meine" },
+      { text: "Stuhl (der)", bucket: 0, explain: "der Stuhl -> mein" },
+      { text: "Lampe (die)", bucket: 1, explain: "die Lampe -> meine" },
+      { text: "Teller (der)", bucket: 0, explain: "der Teller -> mein" },
+      { text: "Glas (das)", bucket: 0, explain: "das Glas -> mein" },
+    ],
+    [
+      { text: "Lehrer (der)", bucket: 0, explain: "der Lehrer -> mein" },
+      { text: "Lehrerin (die)", bucket: 1, explain: "die Lehrerin -> meine" },
+      { text: "Büro (das)", bucket: 0, explain: "das Büro -> mein" },
+      { text: "Computer (der)", bucket: 0, explain: "der Computer -> mein" },
+      { text: "Telefon (das)", bucket: 0, explain: "das Telefon -> mein" },
+      { text: "Adresse (die)", bucket: 1, explain: "die Adresse -> meine" },
+      { text: "Freunde (Plural)", bucket: 1, explain: "die Freunde -> meine" },
+      { text: "Stift (der)", bucket: 0, explain: "der Stift -> mein" },
+      { text: "Heft (das)", bucket: 0, explain: "das Heft -> mein" },
+      { text: "Klasse (die)", bucket: 1, explain: "die Klasse -> meine" },
+      { text: "Tisch (der)", bucket: 0, explain: "der Tisch -> mein" },
+      { text: "Schule (die)", bucket: 1, explain: "die Schule -> meine" },
+      { text: "Aufgaben (Plural)", bucket: 1, explain: "die Aufgaben -> meine" },
+      { text: "Pause (die)", bucket: 1, explain: "die Pause -> meine" },
+      { text: "Kalender (der)", bucket: 0, explain: "der Kalender -> mein" },
+    ],
+    [
+      { text: "Name (der)", bucket: 0, explain: "der Name -> mein" },
+      { text: "E-Mail (die)", bucket: 1, explain: "die E-Mail -> meine" },
+      { text: "Hobby (das)", bucket: 0, explain: "das Hobby -> mein" },
+      { text: "Freund (der)", bucket: 0, explain: "der Freund -> mein" },
+      { text: "Nummer (die)", bucket: 1, explain: "die Nummer -> meine" },
+      { text: "Foto (das)", bucket: 0, explain: "das Foto -> mein" },
+      { text: "Geschwister (Plural)", bucket: 1, explain: "die Geschwister -> meine" },
+      { text: "Geburtstag (der)", bucket: 0, explain: "der Geburtstag -> mein" },
+      { text: "Lieblingsfarbe (die)", bucket: 1, explain: "die Lieblingsfarbe -> meine" },
+      { text: "Frühstück (das)", bucket: 0, explain: "das Frühstück -> mein" },
+      { text: "Idee (die)", bucket: 1, explain: "die Idee -> meine" },
+      { text: "Traum (der)", bucket: 0, explain: "der Traum -> mein" },
+      { text: "Leben (das)", bucket: 0, explain: "das Leben -> mein" },
+      { text: "Arbeit (die)", bucket: 1, explain: "die Arbeit -> meine" },
+      { text: "Musik (die)", bucket: 1, explain: "die Musik -> meine" },
+    ],
+  ],
+});
+
+/* ================================================================
+   Aufgabe 2 — Drag & Drop: Lückensätze Nominativ
+   ================================================================ */
+dragDropGame("#game-dd", {
+  words: ["mein", "meine", "dein", "deine", "sein", "seine", "ihr", "ihre", "unser", "unsere"],
+  sets: [
+    [
+      { sentence: "Das ist ____ Mutter.", answer: "meine", explain: "ich + die Mutter -> meine" },
+      { sentence: "____ Bruder heißt Paul.", answer: "mein", explain: "ich + der Bruder -> mein" },
+      { sentence: "Ist das ____ Handy, Anna?", answer: "dein", explain: "du + das Handy -> dein" },
+      { sentence: "Wo ist ____ Tasche, Tom?", answer: "deine", explain: "du + die Tasche -> deine" },
+      { sentence: "____ Auto ist neu.", answer: "mein", explain: "ich + das Auto -> mein" },
+      { sentence: "Sind das ____ Schuhe?", answer: "deine", explain: "du + Plural -> deine" },
+      { sentence: "____ Vater arbeitet viel.", answer: "mein", explain: "ich + der Vater -> mein" },
+      { sentence: "Wo sind ____ Schlüssel?", answer: "meine", explain: "ich + Plural -> meine" },
+      { sentence: "Ist ____ Wohnung groß?", answer: "deine", explain: "du + die Wohnung -> deine" },
+      { sentence: "____ Katze ist schwarz.", answer: "meine", explain: "ich + die Katze -> meine" },
+      { sentence: "____ Zimmer ist klein.", answer: "dein", explain: "du + das Zimmer -> dein" },
+      { sentence: "Das ist ____ Fahrrad.", answer: "mein", explain: "ich + das Fahrrad -> mein" },
+      { sentence: "____ Freunde kommen heute.", answer: "meine", explain: "ich + Plural -> meine" },
+      { sentence: "Ist ____ Hund lieb?", answer: "dein", explain: "du + der Hund -> dein" },
+      { sentence: "____ Familie wohnt hier.", answer: "meine", explain: "ich + die Familie -> meine" },
+    ],
+    [
+      { sentence: "____ Vater kommt aus Berlin.", answer: "sein", explain: "er + der Vater -> sein" },
+      { sentence: "____ Schwester wohnt in München.", answer: "seine", explain: "er + die Schwester -> seine" },
+      { sentence: "____ Hund ist sehr groß.", answer: "ihr", explain: "sie + der Hund -> ihr" },
+      { sentence: "____ Kinder sind noch klein.", answer: "ihre", explain: "sie + Plural -> ihre" },
+      { sentence: "Das ist ____ Buch.", answer: "sein", explain: "er + das Buch -> sein" },
+      { sentence: "____ Wohnung ist schön.", answer: "ihre", explain: "sie + die Wohnung -> ihre" },
+      { sentence: "____ Auto ist alt.", answer: "sein", explain: "er + das Auto -> sein" },
+      { sentence: "____ Mutter kocht gut.", answer: "seine", explain: "er + die Mutter -> seine" },
+      { sentence: "____ Bruder studiert.", answer: "ihr", explain: "sie + der Bruder -> ihr" },
+      { sentence: "____ Katze heißt Mimi.", answer: "ihre", explain: "sie + die Katze -> ihre" },
+      { sentence: "____ Handy klingelt.", answer: "sein", explain: "er + das Handy -> sein" },
+      { sentence: "____ Freunde sind nett.", answer: "seine", explain: "er + Plural -> seine" },
+      { sentence: "____ Tasche ist neu.", answer: "ihre", explain: "sie + die Tasche -> ihre" },
+      { sentence: "____ Name ist Müller.", answer: "sein", explain: "er + der Name -> sein" },
+      { sentence: "____ Eltern leben in Hamburg.", answer: "ihre", explain: "sie + Plural -> ihre" },
+    ],
+    [
+      { sentence: "____ Lehrer ist sehr nett.", answer: "unser", explain: "wir + der Lehrer -> unser" },
+      { sentence: "____ Schule ist groß.", answer: "unsere", explain: "wir + die Schule -> unsere" },
+      { sentence: "Das ist ____ Haus.", answer: "unser", explain: "wir + das Haus -> unser" },
+      { sentence: "____ Freunde kommen heute.", answer: "unsere", explain: "wir + Plural -> unsere" },
+      { sentence: "____ Hund heißt Bello.", answer: "unser", explain: "wir + der Hund -> unser" },
+      { sentence: "____ Stadt ist klein.", answer: "unsere", explain: "wir + die Stadt -> unsere" },
+      { sentence: "____ Auto steht draußen.", answer: "unser", explain: "wir + das Auto -> unser" },
+      { sentence: "____ Küche ist modern.", answer: "unsere", explain: "wir + die Küche -> unsere" },
+      { sentence: "____ Garten ist schön.", answer: "unser", explain: "wir + der Garten -> unser" },
+      { sentence: "____ Kinder spielen draußen.", answer: "unsere", explain: "wir + Plural -> unsere" },
+      { sentence: "____ Nachbar ist freundlich.", answer: "unser", explain: "wir + der Nachbar -> unser" },
+      { sentence: "____ Wohnung hat drei Zimmer.", answer: "unsere", explain: "wir + die Wohnung -> unsere" },
+      { sentence: "____ Büro ist im Zentrum.", answer: "unser", explain: "wir + das Büro -> unser" },
+      { sentence: "____ Lehrerin kommt aus Spanien.", answer: "unsere", explain: "wir + die Lehrerin -> unsere" },
+      { sentence: "____ Telefon ist kaputt.", answer: "unser", explain: "wir + das Telefon -> unser" },
+    ],
+    [
+      { sentence: "____ Name ist Müller.", answer: "mein", explain: "ich + der Name -> mein" },
+      { sentence: "Wo sind ____ Schlüssel?", answer: "seine", explain: "er + Plural -> seine" },
+      { sentence: "Ist ____ Adresse richtig?", answer: "deine", explain: "du + die Adresse -> deine" },
+      { sentence: "____ Familie wohnt in Köln.", answer: "seine", explain: "er + die Familie -> seine" },
+      { sentence: "____ Büro ist im zweiten Stock.", answer: "ihr", explain: "sie + das Büro -> ihr" },
+      { sentence: "____ Katze schläft gern.", answer: "unsere", explain: "wir + die Katze -> unsere" },
+      { sentence: "Ist das ____ Buch?", answer: "dein", explain: "du + das Buch -> dein" },
+      { sentence: "____ Eltern kommen morgen.", answer: "meine", explain: "ich + Plural -> meine" },
+      { sentence: "____ Bruder ist Arzt.", answer: "ihr", explain: "sie + der Bruder -> ihr" },
+      { sentence: "Das ist ____ Fahrrad.", answer: "unser", explain: "wir + das Fahrrad -> unser" },
+      { sentence: "____ Hund bellt laut.", answer: "sein", explain: "er + der Hund -> sein" },
+      { sentence: "____ Freundin heißt Sara.", answer: "meine", explain: "ich + die Freundin -> meine" },
+      { sentence: "____ Haus ist sehr alt.", answer: "ihr", explain: "sie + das Haus -> ihr" },
+      { sentence: "____ Kinder gehen zur Schule.", answer: "unsere", explain: "wir + Plural -> unsere" },
+      { sentence: "____ Nachbarin ist Lehrerin.", answer: "seine", explain: "er + die Nachbarin -> seine" },
+    ],
+  ],
+});
+
+/* ================================================================
+   Aufgabe 3 — Quiz: Akkusativ
+   ================================================================ */
+quizGame("#game-quiz", {
+  sets: [
+    [
+      { q: "Ich suche ____ Schlüssel. (der)", options: ["mein", "meinen", "meine"], answer: 1, explain: "Akkusativ + der -> meinen." },
+      { q: "Ich liebe ____ Familie. (die)", options: ["meinen", "meine", "mein"], answer: 1, explain: "Akkusativ + die -> meine (keine Änderung)." },
+      { q: "Ich brauche ____ Handy. (das)", options: ["meinen", "mein", "meine"], answer: 1, explain: "Akkusativ + das -> mein (keine Änderung)." },
+      { q: "Ich rufe ____ Bruder an. (der)", options: ["meinen", "mein", "meine"], answer: 0, explain: "Akkusativ + der -> meinen." },
+      { q: "Ich sehe ____ Kinder. (Plural)", options: ["meinen", "mein", "meine"], answer: 2, explain: "Akkusativ + Plural -> meine (keine Änderung)." },
+      { q: "Ich finde ____ Tasche nicht. (die)", options: ["meine", "meinen", "mein"], answer: 0, explain: "Akkusativ + die -> meine (keine Änderung)." },
+      { q: "Ich nehme ____ Rucksack. (der)", options: ["mein", "meine", "meinen"], answer: 2, explain: "Akkusativ + der -> meinen." },
+      { q: "Ich hole ____ Jacke. (die)", options: ["meine", "meinen", "mein"], answer: 0, explain: "Akkusativ + die -> meine (keine Änderung)." },
+      { q: "Ich lese ____ Buch. (das)", options: ["meinen", "mein", "meine"], answer: 1, explain: "Akkusativ + das -> mein (keine Änderung)." },
+      { q: "Ich besuche ____ Oma. (die)", options: ["mein", "meinen", "meine"], answer: 2, explain: "Akkusativ + die -> meine (keine Änderung)." },
+      { q: "Ich vergesse ____ Termin. (der)", options: ["meinen", "mein", "meine"], answer: 0, explain: "Akkusativ + der -> meinen." },
+      { q: "Ich wasche ____ Auto. (das)", options: ["meine", "mein", "meinen"], answer: 1, explain: "Akkusativ + das -> mein (keine Änderung)." },
+      { q: "Ich kenne ____ Lehrer. (der)", options: ["mein", "meine", "meinen"], answer: 2, explain: "Akkusativ + der -> meinen." },
+      { q: "Ich trinke ____ Kaffee. (der)", options: ["meine", "meinen", "mein"], answer: 1, explain: "Akkusativ + der -> meinen." },
+      { q: "Ich mache ____ Hausaufgaben. (Plural)", options: ["meinen", "meine", "mein"], answer: 1, explain: "Akkusativ + Plural -> meine (keine Änderung)." },
+    ],
+    [
+      { q: "Hast du ____ Hund dabei? (der)", options: ["dein", "deinen", "deine"], answer: 1, explain: "Akkusativ + der -> deinen." },
+      { q: "Kennst du ____ Nachbarin? (die)", options: ["deinen", "dein", "deine"], answer: 2, explain: "Akkusativ + die -> deine (keine Änderung)." },
+      { q: "Nimmst du ____ Auto? (das)", options: ["deinen", "deine", "dein"], answer: 2, explain: "Akkusativ + das -> dein (keine Änderung)." },
+      { q: "Rufst du ____ Vater an? (der)", options: ["dein", "deinen", "deine"], answer: 1, explain: "Akkusativ + der -> deinen." },
+      { q: "Bringst du ____ Freunde mit? (Plural)", options: ["deinen", "deine", "dein"], answer: 1, explain: "Akkusativ + Plural -> deine (keine Änderung)." },
+      { q: "Vergisst du ____ Brille? (die)", options: ["deinen", "dein", "deine"], answer: 2, explain: "Akkusativ + die -> deine (keine Änderung)." },
+      { q: "Liebst du ____ Arbeit? (die)", options: ["dein", "deine", "deinen"], answer: 1, explain: "Akkusativ + die -> deine (keine Änderung)." },
+      { q: "Trinkst du ____ Tee? (der)", options: ["deinen", "dein", "deine"], answer: 0, explain: "Akkusativ + der -> deinen." },
+      { q: "Machst du ____ Bett? (das)", options: ["deine", "dein", "deinen"], answer: 1, explain: "Akkusativ + das -> dein (keine Änderung)." },
+      { q: "Findest du ____ Schlüssel? (der)", options: ["dein", "deine", "deinen"], answer: 2, explain: "Akkusativ + der -> deinen." },
+      { q: "Liest du ____ E-Mails? (Plural)", options: ["deinen", "deine", "dein"], answer: 1, explain: "Akkusativ + Plural -> deine (keine Änderung)." },
+      { q: "Brauchst du ____ Laptop? (der)", options: ["deine", "deinen", "dein"], answer: 1, explain: "Akkusativ + der -> deinen." },
+      { q: "Räumst du ____ Zimmer auf? (das)", options: ["deinen", "dein", "deine"], answer: 1, explain: "Akkusativ + das -> dein (keine Änderung)." },
+      { q: "Siehst du ____ Schwester oft? (die)", options: ["dein", "deinen", "deine"], answer: 2, explain: "Akkusativ + die -> deine (keine Änderung)." },
+      { q: "Packst du ____ Koffer? (der)", options: ["deinen", "dein", "deine"], answer: 0, explain: "Akkusativ + der -> deinen." },
+    ],
+    [
+      { q: "Er besucht ____ Oma. (die)", options: ["seinen", "sein", "seine"], answer: 2, explain: "er + Akk. + die -> seine." },
+      { q: "Er trinkt ____ Kaffee. (der)", options: ["sein", "seinen", "seine"], answer: 1, explain: "er + Akk. + der -> seinen." },
+      { q: "Sie liebt ____ Mann. (der)", options: ["ihr", "ihren", "ihre"], answer: 1, explain: "sie + Akk. + der -> ihren." },
+      { q: "Sie nimmt ____ Tasche. (die)", options: ["ihren", "ihr", "ihre"], answer: 2, explain: "sie + Akk. + die -> ihre." },
+      { q: "Er findet ____ Buch gut. (das)", options: ["seinen", "seine", "sein"], answer: 2, explain: "er + Akk. + das -> sein." },
+      { q: "Sie holt ____ Kinder ab. (Plural)", options: ["ihren", "ihre", "ihr"], answer: 1, explain: "sie + Akk. + Plural -> ihre." },
+      { q: "Er macht ____ Hausaufgaben. (Plural)", options: ["sein", "seine", "seinen"], answer: 1, explain: "er + Akk. + Plural -> seine." },
+      { q: "Sie ruft ____ Bruder an. (der)", options: ["ihre", "ihren", "ihr"], answer: 1, explain: "sie + Akk. + der -> ihren." },
+      { q: "Er wäscht ____ Auto. (das)", options: ["seinen", "sein", "seine"], answer: 1, explain: "er + Akk. + das -> sein." },
+      { q: "Sie kennt ____ Nachbarin. (die)", options: ["ihr", "ihre", "ihren"], answer: 1, explain: "sie + Akk. + die -> ihre." },
+      { q: "Er sucht ____ Handy. (das)", options: ["seine", "sein", "seinen"], answer: 1, explain: "er + Akk. + das -> sein." },
+      { q: "Sie vergisst ____ Termin. (der)", options: ["ihren", "ihr", "ihre"], answer: 0, explain: "sie + Akk. + der -> ihren." },
+      { q: "Er braucht ____ Laptop. (der)", options: ["sein", "seine", "seinen"], answer: 2, explain: "er + Akk. + der -> seinen." },
+      { q: "Sie liest ____ Buch. (das)", options: ["ihre", "ihren", "ihr"], answer: 2, explain: "sie + Akk. + das -> ihr." },
+      { q: "Er mag ____ Lehrerin. (die)", options: ["seinen", "seine", "sein"], answer: 1, explain: "er + Akk. + die -> seine." },
+    ],
+    [
+      { q: "____ Bruder kommt morgen. (ich, Nominativ, der)", options: ["meinen", "mein", "meine"], answer: 1, explain: "Nominativ + der -> mein." },
+      { q: "Ich besuche ____ Bruder. (ich, Akkusativ, der)", options: ["mein", "meinen", "meine"], answer: 1, explain: "Akkusativ + der -> meinen." },
+      { q: "____ Lehrerin ist nett. (wir, Nominativ, die)", options: ["unseren", "unser", "unsere"], answer: 2, explain: "Nominativ + die -> unsere." },
+      { q: "Wir mögen ____ Lehrerin. (wir, Akkusativ, die)", options: ["unseren", "unsere", "unser"], answer: 1, explain: "Akkusativ + die -> unsere (keine Änderung)." },
+      { q: "____ Hund ist süß. (du, Nominativ, der)", options: ["deinen", "deine", "dein"], answer: 2, explain: "Nominativ + der -> dein." },
+      { q: "Ich sehe ____ Hund. (du, Akkusativ, der)", options: ["dein", "deine", "deinen"], answer: 2, explain: "Akkusativ + der -> deinen." },
+      { q: "____ Auto ist rot. (er, Nominativ, das)", options: ["seinen", "sein", "seine"], answer: 1, explain: "Nominativ + das -> sein." },
+      { q: "Er verkauft ____ Auto. (er, Akkusativ, das)", options: ["sein", "seinen", "seine"], answer: 0, explain: "Akkusativ + das -> sein (keine Änderung)." },
+      { q: "____ Katze schläft. (sie, Nominativ, die)", options: ["ihr", "ihren", "ihre"], answer: 2, explain: "Nominativ + die -> ihre." },
+      { q: "Sie füttert ____ Katze. (sie, Akkusativ, die)", options: ["ihren", "ihre", "ihr"], answer: 1, explain: "Akkusativ + die -> ihre (keine Änderung)." },
+      { q: "____ Freund wohnt in Berlin. (ich, Nominativ, der)", options: ["mein", "meinen", "meine"], answer: 0, explain: "Nominativ + der -> mein." },
+      { q: "Ich rufe ____ Freund an. (ich, Akkusativ, der)", options: ["mein", "meine", "meinen"], answer: 2, explain: "Akkusativ + der -> meinen." },
+      { q: "____ Kinder spielen draußen. (wir, Nominativ, Plural)", options: ["unser", "unsere", "unseren"], answer: 1, explain: "Nominativ + Plural -> unsere." },
+      { q: "Wir holen ____ Kinder ab. (wir, Akkusativ, Plural)", options: ["unseren", "unser", "unsere"], answer: 2, explain: "Akkusativ + Plural -> unsere (keine Änderung)." },
+      { q: "Er liebt ____ Schwester. (er, Akkusativ, die)", options: ["seinen", "seine", "sein"], answer: 1, explain: "Akkusativ + die -> seine (keine Änderung)." },
+    ],
+  ],
+});
+
+/* ================================================================
+   Aufgabe 4 — Schreibübung: Nominativ
+   ================================================================ */
+(function() {
+  var root = document.querySelector("#game-write");
+  if (!root) return;
+  var sets = [
+    [
+      { sentence: "Das ist ____ Vater.", hint: "ich + der Vater", answer: "mein" },
+      { sentence: "____ Mutter kocht gut.", hint: "ich + die Mutter", answer: "meine" },
+      { sentence: "Wo ist ____ Handy?", hint: "du + das Handy", answer: "dein" },
+      { sentence: "____ Schwester studiert.", hint: "ich + die Schwester", answer: "meine" },
+      { sentence: "Ist das ____ Auto?", hint: "du + das Auto", answer: "dein" },
+      { sentence: "____ Bruder ist 12.", hint: "ich + der Bruder", answer: "mein" },
+      { sentence: "Ich mag ____ Wohnung.", hint: "ich + die Wohnung", answer: "meine" },
+      { sentence: "Wo sind ____ Schlüssel?", hint: "du + Plural", answer: "deine" },
+      { sentence: "____ Hund ist süß.", hint: "du + der Hund", answer: "dein" },
+      { sentence: "Das ist ____ Buch.", hint: "ich + das Buch", answer: "mein" },
+      { sentence: "____ Katze schläft.", hint: "du + die Katze", answer: "deine" },
+      { sentence: "Hier ist ____ Tasche.", hint: "ich + die Tasche", answer: "meine" },
+      { sentence: "____ Eltern sind nett.", hint: "du + Plural", answer: "deine" },
+      { sentence: "Ich suche ____ Brille.", hint: "ich + die Brille", answer: "meine" },
+      { sentence: "____ Zimmer ist groß.", hint: "du + das Zimmer", answer: "dein" },
+    ],
+    [
+      { sentence: "____ Vater arbeitet viel.", hint: "er + der Vater", answer: "sein" },
+      { sentence: "____ Schwester ist Ärztin.", hint: "er + die Schwester", answer: "seine" },
+      { sentence: "____ Hund bellt laut.", hint: "sie + der Hund", answer: "ihr" },
+      { sentence: "____ Kinder sind klein.", hint: "sie + Plural", answer: "ihre" },
+      { sentence: "Das ist ____ Buch.", hint: "er + das Buch", answer: "sein" },
+      { sentence: "____ Wohnung ist schön.", hint: "sie + die Wohnung", answer: "ihre" },
+      { sentence: "____ Auto ist alt.", hint: "er + das Auto", answer: "sein" },
+      { sentence: "____ Mutter kommt morgen.", hint: "er + die Mutter", answer: "seine" },
+      { sentence: "____ Bruder studiert.", hint: "sie + der Bruder", answer: "ihr" },
+      { sentence: "____ Katze heißt Mimi.", hint: "sie + die Katze", answer: "ihre" },
+      { sentence: "____ Handy klingelt.", hint: "er + das Handy", answer: "sein" },
+      { sentence: "____ Freunde sind nett.", hint: "er + Plural", answer: "seine" },
+      { sentence: "____ Tasche ist neu.", hint: "sie + die Tasche", answer: "ihre" },
+      { sentence: "____ Name ist Müller.", hint: "er + der Name", answer: "sein" },
+      { sentence: "____ Eltern leben in Hamburg.", hint: "sie + Plural", answer: "ihre" },
+    ],
+    [
+      { sentence: "____ Lehrer ist nett.", hint: "wir + der Lehrer", answer: "unser" },
+      { sentence: "____ Schule ist groß.", hint: "wir + die Schule", answer: "unsere" },
+      { sentence: "Das ist ____ Haus.", hint: "wir + das Haus", answer: "unser" },
+      { sentence: "____ Freunde kommen.", hint: "wir + Plural", answer: "unsere" },
+      { sentence: "____ Hund heißt Bello.", hint: "wir + der Hund", answer: "unser" },
+      { sentence: "____ Stadt ist klein.", hint: "wir + die Stadt", answer: "unsere" },
+      { sentence: "____ Auto steht draußen.", hint: "wir + das Auto", answer: "unser" },
+      { sentence: "____ Küche ist modern.", hint: "wir + die Küche", answer: "unsere" },
+      { sentence: "____ Garten ist schön.", hint: "wir + der Garten", answer: "unser" },
+      { sentence: "____ Kinder spielen gern.", hint: "wir + Plural", answer: "unsere" },
+      { sentence: "____ Nachbar ist freundlich.", hint: "wir + der Nachbar", answer: "unser" },
+      { sentence: "____ Wohnung hat drei Zimmer.", hint: "wir + die Wohnung", answer: "unsere" },
+      { sentence: "____ Büro ist zentral.", hint: "wir + das Büro", answer: "unser" },
+      { sentence: "____ Lehrerin kommt aus Spanien.", hint: "wir + die Lehrerin", answer: "unsere" },
+      { sentence: "____ Telefon ist kaputt.", hint: "wir + das Telefon", answer: "unser" },
+    ],
+    [
+      { sentence: "____ Name ist Lang.", hint: "ich + der Name", answer: "mein" },
+      { sentence: "____ Familie wohnt in Köln.", hint: "er + die Familie", answer: "seine" },
+      { sentence: "Ist ____ Adresse richtig?", hint: "du + die Adresse", answer: "deine" },
+      { sentence: "____ Büro ist groß.", hint: "sie + das Büro", answer: "ihr" },
+      { sentence: "____ Katze schläft gern.", hint: "wir + die Katze", answer: "unsere" },
+      { sentence: "Ist das ____ Buch?", hint: "du + das Buch", answer: "dein" },
+      { sentence: "____ Eltern kommen morgen.", hint: "ich + Plural", answer: "meine" },
+      { sentence: "____ Bruder ist Arzt.", hint: "sie + der Bruder", answer: "ihr" },
+      { sentence: "Das ist ____ Fahrrad.", hint: "wir + das Fahrrad", answer: "unser" },
+      { sentence: "____ Hund bellt laut.", hint: "er + der Hund", answer: "sein" },
+      { sentence: "____ Freundin heißt Sara.", hint: "ich + die Freundin", answer: "meine" },
+      { sentence: "____ Haus ist sehr alt.", hint: "sie + das Haus", answer: "ihr" },
+      { sentence: "____ Kinder gehen zur Schule.", hint: "wir + Plural", answer: "unsere" },
+      { sentence: "____ Nachbarin ist Lehrerin.", hint: "er + die Nachbarin", answer: "seine" },
+      { sentence: "____ Rucksack ist schwer.", hint: "du + der Rucksack", answer: "dein" },
+    ],
+  ];
+  var messages = { three: "Perfekt!", two: "Gut gemacht!", one: "Weiter üben!" };
+  var currentSet = 0, items = [], idx = 0, score = 0, answered = false;
+
+  root.innerHTML =
+    setBarHTML(sets.length) +
+    '<div class="quiz-bar">' +
+      '<span>Satz <b data-q>1</b> / <span data-total>0</span></span>' +
+      '<span>Punkte <b data-score>0</b></span>' +
+    '</div>' +
+    '<div class="card">' +
+      '<h2 data-sentence></h2>' +
+      '<p class="write-hint" data-hint></p>' +
+      '<div class="write-row">' +
+        '<input type="text" data-input class="write-input" placeholder="..." autocomplete="off" spellcheck="false">' +
+        '<button class="btn btn-primary" data-check>Prüfen</button>' +
+      '</div>' +
+      '<div class="hint" data-explain hidden></div>' +
+      '<button class="btn btn-primary" data-next hidden>Weiter →</button>' +
+    '</div>' +
+    gameOverlayHTML();
+
+  var sentenceEl = root.querySelector("[data-sentence]");
+  var hintEl = root.querySelector("[data-hint]");
+  var inputEl = root.querySelector("[data-input]");
+  var checkBtn = root.querySelector("[data-check]");
+  var explainEl = root.querySelector("[data-explain]");
+  var nextBtn = root.querySelector("[data-next]");
+  var qNum = root.querySelector("[data-q]");
+  var totalEl = root.querySelector("[data-total]");
+  var scoreEl = root.querySelector("[data-score]");
+
+  function render() {
+    var item = items[idx];
+    answered = false;
+    qNum.textContent = idx + 1;
+    sentenceEl.textContent = item.sentence;
+    hintEl.textContent = item.hint;
+    inputEl.value = "";
+    inputEl.disabled = false;
+    inputEl.className = "write-input";
+    checkBtn.hidden = false;
+    explainEl.hidden = true;
+    nextBtn.hidden = true;
+    inputEl.focus();
+  }
+  function check() {
+    if (answered) return;
+    var val = inputEl.value.trim();
+    if (!val) return;
+    answered = true;
+    var item = items[idx];
+    var ok = val.toLowerCase() === item.answer.toLowerCase();
+    inputEl.disabled = true;
+    checkBtn.hidden = true;
+    if (ok) {
+      inputEl.classList.add("correct");
+      score++; scoreEl.textContent = score;
+      explainEl.textContent = "Richtig!";
+    } else {
+      inputEl.classList.add("wrong");
+      explainEl.innerHTML = "Richtig ist: <b>" + item.answer + "</b>";
+    }
+    explainEl.hidden = false;
+    nextBtn.hidden = false;
+  }
+  checkBtn.addEventListener("click", check);
+  inputEl.addEventListener("keydown", function(e) { if (e.key === "Enter") check(); });
+  nextBtn.addEventListener("click", function() {
+    if (idx < items.length - 1) { idx++; render(); }
+    else {
+      var stars = starsByRatio(score, items.length);
+      showGameOverlay(root, stars,
+        stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+        "Richtig: " + score + " / " + items.length);
+    }
+  });
+  function loadSet(i) {
+    currentSet = i;
+    items = shuffle(sets[i]);
+    idx = 0; score = 0; scoreEl.textContent = "0";
+    totalEl.textContent = items.length;
+    updateSetLabel(root, i);
+    root.querySelector("[data-overlay]").hidden = true;
+    render();
+  }
+  root.querySelector("[data-again]").addEventListener("click", function() { loadSet(currentSet); });
+  wireSetBar(root, sets.length, loadSet, function() { return currentSet; });
+  loadSet(0);
+})();
+
+/* ================================================================
+   Aufgabe 5 — Bilder & Personen: Wem gehört das?
+   ================================================================ */
+(function() {
+  var root = document.querySelector("#game-icon");
+  if (!root) return;
+
+  var ICO = {
+    Hund: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="26" cy="30" rx="12" ry="9"/><circle cx="18" cy="20" r="7"/><path d="M13 14l-3-6m10 4l3-6"/><circle cx="16" cy="19" r="1.5" fill="currentColor" stroke="none"/><path d="M38 28q4-4 2-10"/></svg>',
+    Schlüssel: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="7"/><circle cx="16" cy="16" r="3"/><path d="M22 22l18 18m-3-1l3-6m-6 3l6-3"/></svg>',
+    Stuhl: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8v22h20V8M14 22h20M14 30v10m20-10v10"/></svg>',
+    Apfel: '<svg viewBox="0 0 48 48" fill="currentColor"><path d="M24 16c-10 0-14 7-14 14s6 10 14 10 14-2 14-10-4-14-14-14z" opacity=".8"/><path d="M24 16c0-5 4-10 4-10" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="10" rx="4" ry="2" opacity=".5"/></svg>',
+    Stift: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 36l2-8L36 6l4 4L18 32z"/><path d="M14 28l6 6"/></svg>',
+    Katze: '<svg viewBox="0 0 48 48" fill="currentColor"><circle cx="24" cy="26" r="11" opacity=".8"/><path d="M15 17l-5-12h8zm18 0l-3-12h8z"/><circle cx="20" cy="24" r="2" fill="#fff"/><circle cx="28" cy="24" r="2" fill="#fff"/><ellipse cx="24" cy="28" rx="2" ry="1" fill="#fff"/></svg>',
+    Tasche: '<svg viewBox="0 0 48 48" fill="currentColor"><rect x="10" y="20" width="28" height="20" rx="4" opacity=".8"/><path d="M18 20v-6a6 6 0 0112 0v6" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>',
+    Blume: '<svg viewBox="0 0 48 48" fill="currentColor"><circle cx="24" cy="16" r="5" opacity=".7"/><circle cx="18" cy="12" r="5" opacity=".5"/><circle cx="30" cy="12" r="5" opacity=".5"/><circle cx="18" cy="20" r="5" opacity=".4"/><circle cx="30" cy="20" r="5" opacity=".4"/><circle cx="24" cy="16" r="3" fill="#fff"/><path d="M24 22v20" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+    Tasse: '<svg viewBox="0 0 48 48" fill="currentColor"><rect x="10" y="14" width="22" height="18" rx="3" opacity=".8"/><path d="M32 20a6 6 0 010 10" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="8" y="34" width="28" height="4" rx="2" opacity=".4"/></svg>',
+    Uhr: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="24" cy="24" r="16"/><path d="M24 14v10l7 7"/><circle cx="24" cy="24" r="2" fill="currentColor"/></svg>',
+    Auto: '<svg viewBox="0 0 48 48" fill="currentColor"><path d="M8 28h32l-5-10H13z" opacity=".6"/><rect x="6" y="28" width="36" height="7" rx="3" opacity=".8"/><circle cx="14" cy="35" r="4"/><circle cx="34" cy="35" r="4"/><circle cx="14" cy="35" r="2" fill="#fff"/><circle cx="34" cy="35" r="2" fill="#fff"/></svg>',
+    Haus: '<svg viewBox="0 0 48 48" fill="currentColor"><path d="M6 24L24 8l18 16z" opacity=".5"/><rect x="12" y="24" width="24" height="18" opacity=".8"/><rect x="20" y="30" width="8" height="12" fill="#fff"/></svg>',
+    Buch: '<svg viewBox="0 0 48 48" fill="currentColor"><path d="M8 10h14v30H10a2 2 0 01-2-2V10z" opacity=".6"/><path d="M22 10h18v28a2 2 0 01-2 2H22V10z" opacity=".8"/><path d="M22 10v30" stroke="#fff" stroke-width="2"/></svg>',
+    Handy: '<svg viewBox="0 0 48 48" fill="currentColor"><rect x="14" y="6" width="20" height="36" rx="4" opacity=".8"/><rect x="17" y="12" width="14" height="20" rx="1" fill="#fff"/><circle cx="24" cy="37" r="2" fill="#fff"/></svg>',
+    Fahrrad: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="32" r="8"/><circle cx="34" cy="32" r="8"/><path d="M14 32l8-14h8l4 14M22 18l-4 14m4-14l12 14"/></svg>',
+  };
+
+  var PERSON_COLORS = {
+    ich: "#4a90d9", du: "#e07b1a", er: "#2a9d5c",
+    sie: "#d93f8b", wir: "#8b5cf6", ihr: "#e04040"
+  };
+
+  var sets = [
+    [
+      { obj: "Hund", person: "ich", answer: "mein Hund" },
+      { obj: "Hund", person: "du", answer: "dein Hund" },
+      { obj: "Hund", person: "er", answer: "sein Hund" },
+      { obj: "Schlüssel", person: "sie", answer: "ihr Schlüssel" },
+      { obj: "Schlüssel", person: "wir", answer: "unser Schlüssel" },
+      { obj: "Schlüssel", person: "ihr", answer: "euer Schlüssel" },
+      { obj: "Stuhl", person: "ich", answer: "mein Stuhl" },
+      { obj: "Stuhl", person: "er", answer: "sein Stuhl" },
+      { obj: "Stuhl", person: "sie", answer: "ihr Stuhl" },
+      { obj: "Apfel", person: "du", answer: "dein Apfel" },
+      { obj: "Apfel", person: "wir", answer: "unser Apfel" },
+      { obj: "Apfel", person: "ihr", answer: "euer Apfel" },
+      { obj: "Stift", person: "ich", answer: "mein Stift" },
+      { obj: "Stift", person: "du", answer: "dein Stift" },
+      { obj: "Stift", person: "er", answer: "sein Stift" },
+    ],
+    [
+      { obj: "Katze", person: "ich", answer: "meine Katze" },
+      { obj: "Katze", person: "du", answer: "deine Katze" },
+      { obj: "Katze", person: "er", answer: "seine Katze" },
+      { obj: "Tasche", person: "sie", answer: "ihre Tasche" },
+      { obj: "Tasche", person: "wir", answer: "unsere Tasche" },
+      { obj: "Tasche", person: "ihr", answer: "eure Tasche" },
+      { obj: "Blume", person: "ich", answer: "meine Blume" },
+      { obj: "Blume", person: "er", answer: "seine Blume" },
+      { obj: "Blume", person: "sie", answer: "ihre Blume" },
+      { obj: "Tasse", person: "du", answer: "deine Tasse" },
+      { obj: "Tasse", person: "wir", answer: "unsere Tasse" },
+      { obj: "Tasse", person: "ihr", answer: "eure Tasse" },
+      { obj: "Uhr", person: "ich", answer: "meine Uhr" },
+      { obj: "Uhr", person: "du", answer: "deine Uhr" },
+      { obj: "Uhr", person: "er", answer: "seine Uhr" },
+    ],
+    [
+      { obj: "Auto", person: "ich", answer: "mein Auto" },
+      { obj: "Auto", person: "du", answer: "dein Auto" },
+      { obj: "Auto", person: "er", answer: "sein Auto" },
+      { obj: "Haus", person: "sie", answer: "ihr Haus" },
+      { obj: "Haus", person: "wir", answer: "unser Haus" },
+      { obj: "Haus", person: "ihr", answer: "euer Haus" },
+      { obj: "Buch", person: "ich", answer: "mein Buch" },
+      { obj: "Buch", person: "er", answer: "sein Buch" },
+      { obj: "Buch", person: "sie", answer: "ihr Buch" },
+      { obj: "Handy", person: "du", answer: "dein Handy" },
+      { obj: "Handy", person: "wir", answer: "unser Handy" },
+      { obj: "Handy", person: "ihr", answer: "euer Handy" },
+      { obj: "Fahrrad", person: "ich", answer: "mein Fahrrad" },
+      { obj: "Fahrrad", person: "du", answer: "dein Fahrrad" },
+      { obj: "Fahrrad", person: "er", answer: "sein Fahrrad" },
+    ],
+    [
+      { obj: "Hund", person: "wir", answer: "unser Hund" },
+      { obj: "Katze", person: "er", answer: "seine Katze" },
+      { obj: "Auto", person: "sie", answer: "ihr Auto" },
+      { obj: "Tasche", person: "ich", answer: "meine Tasche" },
+      { obj: "Buch", person: "du", answer: "dein Buch" },
+      { obj: "Stuhl", person: "ihr", answer: "euer Stuhl" },
+      { obj: "Blume", person: "wir", answer: "unsere Blume" },
+      { obj: "Handy", person: "ich", answer: "mein Handy" },
+      { obj: "Schlüssel", person: "du", answer: "dein Schlüssel" },
+      { obj: "Uhr", person: "sie", answer: "ihre Uhr" },
+      { obj: "Haus", person: "er", answer: "sein Haus" },
+      { obj: "Stift", person: "wir", answer: "unser Stift" },
+      { obj: "Tasse", person: "ihr", answer: "eure Tasse" },
+      { obj: "Fahrrad", person: "ich", answer: "mein Fahrrad" },
+      { obj: "Apfel", person: "sie", answer: "ihr Apfel" },
+    ],
+  ];
+
+  var messages = { three: "Perfekt!", two: "Gut gemacht!", one: "Weiter üben!" };
+  var currentSet = 0, items = [], idx = 0, score = 0, answered = false;
+
+  root.innerHTML =
+    setBarHTML(sets.length) +
+    '<div class="quiz-bar">' +
+      '<span><b data-q>1</b> / <span data-total>0</span></span>' +
+      '<span>Punkte <b data-score>0</b></span>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="icon-pair">' +
+        '<div class="icon-object" data-icon></div>' +
+        '<div class="icon-plus">+</div>' +
+        '<div class="icon-person" data-person></div>' +
+        '<div class="icon-equals">=</div>' +
+        '<div class="icon-answer">' +
+          '<input type="text" data-input class="write-input" placeholder="z.B. sein Hund" autocomplete="off" spellcheck="false">' +
+        '</div>' +
+      '</div>' +
+      '<p class="icon-obj-label" data-obj-label></p>' +
+      '<div class="write-row" style="justify-content:center">' +
+        '<button class="btn btn-primary" data-check>Prüfen</button>' +
+      '</div>' +
+      '<div class="hint" data-explain hidden></div>' +
+      '<button class="btn btn-primary" data-next hidden>Weiter →</button>' +
+    '</div>' +
+    gameOverlayHTML();
+
+  var iconEl = root.querySelector("[data-icon]");
+  var personEl = root.querySelector("[data-person]");
+  var objLabel = root.querySelector("[data-obj-label]");
+  var inputEl = root.querySelector("[data-input]");
+  var checkBtn = root.querySelector("[data-check]");
+  var explainEl = root.querySelector("[data-explain]");
+  var nextBtn = root.querySelector("[data-next]");
+  var qNum = root.querySelector("[data-q]");
+  var totalEl = root.querySelector("[data-total]");
+  var scoreEl = root.querySelector("[data-score]");
+
+  function render() {
+    var item = items[idx];
+    answered = false;
+    qNum.textContent = idx + 1;
+    iconEl.innerHTML = ICO[item.obj] || "";
+    personEl.textContent = item.person;
+    personEl.style.background = PERSON_COLORS[item.person] || "#888";
+    objLabel.textContent = item.obj;
+    inputEl.value = "";
+    inputEl.disabled = false;
+    inputEl.className = "write-input";
+    checkBtn.hidden = false;
+    explainEl.hidden = true;
+    nextBtn.hidden = true;
+    inputEl.focus();
+  }
+  function check() {
+    if (answered) return;
+    var val = inputEl.value.trim();
+    if (!val) return;
+    answered = true;
+    var item = items[idx];
+    var ok = val.toLowerCase() === item.answer.toLowerCase();
+    inputEl.disabled = true;
+    checkBtn.hidden = true;
+    if (ok) {
+      inputEl.classList.add("correct");
+      score++; scoreEl.textContent = score;
+      explainEl.textContent = "Richtig!";
+    } else {
+      inputEl.classList.add("wrong");
+      explainEl.innerHTML = "Richtig ist: <b>" + item.answer + "</b>";
+    }
+    explainEl.hidden = false;
+    nextBtn.hidden = false;
+  }
+  checkBtn.addEventListener("click", check);
+  inputEl.addEventListener("keydown", function(e) { if (e.key === "Enter") check(); });
+  nextBtn.addEventListener("click", function() {
+    if (idx < items.length - 1) { idx++; render(); }
+    else {
+      var stars = starsByRatio(score, items.length);
+      showGameOverlay(root, stars,
+        stars === 3 ? messages.three : stars === 2 ? messages.two : messages.one,
+        "Richtig: " + score + " / " + items.length);
+    }
+  });
+  function loadSet(i) {
+    currentSet = i;
+    items = shuffle(sets[i]);
+    idx = 0; score = 0; scoreEl.textContent = "0";
+    totalEl.textContent = items.length;
+    updateSetLabel(root, i);
+    root.querySelector("[data-overlay]").hidden = true;
+    render();
+  }
+  root.querySelector("[data-again]").addEventListener("click", function() { loadSet(currentSet); });
+  wireSetBar(root, sets.length, loadSet, function() { return currentSet; });
+  loadSet(0);
+})();
+</script>
+</body>
+</html>
