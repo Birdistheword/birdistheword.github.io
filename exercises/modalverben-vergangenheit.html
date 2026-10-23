@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modalverben Vergangenheit</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#263348;--border:#334155;
+  --accent:#38bdf8;--accent2:#f472b6;--green:#34d399;--red:#f87171;
+  --yellow:#fbbf24;--text:#e2e8f0;--muted:#94a3b8;--radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:radial-gradient(ellipse at 10% 0%,rgba(56,189,248,.12) 0%,transparent 45%),
+  radial-gradient(ellipse at 90% 100%,rgba(244,114,182,.12) 0%,transparent 45%);
+  padding:24px 16px 60px;display:flex;flex-direction:column;align-items:center}
+header{text-align:center;margin-bottom:22px}
+h1{font-family:'Baloo 2',cursive;font-size:clamp(1.9rem,6vw,2.8rem);font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+header p{color:var(--muted);margin-top:4px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:22px;max-width:760px}
+.tab{padding:9px 15px;border:2px solid var(--border);border-radius:99px;background:var(--surface);
+  color:var(--muted);font-family:'Baloo 2',cursive;font-weight:700;font-size:.92rem;cursor:pointer}
+.tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border-color:transparent}
+.tab.done{border-color:var(--green);color:var(--green)}
+.panel{display:none;width:100%;max-width:680px;flex-direction:column;gap:16px}
+.panel.active{display:flex}
+.card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:22px 20px}
+.card h2{font-family:'Baloo 2',cursive;font-size:1.35rem;margin-bottom:6px}
+.card .sub{color:var(--muted);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:1.02rem}
+th,td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--muted);font-size:.85rem;font-weight:700}
+b.hl{color:var(--yellow)}
+.q{margin:12px 0;font-weight:700;line-height:1.5}
+.reveal{margin-top:6px;padding:9px 12px;border-radius:10px;background:rgba(52,211,153,.1);
+  color:var(--green);display:none;font-weight:700}
+.reveal.show{display:block}
+.merke{border-left:4px solid var(--yellow);background:rgba(251,191,36,.08);padding:14px 16px;border-radius:10px;line-height:1.7;display:none}
+.merke.show{display:block}
+.btn{background:var(--surface2);color:var(--text);border:2px solid var(--border);border-radius:99px;
+  padding:7px 16px;font-family:'Baloo 2',cursive;font-weight:700;cursor:pointer;font-size:.9rem;margin-top:4px}
+.btn:hover{border-color:var(--accent)}
+.btn.main{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border:none;padding:10px 22px;font-size:1rem}
+.row{padding:12px 0;border-bottom:1px solid var(--border);font-size:1.08rem;font-weight:700;line-height:2.3}
+.row:last-of-type{border-bottom:none}
+.hint{color:var(--muted);font-weight:400;font-size:.9rem}
+input.gap{height:36px;min-width:96px;width:110px;background:var(--surface2);border:2px dashed var(--border);
+  border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;
+  text-align:center;outline:none;vertical-align:middle}
+input.long{width:100%;text-align:left;padding:0 12px;margin-top:4px}
+input.gap:focus{border-color:var(--accent);border-style:solid}
+input.ok{border-color:var(--green)!important;border-style:solid!important;color:var(--green);background:rgba(52,211,153,.1)}
+input.bad{border-color:var(--red)!important;border-style:solid!important;color:var(--red);background:rgba(248,113,113,.1)}
+.fix{color:var(--green);font-size:.92rem;margin-left:6px;display:none}
+.fix.show{display:inline}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.score{font-weight:900;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{background:var(--surface2);border:2px solid var(--border);border-radius:10px;padding:5px 12px;cursor:pointer;
+  font-weight:700;font-size:1rem;color:var(--text);font-family:'Nunito',sans-serif}
+.chip:hover{border-color:var(--accent)}
+.chip.used{opacity:.25;pointer-events:none}
+.answer{min-height:44px;border:2px dashed var(--border);border-radius:10px;padding:8px 12px;font-weight:700;font-size:1.05rem}
+.answer.ok{border-color:var(--green);border-style:solid;color:var(--green)}
+.answer.bad{border-color:var(--red);border-style:solid;color:var(--red)}
+.sb{padding:14px 0;border-bottom:1px solid var(--border)}
+.speak li{margin:10px 0 10px 20px;font-size:1.08rem;font-weight:700;line-height:1.5}
+.nav{display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<header>
+  <h1>Modalverben in der Vergangenheit</h1>
+  <p>konnte - musste - wollte - durfte - sollte</p>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<!-- 1 Regel -->
+<section class="panel" data-title="1 Regel">
+  <div class="card">
+    <h2>Regel entdecken</h2>
+    <p class="sub">Links ist heute, rechts ist gestern. Lies die Sätze.</p>
+    <table>
+      <tr><th>Heute</th><th>Gestern</th></tr>
+      <tr><td>Heute <b class="hl">kann</b> ich nicht joggen.</td><td>Gestern <b class="hl">konnte</b> ich nicht joggen.</td></tr>
+      <tr><td>Heute <b class="hl">muss</b> ich lange arbeiten.</td><td>Gestern <b class="hl">musste</b> ich lange arbeiten.</td></tr>
+      <tr><td>Heute <b class="hl">will</b> ich an den See.</td><td>Gestern <b class="hl">wollte</b> ich an den See.</td></tr>
+      <tr><td>Heute <b class="hl">kann</b> er nicht schlafen.</td><td>Gestern <b class="hl">konnte</b> er nicht schlafen.</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Fragen</h2>
+    <div class="q">1. Welche Buchstaben kommen in der Vergangenheit dazu?
+      <br><button class="btn" onclick="rev(this)">Lösung</button><div class="reveal">-te (konn<u>te</u>, muss<u>te</u>, woll<u>te</u>)</div></div>
+    <div class="q">2. können, müssen: Was passiert mit den Punkten (ö, ü)?
+      <br><button class="btn" onclick="rev(this)">Lösung</button><div class="reveal">Die Punkte sind weg: können -> konnte, müssen -> musste</div></div>
+    <div class="q">3. "ich konnte" und "er konnte": Was fällt dir auf? Kennst du das von "war" und "hatte"?
+      <br><button class="btn" onclick="rev(this)">Lösung</button><div class="reveal">ich und er sind gleich - wie ich war / er war, ich hatte / er hatte</div></div>
+    <div class="q">4. Mit du heißt es: Du <b class="hl">konntest</b> nicht joggen. Wie heißt es mit müssen und wollen?
+      <br><input class="gap" data-a="musstest" placeholder="du ... (müssen)"> <input class="gap" data-a="wolltest" placeholder="du ... (wollen)">
+      <span class="fix"></span>
+      <br><button class="btn" onclick="checkBox(this.parentElement)">Prüfen</button></div>
+  </div>
+  <div class="card">
+    <button class="btn main" onclick="this.nextElementSibling.classList.add('show');this.remove()">Regel anzeigen</button>
+    <div class="merke">
+      <b>Merke</b><br>
+      Stamm ohne Punkte + <b class="hl">-te</b>: können -> konnte, müssen -> musste, wollen -> wollte<br>
+      ich = er / sie / es (wie war, hatte)<br>
+      du: <b class="hl">-test</b> (konntest, musstest, wolltest)<br>
+      Das zweite Verb steht am Ende: Ich <b class="hl">musste</b> gestern lange <b class="hl">arbeiten</b>.
+    </div>
+  </div>
+</section>
+
+<!-- 2 Tabelle -->
+<section class="panel" data-title="2 Tabelle">
+  <div class="card">
+    <h2>Tabelle</h2>
+    <p class="sub">Schreib die Formen.</p>
+    <table class="box">
+      <tr><th></th><th>können</th><th>müssen</th><th>wollen</th></tr>
+      <tr><td><b>ich</b></td><td>konnte</td><td><input class="gap" data-a="musste"></td><td><input class="gap" data-a="wollte"></td></tr>
+      <tr><td><b>du</b></td><td><input class="gap" data-a="konntest"></td><td><input class="gap" data-a="musstest"></td><td><input class="gap" data-a="wolltest"></td></tr>
+      <tr><td><b>er / sie</b></td><td><input class="gap" data-a="konnte"></td><td><input class="gap" data-a="musste"></td><td>wollte</td></tr>
+    </table>
+    <div class="bar"><button class="btn main" onclick="checkPanel(this)">Prüfen</button><span class="score"></span></div>
+  </div>
+</section>
+
+<!-- 3 Lücken -->
+<section class="panel" data-title="3 Lücken" id="p-gaps1">
+  <div class="card"><h2>Lücken</h2><p class="sub">ich, du, er / sie</p><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkPanel(this)">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- 4 Satzbau -->
+<section class="panel" data-title="4 Satzbau" id="p-order">
+  <div class="card"><h2>Satzbau</h2><p class="sub">Klick die Wörter in der richtigen Reihenfolge. Das zweite Verb steht am Ende.</p><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkOrder()">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- 5 Heute -> Gestern -->
+<section class="panel" data-title="5 Gestern" id="p-trans">
+  <div class="card"><h2>Heute -> Gestern</h2><p class="sub">Schreib den Satz in der Vergangenheit. Statt "heute" schreibst du "gestern".</p><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkPanel(this)">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- 6 wir ihr sie -->
+<section class="panel" data-title="6 wir / ihr / sie" id="p-gaps2">
+  <div class="card">
+    <h2>wir, ihr, sie</h2>
+    <table>
+      <tr><td><b>wir</b></td><td>konnten</td><td>mussten</td><td>wollten</td></tr>
+      <tr><td><b>ihr</b></td><td>konntet</td><td>musstet</td><td>wolltet</td></tr>
+      <tr><td><b>sie / Sie</b></td><td>konnten</td><td>mussten</td><td>wollten</td></tr>
+    </table>
+    <div class="q">1. wir und sie: Welche Endung? Sind sie gleich?
+      <br><button class="btn" onclick="rev(this)">Lösung</button><div class="reveal">-ten, ja, wir und sie sind gleich</div></div>
+    <div class="q">2. ihr: Welche Endung?
+      <br><button class="btn" onclick="rev(this)">Lösung</button><div class="reveal">-tet</div></div>
+  </div>
+  <div class="card"><h2>Lücken</h2><p class="sub">Alle Personen</p><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkPanel(this)">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- 7 dürfen sollen -->
+<section class="panel" data-title="7 dürfen / sollen" id="p-gaps3">
+  <div class="card">
+    <h2>dürfen und sollen</h2>
+    <p class="sub">dürfen = etwas ist erlaubt. sollen = eine andere Person will das.</p>
+    <div class="q">Rate: Wie heißt die Vergangenheit? (Tipp: wie können und wollen)<br>
+      ich <input class="gap" data-a="durfte" placeholder="dürfen"> &nbsp; ich <input class="gap" data-a="sollte" placeholder="sollen">
+      <span class="fix"></span>
+      <br><button class="btn" onclick="checkBox(this.parentElement)">Prüfen</button></div>
+  </div>
+  <div class="card"><h2>Meine Kindheit</h2><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkPanel(this)">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- 8 Sprechen -->
+<section class="panel" data-title="8 Sprechen">
+  <div class="card speak">
+    <h2>Sprechen</h2>
+    <p class="sub">Antworte mit ganzen Sätzen.</p>
+    <ol>
+      <li>Was musstest du als Kind zu Hause machen?</li>
+      <li>Was durftest du als Kind nicht?</li>
+      <li>Was wolltest du als Kind werden?</li>
+      <li>Was konntest du mit 10 Jahren schon gut?</li>
+      <li>Was musstest du gestern bei der Arbeit machen?</li>
+      <li>Was wolltest du am Wochenende machen? Konntest du das machen?</li>
+      <li>Was durfte dein großer Sohn letzte Woche nicht machen?</li>
+      <li>Was wolltest du mit 18 Jahren studieren oder arbeiten?</li>
+      <li>Was musstest du machen, als du in die Schweiz umgezogen bist?</li>
+      <li>Was solltest du als Kind immer essen, aber du wolltest nicht?</li>
+    </ol>
+  </div>
+</section>
+
+<script>
+const gaps1=[
+ ["Gestern","musste","ich bis 20 Uhr arbeiten.","müssen"],
+ ["Als Kind","konnte","ich nicht schwimmen.","können"],
+ ["","Wolltest","du als Kind Fußballspieler werden?","wollen"],
+ ["Mein Sohn","wollte","gestern nicht schlafen.","wollen"],
+ ["Am Samstag","konnte","ich nicht joggen. Es hat geregnet.","können"],
+ ["","Musstest","du gestern früh aufstehen?","müssen"],
+ ["Meine Frau","musste","am Montag zum Arzt.","müssen"],
+ ["Im Urlaub","wollte","ich jeden Tag an den Strand.","wollen"],
+ ["Mein Chef","wollte","am Freitag ein Meeting machen.","wollen"],
+ ["Ich","konnte","gestern nicht einschlafen.","können"],
+ ["Warum","musstest","du so lange im Büro bleiben?","müssen"],
+ ["Du","wolltest","ein Haus in Spanien kaufen, richtig?","wollen"],
+ ["","Konntest","du am Wochenende wandern?","können"],
+ ["Mein Kollege","musste","nach Paris fliegen.","müssen"],
+ ["Letzte Woche","konnte","ich nicht zum Deutschkurs kommen.","können"]];
+const gaps2=[
+ ["Letztes Jahr","wollten","wir ein neues Auto kaufen.","wollen"],
+ ["Meine Kinder","konnten","gestern nicht in die Kita.","können"],
+ ["","Wolltet","ihr im Urlaub nach Barcelona?","wollen"],
+ ["Meine Eltern","mussten","früher viel arbeiten.","müssen"],
+ ["Wir","konnten","am Sonntag um den See spazieren.","können"],
+ ["","Musstet","ihr lange warten?","müssen"],
+ ["Meine Kollegen","wollten","am Freitag Pizza essen.","wollen"],
+ ["Wir","mussten","um 5 Uhr zum Flughafen fahren.","müssen"],
+ ["","Konntet","ihr den Berg sehen? Es war sehr neblig.","können"],
+ ["Die Nachbarn","wollten","ihre Wohnung verkaufen.","wollen"],
+ ["Ich","musste","gestern zum Zahnarzt.","müssen"],
+ ["Warum","wolltet","ihr nicht mitkommen?","wollen"],
+ ["Meine Söhne","konnten","gestern lange schlafen.","können"],
+ ["","Konnten","Sie das Formular lesen, Herr Müller?","können"],
+ ["Du","musstest","am Wochenende arbeiten, oder?","müssen"]];
+const gaps3=[
+ ["Als Kind","durfte","ich nicht lange fernsehen.","dürfen"],
+ ["Ich","musste","jeden Tag um 20 Uhr ins Bett.","müssen"],
+ ["Ich","sollte","meiner Mutter in der Küche helfen.","sollen"],
+ ["","Durftest","du als Kind Cola trinken?","dürfen"],
+ ["Wir","durften","am Sonntag nicht laut sein.","dürfen"],
+ ["Mein Bruder","durfte","mit 16 Jahren Moped fahren.","dürfen"],
+ ["Ich","sollte","jeden Abend meine Hausaufgaben machen.","sollen"],
+ ["","Durftet","ihr in der Schule Handys benutzen?","dürfen"],
+ ["Wir","sollten","im Auto immer leise sein.","sollen"],
+ ["Mein Lehrer","wollte","jeden Freitag einen Test machen.","wollen"],
+ ["Meine Schwester","durfte","nie allein in die Stadt.","dürfen"],
+ ["Als Kind","konnte","ich schon gut Fußball spielen.","können"],
+ ["","Solltest","du auch zu Hause helfen?","sollen"],
+ ["Die Kinder","durften","im Sommer lange draußen spielen.","dürfen"],
+ ["Am Samstag","sollten","wir unser Zimmer aufräumen.","sollen"]];
+const order=[
+ ["Ich musste gestern lange arbeiten.","Gestern musste ich lange arbeiten."],
+ ["Mein Sohn konnte nicht schlafen."],
+ ["Was wolltest du als Kind werden?"],
+ ["Ich musste um 6 Uhr aufstehen.","Um 6 Uhr musste ich aufstehen."],
+ ["Am Montag musste ich nach Zürich fahren.","Ich musste am Montag nach Zürich fahren."],
+ ["Konntest du gestern joggen?"],
+ ["Er wollte keine Suppe essen."],
+ ["Ich konnte das Wort nicht verstehen."],
+ ["Warum musstest du so früh gehen?"],
+ ["Gestern wollte ich im See schwimmen.","Ich wollte gestern im See schwimmen."],
+ ["Meine Frau konnte am Abend nicht kommen.","Am Abend konnte meine Frau nicht kommen."],
+ ["Wolltest du im Urlaub nach Barcelona fliegen?"],
+ ["Im Büro musste ich viele E-Mails schreiben.","Ich musste im Büro viele E-Mails schreiben."],
+ ["Mein Sohn wollte mit mir Fußball spielen."],
+ ["Ich konnte am Wochenende nicht wandern.","Am Wochenende konnte ich nicht wandern."]];
+const trans=[
+ ["Ich muss heute ins Büro.","Gestern musste ich ins Büro.","Ich musste gestern ins Büro."],
+ ["Kannst du heute joggen?","Konntest du gestern joggen?"],
+ ["Er will heute nicht essen.","Er wollte gestern nicht essen.","Gestern wollte er nicht essen."],
+ ["Ich kann heute nicht kommen.","Ich konnte gestern nicht kommen.","Gestern konnte ich nicht kommen."],
+ ["Ich will heute im See schwimmen.","Ich wollte gestern im See schwimmen.","Gestern wollte ich im See schwimmen."],
+ ["Musst du heute lange arbeiten?","Musstest du gestern lange arbeiten?"],
+ ["Mein Sohn will heute nicht in die Kita.","Mein Sohn wollte gestern nicht in die Kita.","Gestern wollte mein Sohn nicht in die Kita."],
+ ["Ich muss heute viele E-Mails schreiben.","Ich musste gestern viele E-Mails schreiben.","Gestern musste ich viele E-Mails schreiben."],
+ ["Meine Frau kann heute nicht kochen.","Meine Frau konnte gestern nicht kochen.","Gestern konnte meine Frau nicht kochen."],
+ ["Willst du heute wandern?","Wolltest du gestern wandern?"],
+ ["Er muss heute nach Genf fahren.","Er musste gestern nach Genf fahren.","Gestern musste er nach Genf fahren."],
+ ["Ich kann heute das Auto nicht nehmen.","Ich konnte gestern das Auto nicht nehmen.","Gestern konnte ich das Auto nicht nehmen."],
+ ["Kannst du heute den Kinderwagen mitnehmen?","Konntest du gestern den Kinderwagen mitnehmen?"],
+ ["Mein Chef will heute mit mir sprechen.","Mein Chef wollte gestern mit mir sprechen.","Gestern wollte mein Chef mit mir sprechen."],
+ ["Ich muss heute früh aufstehen.","Ich musste gestern früh aufstehen.","Gestern musste ich früh aufstehen."]];
+
+function gapRows(sel,data){
+  const el=document.querySelector(sel+" .list");
+  data.forEach((d,i)=>{
+    const r=document.createElement("div");r.className="row";
+    r.innerHTML=`${i+1}. ${d[0]} <input class="gap" data-a="${d[1]}"> ${d[2]} <span class="hint">(${d[3]})</span><span class="fix"></span>`;
+    el.appendChild(r);
+  });
+}
+gapRows("#p-gaps1",gaps1);gapRows("#p-gaps2",gaps2);gapRows("#p-gaps3",gaps3);
+
+const tl=document.querySelector("#p-trans .list");
+trans.forEach((t,i)=>{
+  const r=document.createElement("div");r.className="row";
+  r.innerHTML=`${i+1}. ${t[0]}<br><input class="gap long" data-a="${t[1]}" data-alt="${t.slice(2).join("|")}" placeholder="... gestern ..."><span class="fix"></span>`;
+  tl.appendChild(r);
+});
+
+const ol=document.querySelector("#p-order .list");
+order.forEach((alts,i)=>{
+  const s=alts[0];
+  const words=s.replace(/[.?]$/,"").split(" ");
+  const punct=s.slice(-1);
+  const shuffled=[...words].sort(()=>Math.random()-.5);
+  const box=document.createElement("div");box.className="sb";box.dataset.a=s;box.dataset.alt=alts.join("|");box.dataset.p=punct;
+  box.innerHTML=`<b>${i+1}.</b><div class="chips">${shuffled.map(w=>`<button class="chip">${w}</button>`).join("")}</div>
+   <div class="answer"></div><button class="btn" onclick="resetOrder(this)">Zurück</button><span class="fix"></span>`;
+  box.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+    const a=box.querySelector(".answer");a.classList.remove("ok","bad");
+    a.textContent=(a.textContent?a.textContent+" ":"")+c.textContent;c.classList.add("used");
+  });
+  ol.appendChild(box);
+});
+function resetOrder(b){const box=b.parentElement;box.querySelector(".answer").textContent="";
+  box.querySelector(".answer").classList.remove("ok","bad");box.querySelector(".fix").classList.remove("show");
+  box.querySelectorAll(".chip").forEach(c=>c.classList.remove("used"));}
+function checkOrder(){
+  let ok=0;const boxes=document.querySelectorAll("#p-order .sb");
+  boxes.forEach(box=>{
+    const a=box.querySelector(".answer");
+    const match=box.dataset.alt.split("|").find(x=>norm(x)===norm(a.textContent));
+    const good=!!match;
+    a.classList.toggle("ok",good);a.classList.toggle("bad",!good);
+    const f=box.querySelector(".fix");
+    if(good){ok++;a.textContent=match;f.classList.remove("show");}
+    else{f.textContent="-> "+box.dataset.a;f.classList.add("show");}
+  });
+  score(document.querySelector("#p-order"),ok,boxes.length);
+}
+
+function norm(s){return s.trim().toLowerCase().replace(/[.?!]+$/,"").replace(/\s+/g," ");}
+function checkInputs(scope){
+  let ok=0;const ins=scope.querySelectorAll("input.gap");
+  ins.forEach(inp=>{
+    const answers=[inp.dataset.a,...(inp.dataset.alt?inp.dataset.alt.split("|"):[])];
+    const good=answers.some(a=>norm(inp.value)===norm(a));
+    inp.classList.toggle("ok",good);inp.classList.toggle("bad",!good);
+    if(good)ok++;
+    const f=inp.parentElement.querySelector(".fix");
+    if(f){
+      if(good){f.classList.remove("show")}else{f.textContent="-> "+inp.dataset.a;f.classList.add("show")}
+    }
+  });
+  return [ok,ins.length];
+}
+function checkBox(scope){
+  const ins=[...scope.querySelectorAll("input.gap")];
+  let wrong=[];
+  ins.forEach(inp=>{const good=norm(inp.value)===norm(inp.dataset.a);
+    inp.classList.toggle("ok",good);inp.classList.toggle("bad",!good);if(!good)wrong.push(inp.dataset.a);});
+  const f=scope.querySelector(".fix");
+  if(wrong.length){f.textContent="-> "+ins.map(i=>i.dataset.a).join(", ");f.classList.add("show")}else f.classList.remove("show");
+}
+function checkPanel(btn){
+  const card=btn.closest(".card");
+  const [ok,n]=checkInputs(card);
+  score(card,ok,n);
+}
+function score(scope,ok,n){
+  const s=scope.querySelector(".score");s.textContent=`${ok} / ${n} richtig`;
+  s.style.color=ok===n?"var(--green)":"var(--muted)";
+  if(ok===n){const p=scope.closest(".panel");const i=[...document.querySelectorAll(".panel")].indexOf(p);
+    document.querySelectorAll(".tab")[i].classList.add("done");}
+}
+function rev(b){b.nextElementSibling.classList.add("show");b.remove();}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.matches("input.gap")){
+    const all=[...e.target.closest(".panel").querySelectorAll("input.gap")];
+    const i=all.indexOf(e.target);if(all[i+1])all[i+1].focus();
+  }
+});
+
+const panels=[...document.querySelectorAll(".panel")];const tabs=document.getElementById("tabs");
+panels.forEach((p,i)=>{
+  const b=document.createElement("button");b.className="tab";b.textContent=p.dataset.title;
+  b.onclick=()=>show(i);tabs.appendChild(b);
+});
+function show(i){panels.forEach((p,j)=>p.classList.toggle("active",i===j));
+  document.querySelectorAll(".tab").forEach((t,j)=>t.classList.toggle("active",i===j));window.scrollTo(0,0);}
+show(0);
+</script>
+</body>
+</html>
