@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nebensätze: weil, wenn, dass</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#263348;--border:#334155;
+  --accent:#38bdf8;--accent2:#f472b6;--green:#34d399;--red:#f87171;
+  --yellow:#fbbf24;--text:#e2e8f0;--muted:#94a3b8;--radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:radial-gradient(ellipse at 10% 0%,rgba(56,189,248,.12) 0%,transparent 45%),
+  radial-gradient(ellipse at 90% 100%,rgba(244,114,182,.12) 0%,transparent 45%);
+  padding:24px 16px 60px;display:flex;flex-direction:column;align-items:center}
+header{text-align:center;margin-bottom:22px}
+h1{font-family:'Baloo 2',cursive;font-size:clamp(1.9rem,6vw,2.8rem);font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+header p{color:var(--muted);margin-top:4px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:22px;max-width:820px}
+.tab{padding:9px 15px;border:2px solid var(--border);border-radius:99px;background:var(--surface);
+  color:var(--muted);font-family:'Baloo 2',cursive;font-weight:700;font-size:.92rem;cursor:pointer}
+.tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border-color:transparent}
+.tab.done{border-color:var(--green);color:var(--green)}
+.tab.active.done{color:#0f172a}
+.panel{display:none;width:100%;max-width:720px;flex-direction:column;gap:16px}
+.panel.active{display:flex}
+.card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:22px 20px}
+.card h2{font-family:'Baloo 2',cursive;font-size:1.35rem;margin-bottom:6px}
+.card .sub{color:var(--muted);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:1.02rem}
+th,td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{color:var(--muted);font-size:.85rem;font-weight:700}
+.k{color:var(--accent);font-weight:900}
+.v{color:var(--accent2);font-weight:900}
+.ex{font-size:1.15rem;font-weight:700;line-height:1.9;padding:4px 0}
+.merke{border-left:4px solid var(--yellow);background:rgba(251,191,36,.08);padding:14px 16px;border-radius:10px;line-height:1.8}
+.btn{background:var(--surface2);color:var(--text);border:2px solid var(--border);border-radius:99px;
+  padding:7px 16px;font-family:'Baloo 2',cursive;font-weight:700;cursor:pointer;font-size:.9rem;margin-top:4px}
+.btn:hover{border-color:var(--accent)}
+.btn.on{border-color:var(--accent);background:rgba(56,189,248,.15)}
+.btn.main{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border:none;padding:10px 22px;font-size:1rem}
+.row{padding:12px 0;border-bottom:1px solid var(--border);font-size:1.06rem;font-weight:700;line-height:1.9}
+.row:last-child{border-bottom:none}
+.num{color:var(--muted);margin-right:4px}
+.conj{display:inline-block;margin-left:6px;padding:0 10px;border-radius:99px;border:2px solid var(--accent);color:var(--accent);font-size:.85rem;line-height:1.6}
+input.gap{height:38px;width:100%;background:var(--surface2);border:2px dashed var(--border);
+  border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;
+  padding:0 12px;outline:none;margin-top:4px}
+input.gap:focus{border-color:var(--accent);border-style:solid}
+input.ok{border-color:var(--green)!important;border-style:solid!important;color:var(--green);background:rgba(52,211,153,.1)}
+input.bad{border-color:var(--red)!important;border-style:solid!important;color:var(--red);background:rgba(248,113,113,.1)}
+.fix{font-size:.98rem;margin-top:4px;display:none;font-weight:700}
+.fix.show{display:block}
+.fix .lbl{color:var(--red);margin-right:6px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.score{font-weight:900;color:var(--muted)}
+.slot{display:inline-block;min-width:70px;border-bottom:2px dashed var(--muted);text-align:center;color:var(--accent);padding:0 6px}
+.slot.ok{color:var(--green);border-color:var(--green)}
+.slot.bad{color:var(--red);border-color:var(--red)}
+.choice{margin-top:4px}
+.choice .btn{margin-right:6px;padding:4px 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{background:var(--surface2);border:2px solid var(--border);border-radius:10px;padding:5px 12px;cursor:pointer;
+  font-weight:700;font-size:1rem;color:var(--text);font-family:'Nunito',sans-serif}
+.chip:hover{border-color:var(--accent)}
+.chip.used{opacity:.25;pointer-events:none}
+.answer{min-height:44px;border:2px dashed var(--border);border-radius:10px;padding:8px 12px;font-weight:700;font-size:1.05rem}
+.answer.ok{border-color:var(--green);border-style:solid;color:var(--green)}
+.answer.bad{border-color:var(--red);border-style:solid;color:var(--red)}
+.speak li{margin:10px 0 10px 22px;font-size:1.08rem;font-weight:700;line-height:1.5}
+.speak h3{font-family:'Baloo 2',cursive;color:var(--accent);margin-top:14px}
+.switch{display:flex;gap:8px;margin:10px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Nebensätze</h1>
+  <p>weil - wenn - dass: das Verb geht ans Ende</p>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<!-- Übersicht -->
+<section class="panel" data-title="Übersicht">
+  <div class="card">
+    <h2>Zwei Sätze, ein Satz</h2>
+    <p class="sub">Klick auf denn und weil. Wo steht das Verb?</p>
+    <div class="ex">Ich bleibe zu Hause. Ich <span class="v">bin</span> müde.</div>
+    <div class="switch"><button class="btn on" data-s="denn" onclick="sw(this)">denn</button><button class="btn" data-s="weil" onclick="sw(this)">weil</button></div>
+    <div class="ex" id="swOut"></div>
+  </div>
+  <div class="card">
+    <h2>Position 2 oder Ende?</h2>
+    <table>
+      <tr><th>Verb auf Position 2</th><th>Verb am Ende</th></tr>
+      <tr><td><span class="k">und, aber, oder, denn</span></td><td><span class="k">weil, wenn, dass</span></td></tr>
+      <tr><td>..., <span class="k">denn</span> es <span class="v">regnet</span> stark.</td><td>..., <span class="k">weil</span> es stark <span class="v">regnet</span>.</td></tr>
+      <tr><td>..., <span class="k">aber</span> ich <span class="v">habe</span> keine Zeit.</td><td>..., <span class="k">wenn</span> ich Zeit <span class="v">habe</span>.</td></tr>
+      <tr><td>..., <span class="k">und</span> das <span class="v">ist</span> gut.</td><td>..., <span class="k">dass</span> das gut <span class="v">ist</span>.</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Drei Beispiele</h2>
+    <div class="ex"><span class="k">weil</span> = Grund (Warum?)<br>Ich jogge heute nicht, <span class="k">weil</span> es kalt <span class="v">ist</span>.</div>
+    <div class="ex"><span class="k">wenn</span> = Bedingung / immer dann<br>Ich esse Kürbissuppe, <span class="k">wenn</span> es kalt <span class="v">ist</span>.</div>
+    <div class="ex"><span class="k">dass</span> = nach glauben, denken, hoffen, wissen, sagen<br>Ich glaube, <span class="k">dass</span> es morgen kalt <span class="v">ist</span>.</div>
+  </div>
+  <div class="card">
+    <div class="merke">
+      <b>Merke</b><br>
+      Nach <span class="k">weil, wenn, dass</span> steht das Verb <b>ganz am Ende</b>.<br>
+      Vor <span class="k">weil, wenn, dass</span> und <span class="k">denn</span> steht ein <b>Komma</b>.<br>
+      Das Subjekt (ich, er, mein Sohn ...) kommt direkt nach <span class="k">weil, wenn, dass</span>.
+    </div>
+  </div>
+</section>
+
+<!-- denn oder weil -->
+<section class="panel" data-title="denn oder weil?" id="p-dw">
+  <div class="card"><h2>denn oder weil?</h2><p class="sub">Schau auf das Verb. Wähle das richtige Wort.</p><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkDW()">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- Satzbau weil -->
+<section class="panel" data-title="Satzbau weil" id="p-order">
+  <div class="card"><h2>Satzbau mit weil</h2><p class="sub">Klick die Wörter in der richtigen Reihenfolge.</p><div class="list"></div>
+  <div class="bar"><button class="btn main" onclick="checkOrder()">Prüfen</button><span class="score"></span></div></div>
+</section>
+
+<!-- Typed panels are generated -->
+<section class="panel" data-title="weil" id="p-weil"></section>
+<section class="panel" data-title="wenn" id="p-wenn"></section>
+<section class="panel" data-title="dass" id="p-dass"></section>
+<section class="panel" data-title="Gemischt" id="p-mix"></section>
+<section class="panel" data-title="+ Modalverb" id="p-modal"></section>
+<section class="panel" data-title="+ trennbare Verben" id="p-trenn"></section>
+<section class="panel" data-title="+ Perfekt" id="p-perf"></section>
+
+<!-- Sprechen -->
+<section class="panel" data-title="Sprechen">
+  <div class="card speak">
+    <h2>Sprechen</h2>
+    <p class="sub">Antworte mit einem ganzen Satz.</p>
+    <h3>weil</h3>
+    <ol>
+      <li>Warum lernst du Deutsch?</li>
+      <li>Warum wohnst du in der Schweiz?</li>
+      <li>Warum magst du deine Arbeit?</li>
+      <li>Warum schaust du gern Formel 1 oder MotoGP?</li>
+      <li>Warum joggst du?</li>
+      <li>Warum fliegst du gern nach Spanien?</li>
+      <li>Warum bist du heute müde oder nicht müde?</li>
+    </ol>
+    <h3>wenn</h3>
+    <ol start="8">
+      <li>Was machst du, wenn es regnet?</li>
+      <li>Was machst du, wenn deine Kinder nicht schlafen?</li>
+      <li>Was isst du, wenn es kalt ist?</li>
+      <li>Was machst du, wenn du Stress hast?</li>
+      <li>Was machst du, wenn du ein Wort nicht verstehst?</li>
+      <li>Was machst du, wenn du frei hast?</li>
+      <li>Wohin gehst du, wenn die Sonne scheint?</li>
+    </ol>
+    <h3>dass</h3>
+    <ol start="15">
+      <li>Was glaubst du: Wie ist das Wetter morgen?</li>
+      <li>Was hoffst du für das Wochenende?</li>
+      <li>Was denkst du über Zürich?</li>
+      <li>Was weißt du über deinen Chef?</li>
+      <li>Was sagen deine Kinder oft?</li>
+      <li>Wer gewinnt das nächste Rennen? Was glaubst du?</li>
+    </ol>
+  </div>
+</section>
+
+<script>
+/* ---------- Daten ---------- */
+const dw=[
+ ["Ich bleibe heute zu Hause, ___ ich bin krank.","denn"],
+ ["Ich bleibe heute zu Hause, ___ ich krank bin.","weil"],
+ ["Ich gehe nicht joggen, ___ es regnet sehr stark.","denn"],
+ ["Ich gehe nicht joggen, ___ es sehr stark regnet.","weil"],
+ ["Mein Sohn weint, ___ er hat Hunger.","denn"],
+ ["Mein Sohn weint, ___ er Hunger hat.","weil"],
+ ["Wir fahren an den See, ___ das Wetter ist schön.","denn"],
+ ["Wir fahren an den See, ___ das Wetter schön ist.","weil"],
+ ["Ich trinke noch einen Kaffee, ___ ich bin sehr müde.","denn"],
+ ["Ich trinke noch einen Kaffee, ___ ich sehr müde bin.","weil"],
+ ["Ich arbeite heute lange, ___ ich habe viele Meetings.","denn"],
+ ["Ich arbeite heute lange, ___ ich viele Meetings habe.","weil"],
+ ["Wir essen Kürbissuppe, ___ es ist kalt draußen.","denn"],
+ ["Wir essen Kürbissuppe, ___ es draußen kalt ist.","weil"],
+ ["Ich lerne Deutsch, ___ ich wohne in der Schweiz.","denn"],
+ ["Ich lerne Deutsch, ___ ich in der Schweiz wohne.","weil"],
+ ["Mein Chef ist zufrieden, ___ das Projekt läuft gut.","denn"],
+ ["Mein Chef ist zufrieden, ___ das Projekt gut läuft.","weil"],
+ ["Ich schaue heute Formel 1, ___ das Rennen ist spannend.","denn"],
+ ["Ich schaue heute Formel 1, ___ das Rennen spannend ist.","weil"],
+ ["Ich fahre mit dem Zug, ___ das Auto ist kaputt.","denn"],
+ ["Meine Frau ist glücklich, ___ ihre Mutter zu Besuch kommt.","weil"],
+ ["Ich kaufe keine Wohnung in Zürich, ___ die Wohnungen sind sehr teuer.","denn"],
+ ["Ich wandere gern, ___ ich die Berge liebe.","weil"],
+ ["Der Kleine schläft nicht, ___ er hat Bauchschmerzen.","denn"],
+ ["Ich rufe meinen Kollegen an, ___ ich eine Frage habe.","weil"],
+ ["Wir fliegen nach Barcelona, ___ meine Eltern wohnen dort.","denn"],
+ ["Ich esse heute kein Fleisch, ___ ich keinen Hunger habe.","weil"],
+ ["Ich nehme einen Regenschirm mit, ___ es regnet bestimmt.","denn"],
+ ["Ich spaziere um den See, ___ ich frische Luft brauche.","weil"],
+ ["Ich gehe zum Arzt, ___ ich habe Kopfschmerzen.","denn"],
+ ["Wir bleiben im Haus, ___ es draußen sehr windig ist.","weil"],
+ ["Ich schreibe eine E-Mail, ___ mein Kunde wartet auf eine Antwort.","denn"],
+ ["Ich bin nervös, ___ ich morgen eine Präsentation habe.","weil"],
+ ["Wir kaufen ein großes Auto, ___ wir haben zwei Kinder.","denn"],
+ ["Mein Kollege ist nicht im Büro, ___ er im Urlaub ist.","weil"],
+ ["Ich bestelle eine Pizza, ___ ich habe keine Zeit.","denn"],
+ ["Ich bin glücklich, ___ heute Freitag ist.","weil"],
+ ["Meine Frau ist müde, ___ das Baby schläft nicht gut.","denn"],
+ ["Ich bezahle mit Karte, ___ ich kein Bargeld habe.","weil"]];
+
+const order=[
+ "Ich bleibe zu Hause, weil ich müde *bin*.",
+ "Ich gehe nicht joggen, weil es *regnet*.",
+ "Mein Sohn weint, weil er Hunger *hat*.",
+ "Wir fahren an den See, weil das Wetter schön *ist*.",
+ "Ich trinke Tee, weil ich krank *bin*.",
+ "Ich lerne Deutsch, weil ich in der Schweiz *wohne*.",
+ "Ich arbeite viel, weil ich meine Arbeit *liebe*.",
+ "Wir essen Suppe, weil es kalt *ist*.",
+ "Meine Frau lacht, weil der Film lustig *ist*.",
+ "Ich kaufe Blumen, weil meine Frau Geburtstag *hat*.",
+ "Ich fahre nach Zürich, weil ich ein Meeting *habe*.",
+ "Mein Sohn spielt draußen, weil die Sonne *scheint*.",
+ "Ich rufe meine Mutter an, weil sie Geburtstag *hat*.",
+ "Wir gehen ins Restaurant, weil wir keine Zeit *haben*.",
+ "Ich höre Musik, weil ich gute Laune *habe*.",
+ "Der Kleine schläft, weil er müde *ist*.",
+ "Ich wandere gern, weil ich die Berge *liebe*.",
+ "Wir wohnen am See, weil es dort ruhig *ist*.",
+ "Ich esse kein Fleisch, weil ich keinen Hunger *habe*.",
+ "Ich nehme den Zug, weil das Auto kaputt *ist*.",
+ "Ich bin glücklich, weil heute Freitag *ist*.",
+ "Mein Chef ist zufrieden, weil das Projekt gut *läuft*.",
+ "Ich schaue Formel 1, weil ich schnelle Autos *mag*.",
+ "Wir fliegen nach Spanien, weil unsere Familie dort *wohnt*.",
+ "Ich gehe zum Arzt, weil ich Kopfschmerzen *habe*.",
+ "Meine Söhne sind laut, weil sie *spielen*.",
+ "Ich trage eine Jacke, weil es draußen kalt *ist*.",
+ "Ich kaufe eine Wohnung, weil die Preise gut *sind*.",
+ "Wir bleiben im Haus, weil es *schneit*.",
+ "Ich spreche Englisch, weil mein Kollege kein Deutsch *spricht*.",
+ "Mein Sohn isst kein Gemüse, weil er Gemüse nicht *mag*.",
+ "Ich bin nervös, weil ich eine Präsentation *habe*.",
+ "Ich schreibe eine E-Mail, weil mein Kunde eine Frage *hat*.",
+ "Wir kochen zu Hause, weil das Restaurant zu *ist*.",
+ "Ich laufe schnell, weil der Bus gleich *kommt*.",
+ "Meine Frau ist müde, weil das Baby nicht *schläft*.",
+ "Ich mache eine Pause, weil ich Hunger *habe*.",
+ "Wir gehen spazieren, weil wir frische Luft *brauchen*.",
+ "Ich bezahle mit Karte, weil ich kein Bargeld *habe*.",
+ "Ich bin früh im Büro, weil ich viel Arbeit *habe*."];
+
+const tWeil=[
+ ["Ich bin heute zu Hause. Ich bin krank.","weil","Ich bin heute zu Hause, weil ich krank *bin*."],
+ ["Ich gehe nicht joggen. Es regnet stark.","weil","Ich gehe nicht joggen, weil es stark *regnet*."],
+ ["Ich trinke viel Wasser. Es ist sehr heiß.","weil","Ich trinke viel Wasser, weil es sehr heiß *ist*."],
+ ["Mein Sohn ist glücklich. Er hat ein neues Fahrrad.","weil","Mein Sohn ist glücklich, weil er ein neues Fahrrad *hat*."],
+ ["Wir fahren nach Italien. Wir lieben das Essen dort.","weil","Wir fahren nach Italien, weil wir das Essen dort *lieben*."],
+ ["Ich kaufe ein Geschenk. Mein Freund hat Geburtstag.","weil","Ich kaufe ein Geschenk, weil mein Freund Geburtstag *hat*."],
+ ["Meine Frau kocht heute. Sie hat Zeit.","weil","Meine Frau kocht heute, weil sie Zeit *hat*."],
+ ["Ich bin müde. Das Baby schreit in der Nacht.","weil","Ich bin müde, weil das Baby in der Nacht *schreit*."],
+ ["Ich lerne jeden Tag Deutsch. Ich brauche Deutsch für die Arbeit.","weil","Ich lerne jeden Tag Deutsch, weil ich Deutsch für die Arbeit *brauche*."],
+ ["Wir gehen nicht an den Strand. Das Wasser ist zu kalt.","weil","Wir gehen nicht an den Strand, weil das Wasser zu kalt *ist*."],
+ ["Ich fliege oft nach Paris. Mein Kunde wohnt dort.","weil","Ich fliege oft nach Paris, weil mein Kunde dort *wohnt*."],
+ ["Der Kleine weint. Er ist müde.","weil","Der Kleine weint, weil er müde *ist*."],
+ ["Ich mache das Fenster auf. Das Zimmer ist warm.","weil","Ich mache das Fenster auf, weil das Zimmer warm *ist*."],
+ ["Wir kaufen ein Haus. Die Wohnung ist zu klein.","weil","Wir kaufen ein Haus, weil die Wohnung zu klein *ist*."],
+ ["Ich trinke keinen Alkohol. Ich fahre heute Auto.","weil","Ich trinke keinen Alkohol, weil ich heute Auto *fahre*."],
+ ["Mein Kollege ist sauer. Der Computer funktioniert nicht.","weil","Mein Kollege ist sauer, weil der Computer nicht *funktioniert*."],
+ ["Ich esse ein Sandwich. Ich habe keine Zeit für ein Mittagessen.","weil","Ich esse ein Sandwich, weil ich keine Zeit für ein Mittagessen *habe*."],
+ ["Wir gehen in den Park. Die Kinder spielen dort gern.","weil","Wir gehen in den Park, weil die Kinder dort gern *spielen*."],
+ ["Ich schaue MotoGP. Ich liebe Motorräder.","weil","Ich schaue MotoGP, weil ich Motorräder *liebe*."],
+ ["Meine Mutter ruft oft an. Sie vermisst uns.","weil","Meine Mutter ruft oft an, weil sie uns *vermisst*."],
+ ["Ich nehme den Bus. Der Zug ist zu spät.","weil","Ich nehme den Bus, weil der Zug zu spät *ist*."],
+ ["Wir bleiben heute zu Hause. Unser Sohn hat Fieber.","weil","Wir bleiben heute zu Hause, weil unser Sohn Fieber *hat*."],
+ ["Ich bin froh. Das Wochenende beginnt.","weil","Ich bin froh, weil das Wochenende *beginnt*."],
+ ["Ich trage eine Mütze. Es ist sehr kalt.","weil","Ich trage eine Mütze, weil es sehr kalt *ist*."],
+ ["Mein Chef lädt uns ein. Das Projekt ist fertig.","weil","Mein Chef lädt uns ein, weil das Projekt fertig *ist*."],
+ ["Ich verkaufe meine Wohnung. Ich brauche Geld für ein Haus.","weil","Ich verkaufe meine Wohnung, weil ich Geld für ein Haus *brauche*."],
+ ["Wir essen oft Pasta. Die Kinder mögen Pasta.","weil","Wir essen oft Pasta, weil die Kinder Pasta *mögen*."],
+ ["Ich bin spät. Es gibt viel Verkehr.","weil","Ich bin spät, weil es viel Verkehr *gibt*."],
+ ["Meine Frau lernt Deutsch. Sie arbeitet in einer Schweizer Firma.","weil","Meine Frau lernt Deutsch, weil sie in einer Schweizer Firma *arbeitet*."],
+ ["Ich jogge am Morgen. Es ist dann noch ruhig.","weil","Ich jogge am Morgen, weil es dann noch ruhig *ist*."],
+ ["Wir fahren in die Berge. Wir wandern gern.","weil","Wir fahren in die Berge, weil wir gern *wandern*."],
+ ["Ich lese die E-Mail noch einmal. Ich verstehe sie nicht.","weil","Ich lese die E-Mail noch einmal, weil ich sie nicht *verstehe*."],
+ ["Mein Sohn lacht. Der Hund ist lustig.","weil","Mein Sohn lacht, weil der Hund lustig *ist*."],
+ ["Ich bestelle ein Taxi. Es regnet sehr stark.","weil","Ich bestelle ein Taxi, weil es sehr stark *regnet*."],
+ ["Wir machen Urlaub in Spanien. Das Wetter ist dort gut.","weil","Wir machen Urlaub in Spanien, weil das Wetter dort gut *ist*."],
+ ["Ich spreche langsam. Mein Deutsch ist noch nicht gut.","weil","Ich spreche langsam, weil mein Deutsch noch nicht gut *ist*."],
+ ["Ich bin stolz. Mein Sohn schwimmt schon allein.","weil","Ich bin stolz, weil mein Sohn schon allein *schwimmt*."],
+ ["Wir kaufen viel Gemüse. Wir kochen heute Suppe.","weil","Wir kaufen viel Gemüse, weil wir heute Suppe *kochen*."],
+ ["Ich arbeite heute im Homeoffice. Mein Sohn ist krank.","weil","Ich arbeite heute im Homeoffice, weil mein Sohn krank *ist*."],
+ ["Ich gehe früh schlafen. Ich bin sehr müde.","weil","Ich gehe früh schlafen, weil ich sehr müde *bin*."]];
+
+const tWenn=[
+ ["Ich esse Kürbissuppe. Es ist kalt.","wenn","Ich esse Kürbissuppe, wenn es kalt *ist*."],
+ ["Ich gehe joggen. Das Wetter ist gut.","wenn","Ich gehe joggen, wenn das Wetter gut *ist*."],
+ ["Ich trinke Kaffee. Ich bin müde.","wenn","Ich trinke Kaffee, wenn ich müde *bin*."],
+ ["Mein Sohn weint. Er hat Hunger.","wenn","Mein Sohn weint, wenn er Hunger *hat*."],
+ ["Wir gehen an den See. Die Sonne scheint.","wenn","Wir gehen an den See, wenn die Sonne *scheint*."],
+ ["Ich nehme den Zug. Ich fahre nach Zürich.","wenn","Ich nehme den Zug, wenn ich nach Zürich *fahre*."],
+ ["Ich schaue Formel 1. Ich habe Zeit.","wenn","Ich schaue Formel 1, wenn ich Zeit *habe*."],
+ ["Wir bleiben zu Hause. Es regnet.","wenn","Wir bleiben zu Hause, wenn es *regnet*."],
+ ["Ich spreche Englisch. Ich bin im Büro.","wenn","Ich spreche Englisch, wenn ich im Büro *bin*."],
+ ["Ich rufe dich an. Ich bin in Barcelona.","wenn","Ich rufe dich an, wenn ich in Barcelona *bin*."],
+ ["Meine Frau liest ein Buch. Die Kinder schlafen.","wenn","Meine Frau liest ein Buch, wenn die Kinder *schlafen*."],
+ ["Ich trage eine Jacke. Es ist windig.","wenn","Ich trage eine Jacke, wenn es windig *ist*."],
+ ["Wir essen Pizza. Wir haben keine Zeit.","wenn","Wir essen Pizza, wenn wir keine Zeit *haben*."],
+ ["Ich höre Musik. Ich jogge.","wenn","Ich höre Musik, wenn ich *jogge*."],
+ ["Mein Sohn lacht. Ich singe.","wenn","Mein Sohn lacht, wenn ich *singe*."],
+ ["Ich bin glücklich. Meine Familie ist zusammen.","wenn","Ich bin glücklich, wenn meine Familie zusammen *ist*."],
+ ["Ich trinke Tee. Ich bin krank.","wenn","Ich trinke Tee, wenn ich krank *bin*."],
+ ["Wir fahren in die Berge. Es schneit.","wenn","Wir fahren in die Berge, wenn es *schneit*."],
+ ["Ich arbeite zu Hause. Mein Sohn ist krank.","wenn","Ich arbeite zu Hause, wenn mein Sohn krank *ist*."],
+ ["Ich gehe früh ins Bett. Ich habe am Morgen ein Meeting.","wenn","Ich gehe früh ins Bett, wenn ich am Morgen ein Meeting *habe*."],
+ ["Ich fahre mit dem Fahrrad. Das Wetter ist schön.","wenn","Ich fahre mit dem Fahrrad, wenn das Wetter schön *ist*."],
+ ["Wir besuchen meine Eltern. Wir sind in Spanien.","wenn","Wir besuchen meine Eltern, wenn wir in Spanien *sind*."],
+ ["Ich bin nervös. Ich spreche Deutsch.","wenn","Ich bin nervös, wenn ich Deutsch *spreche*."],
+ ["Mein Chef ist froh. Die Kunden sind zufrieden.","wenn","Mein Chef ist froh, wenn die Kunden zufrieden *sind*."],
+ ["Ich mache eine Pause. Ich habe Hunger.","wenn","Ich mache eine Pause, wenn ich Hunger *habe*."],
+ ["Die Kinder spielen draußen. Es ist warm.","wenn","Die Kinder spielen draußen, wenn es warm *ist*."],
+ ["Ich kaufe eine Wohnung. Der Preis ist gut.","wenn","Ich kaufe eine Wohnung, wenn der Preis gut *ist*."],
+ ["Ich schlafe schlecht. Ich trinke am Abend Kaffee.","wenn","Ich schlafe schlecht, wenn ich am Abend Kaffee *trinke*."],
+ ["Wir kochen zusammen. Wir haben Gäste.","wenn","Wir kochen zusammen, wenn wir Gäste *haben*."],
+ ["Ich frage meinen Kollegen. Ich verstehe etwas nicht.","wenn","Ich frage meinen Kollegen, wenn ich etwas nicht *verstehe*."],
+ ["Mein Sohn schläft schnell. Er ist müde.","wenn","Mein Sohn schläft schnell, wenn er müde *ist*."],
+ ["Ich bin froh. Es ist Freitag.","wenn","Ich bin froh, wenn es Freitag *ist*."],
+ ["Wir spazieren um den See. Es ist Sonntag.","wenn","Wir spazieren um den See, wenn es Sonntag *ist*."],
+ ["Ich nehme ein Taxi. Es ist spät.","wenn","Ich nehme ein Taxi, wenn es spät *ist*."],
+ ["Ich schreibe eine Liste. Ich gehe einkaufen.","wenn","Ich schreibe eine Liste, wenn ich einkaufen *gehe*."],
+ ["Meine Frau ist sauer. Ich komme spät nach Hause.","wenn","Meine Frau ist sauer, wenn ich spät nach Hause *komme*."],
+ ["Ich esse Paella. Ich bin in Valencia.","wenn","Ich esse Paella, wenn ich in Valencia *bin*."],
+ ["Wir gehen ins Kino. Wir haben einen Babysitter.","wenn","Wir gehen ins Kino, wenn wir einen Babysitter *haben*."],
+ ["Ich lerne neue Wörter. Ich lese.","wenn","Ich lerne neue Wörter, wenn ich *lese*."],
+ ["Ich bin müde. Ich arbeite viel.","wenn","Ich bin müde, wenn ich viel *arbeite*."]];
+
+const tDass=[
+ ["Ich glaube: Das Wetter ist morgen schön.","dass","Ich glaube, dass das Wetter morgen schön *ist*."],
+ ["Ich denke: Der Film ist gut.","dass","Ich denke, dass der Film gut *ist*."],
+ ["Ich hoffe: Mein Sohn schläft heute gut.","dass","Ich hoffe, dass mein Sohn heute gut *schläft*."],
+ ["Ich weiß: Deutsch ist schwer.","dass","Ich weiß, dass Deutsch schwer *ist*."],
+ ["Mein Chef sagt: Das Meeting beginnt um 10 Uhr.","dass","Mein Chef sagt, dass das Meeting um 10 Uhr *beginnt*."],
+ ["Ich glaube: Es regnet morgen.","dass","Ich glaube, dass es morgen *regnet*."],
+ ["Meine Frau sagt: Das Essen ist fertig.","dass","Meine Frau sagt, dass das Essen fertig *ist*."],
+ ["Ich hoffe: Du hast Zeit.","dass","Ich hoffe, dass du Zeit *hast*."],
+ ["Ich denke: Barcelona ist sehr schön.","dass","Ich denke, dass Barcelona sehr schön *ist*."],
+ ["Ich weiß: Mein Kollege wohnt in Genf.","dass","Ich weiß, dass mein Kollege in Genf *wohnt*."],
+ ["Ich glaube: Der Zug kommt zu spät.","dass","Ich glaube, dass der Zug zu spät *kommt*."],
+ ["Mein Sohn sagt: Er hat Hunger.","dass","Mein Sohn sagt, dass er Hunger *hat*."],
+ ["Ich hoffe: Das Projekt läuft gut.","dass","Ich hoffe, dass das Projekt gut *läuft*."],
+ ["Ich denke: Die Wohnung ist zu teuer.","dass","Ich denke, dass die Wohnung zu teuer *ist*."],
+ ["Ich weiß: Du bist müde.","dass","Ich weiß, dass du müde *bist*."],
+ ["Ich glaube: Ferrari gewinnt das Rennen.","dass","Ich glaube, dass Ferrari das Rennen *gewinnt*."],
+ ["Meine Mutter sagt: Sie kommt im Dezember.","dass","Meine Mutter sagt, dass sie im Dezember *kommt*."],
+ ["Ich hoffe: Es schneit im Winter.","dass","Ich hoffe, dass es im Winter *schneit*."],
+ ["Ich denke: Mein Deutsch wird besser.","dass","Ich denke, dass mein Deutsch besser *wird*."],
+ ["Ich weiß: Die Kita ist am Freitag zu.","dass","Ich weiß, dass die Kita am Freitag zu *ist*."],
+ ["Der Arzt sagt: Mein Sohn ist gesund.","dass","Der Arzt sagt, dass mein Sohn gesund *ist*."],
+ ["Ich glaube: Die Kunden sind zufrieden.","dass","Ich glaube, dass die Kunden zufrieden *sind*."],
+ ["Ich hoffe: Wir haben im Sommer Urlaub.","dass","Ich hoffe, dass wir im Sommer Urlaub *haben*."],
+ ["Ich denke: Der See ist noch zu kalt.","dass","Ich denke, dass der See noch zu kalt *ist*."],
+ ["Ich weiß: Meine Frau mag Schokolade.","dass","Ich weiß, dass meine Frau Schokolade *mag*."],
+ ["Mein Kollege sagt: Der Computer funktioniert nicht.","dass","Mein Kollege sagt, dass der Computer nicht *funktioniert*."],
+ ["Ich glaube: Die Preise steigen.","dass","Ich glaube, dass die Preise *steigen*."],
+ ["Ich hoffe: Die Sonne scheint am Wochenende.","dass","Ich hoffe, dass die Sonne am Wochenende *scheint*."],
+ ["Ich denke: Das Restaurant ist gut.","dass","Ich denke, dass das Restaurant gut *ist*."],
+ ["Ich weiß: Der Flug dauert zwei Stunden.","dass","Ich weiß, dass der Flug zwei Stunden *dauert*."],
+ ["Meine Frau sagt: Das Baby schläft.","dass","Meine Frau sagt, dass das Baby *schläft*."],
+ ["Ich glaube: Du hast recht.","dass","Ich glaube, dass du recht *hast*."],
+ ["Ich hoffe: Meine Eltern besuchen uns bald.","dass","Ich hoffe, dass meine Eltern uns bald *besuchen*."],
+ ["Ich denke: Joggen ist gesund.","dass","Ich denke, dass Joggen gesund *ist*."],
+ ["Ich weiß: Die Schweiz ist teuer.","dass","Ich weiß, dass die Schweiz teuer *ist*."],
+ ["Mein Chef sagt: Wir brauchen neue Kunden.","dass","Mein Chef sagt, dass wir neue Kunden *brauchen*."],
+ ["Ich glaube: Das Wetter wird besser.","dass","Ich glaube, dass das Wetter besser *wird*."],
+ ["Ich hoffe: Der Kleine wird nicht krank.","dass","Ich hoffe, dass der Kleine nicht krank *wird*."],
+ ["Ich denke: Die Kinder sind glücklich.","dass","Ich denke, dass die Kinder glücklich *sind*."],
+ ["Ich weiß: Ich mache noch Fehler.","dass","Ich weiß, dass ich noch Fehler *mache*."]];
+
+const tMix=[
+ ["Ich gehe nicht ins Büro. Ich bin krank.","denn","Ich gehe nicht ins Büro, denn ich *bin* krank."],
+ ["Ich gehe nicht ins Büro. Ich bin krank.","weil","Ich gehe nicht ins Büro, weil ich krank *bin*."],
+ ["Ich jogge. Es ist nicht zu kalt.","wenn","Ich jogge, wenn es nicht zu kalt *ist*."],
+ ["Ich glaube: Der Bus kommt gleich.","dass","Ich glaube, dass der Bus gleich *kommt*."],
+ ["Wir fahren nach Spanien. Wir haben Urlaub.","denn","Wir fahren nach Spanien, denn wir *haben* Urlaub."],
+ ["Mein Sohn ist müde. Er spielt viel in der Kita.","weil","Mein Sohn ist müde, weil er viel in der Kita *spielt*."],
+ ["Ich trinke Kaffee. Ich habe ein Meeting.","wenn","Ich trinke Kaffee, wenn ich ein Meeting *habe*."],
+ ["Ich hoffe: Das Wetter ist morgen gut.","dass","Ich hoffe, dass das Wetter morgen gut *ist*."],
+ ["Ich kaufe Brot. Wir haben kein Brot mehr.","denn","Ich kaufe Brot, denn wir *haben* kein Brot mehr."],
+ ["Ich kaufe Brot. Wir haben kein Brot mehr.","weil","Ich kaufe Brot, weil wir kein Brot mehr *haben*."],
+ ["Meine Frau ist froh. Ich koche.","wenn","Meine Frau ist froh, wenn ich *koche*."],
+ ["Ich weiß: Du arbeitest viel.","dass","Ich weiß, dass du viel *arbeitest*."],
+ ["Ich nehme den Zug. Das Auto ist kaputt.","denn","Ich nehme den Zug, denn das Auto *ist* kaputt."],
+ ["Ich spreche Englisch. Ich verstehe das Wort nicht.","weil","Ich spreche Englisch, weil ich das Wort nicht *verstehe*."],
+ ["Wir gehen an den See. Die Sonne scheint.","wenn","Wir gehen an den See, wenn die Sonne *scheint*."],
+ ["Mein Chef sagt: Das Projekt ist wichtig.","dass","Mein Chef sagt, dass das Projekt wichtig *ist*."],
+ ["Ich lerne Deutsch. Ich lebe in der Schweiz.","denn","Ich lerne Deutsch, denn ich *lebe* in der Schweiz."],
+ ["Ich bin nervös. Ich habe morgen eine Präsentation.","weil","Ich bin nervös, weil ich morgen eine Präsentation *habe*."],
+ ["Ich schaue MotoGP. Ich habe am Sonntag Zeit.","wenn","Ich schaue MotoGP, wenn ich am Sonntag Zeit *habe*."],
+ ["Ich glaube: Mein Sohn wird groß.","dass","Ich glaube, dass mein Sohn groß *wird*."],
+ ["Wir essen Suppe. Es ist kalt.","denn","Wir essen Suppe, denn es *ist* kalt."],
+ ["Ich rufe meine Mutter an. Sie hat Geburtstag.","weil","Ich rufe meine Mutter an, weil sie Geburtstag *hat*."],
+ ["Ich bin glücklich. Die Kinder lachen.","wenn","Ich bin glücklich, wenn die Kinder *lachen*."],
+ ["Ich denke: Die Wohnung ist zu klein.","dass","Ich denke, dass die Wohnung zu klein *ist*."],
+ ["Ich trage eine Mütze. Es ist sehr kalt.","denn","Ich trage eine Mütze, denn es *ist* sehr kalt."],
+ ["Wir bleiben zu Hause. Unser Sohn ist krank.","weil","Wir bleiben zu Hause, weil unser Sohn krank *ist*."],
+ ["Ich fahre langsam. Es schneit.","wenn","Ich fahre langsam, wenn es *schneit*."],
+ ["Ich hoffe: Du kommst am Samstag.","dass","Ich hoffe, dass du am Samstag *kommst*."],
+ ["Ich bezahle bar. Ich habe meine Karte nicht.","denn","Ich bezahle bar, denn ich *habe* meine Karte nicht."],
+ ["Ich arbeite lange. Ich habe viele E-Mails.","weil","Ich arbeite lange, weil ich viele E-Mails *habe*."],
+ ["Wir machen ein Picknick. Das Wetter ist schön.","wenn","Wir machen ein Picknick, wenn das Wetter schön *ist*."],
+ ["Meine Frau sagt: Die Kinder schlafen.","dass","Meine Frau sagt, dass die Kinder *schlafen*."],
+ ["Ich trinke Wasser. Ich habe Durst.","denn","Ich trinke Wasser, denn ich *habe* Durst."],
+ ["Ich gehe zum Arzt. Ich habe Rückenschmerzen.","weil","Ich gehe zum Arzt, weil ich Rückenschmerzen *habe*."],
+ ["Ich lese die Zeitung. Ich frühstücke.","wenn","Ich lese die Zeitung, wenn ich *frühstücke*."],
+ ["Ich weiß: Der Flug ist teuer.","dass","Ich weiß, dass der Flug teuer *ist*."],
+ ["Wir fliegen nicht. Das Wetter ist schlecht.","denn","Wir fliegen nicht, denn das Wetter *ist* schlecht."],
+ ["Ich bin müde. Der Kleine schläft schlecht.","weil","Ich bin müde, weil der Kleine schlecht *schläft*."],
+ ["Ich mache Sport. Ich habe Stress.","wenn","Ich mache Sport, wenn ich Stress *habe*."],
+ ["Ich glaube: Das ist eine gute Idee.","dass","Ich glaube, dass das eine gute Idee *ist*."]];
+
+const tModal=[
+ ["Ich bleibe zu Hause. Ich muss arbeiten.","weil","Ich bleibe zu Hause, weil ich *arbeiten muss*."],
+ ["Ich gehe früh ins Bett. Ich muss früh aufstehen.","weil","Ich gehe früh ins Bett, weil ich früh *aufstehen muss*."],
+ ["Ich lerne Deutsch. Ich will in der Schweiz bleiben.","weil","Ich lerne Deutsch, weil ich in der Schweiz *bleiben will*."],
+ ["Ich trinke keinen Wein. Ich muss noch Auto fahren.","weil","Ich trinke keinen Wein, weil ich noch Auto *fahren muss*."],
+ ["Mein Sohn weint. Er darf nicht fernsehen.","weil","Mein Sohn weint, weil er nicht *fernsehen darf*."],
+ ["Wir fahren nach Barcelona. Wir wollen meine Eltern besuchen.","weil","Wir fahren nach Barcelona, weil wir meine Eltern *besuchen wollen*."],
+ ["Ich spreche langsam. Mein Kollege soll alles verstehen.","weil","Ich spreche langsam, weil mein Kollege alles *verstehen soll*."],
+ ["Ich bin nervös. Ich muss eine Präsentation halten.","weil","Ich bin nervös, weil ich eine Präsentation *halten muss*."],
+ ["Ich jogge heute nicht. Ich kann nicht gut laufen.","weil","Ich jogge heute nicht, weil ich nicht gut *laufen kann*."],
+ ["Ich kaufe Gemüse. Ich will Suppe kochen.","weil","Ich kaufe Gemüse, weil ich Suppe *kochen will*."],
+ ["Ich rufe dich an. Ich kann am Freitag kommen.","wenn","Ich rufe dich an, wenn ich am Freitag *kommen kann*."],
+ ["Ich helfe dir. Du willst umziehen.","wenn","Ich helfe dir, wenn du *umziehen willst*."],
+ ["Wir gehen an den See. Die Kinder wollen schwimmen.","wenn","Wir gehen an den See, wenn die Kinder *schwimmen wollen*."],
+ ["Ich nehme ein Taxi. Ich muss schnell im Büro sein.","wenn","Ich nehme ein Taxi, wenn ich schnell im Büro *sein muss*."],
+ ["Mein Sohn ist glücklich. Er darf Fußball spielen.","wenn","Mein Sohn ist glücklich, wenn er Fußball *spielen darf*."],
+ ["Ich arbeite zu Hause. Ich muss auf die Kinder aufpassen.","wenn","Ich arbeite zu Hause, wenn ich auf die Kinder *aufpassen muss*."],
+ ["Ich frage meinen Kollegen. Ich kann etwas nicht verstehen.","wenn","Ich frage meinen Kollegen, wenn ich etwas nicht *verstehen kann*."],
+ ["Wir essen im Restaurant. Wir wollen nicht kochen.","wenn","Wir essen im Restaurant, wenn wir nicht *kochen wollen*."],
+ ["Ich trinke Kaffee. Ich muss lange arbeiten.","wenn","Ich trinke Kaffee, wenn ich lange *arbeiten muss*."],
+ ["Ich stehe früh auf. Ich muss nach Zürich fahren.","wenn","Ich stehe früh auf, wenn ich nach Zürich *fahren muss*."],
+ ["Ich glaube: Du musst mehr schlafen.","dass","Ich glaube, dass du mehr *schlafen musst*."],
+ ["Der Arzt sagt: Ich soll mehr Wasser trinken.","dass","Der Arzt sagt, dass ich mehr Wasser *trinken soll*."],
+ ["Ich hoffe: Wir können im Sommer nach Spanien fliegen.","dass","Ich hoffe, dass wir im Sommer nach Spanien *fliegen können*."],
+ ["Mein Chef sagt: Ich muss nach Paris fliegen.","dass","Mein Chef sagt, dass ich nach Paris *fliegen muss*."],
+ ["Ich weiß: Du kannst gut kochen.","dass","Ich weiß, dass du gut *kochen kannst*."],
+ ["Meine Frau sagt: Die Kinder dürfen heute draußen spielen.","dass","Meine Frau sagt, dass die Kinder heute draußen *spielen dürfen*."],
+ ["Ich denke: Wir sollen pünktlich sein.","dass","Ich denke, dass wir pünktlich *sein sollen*."],
+ ["Ich hoffe: Mein Sohn kann bald schwimmen.","dass","Ich hoffe, dass mein Sohn bald *schwimmen kann*."],
+ ["Ich glaube: Mein Kollege will die Firma verlassen.","dass","Ich glaube, dass mein Kollege die Firma *verlassen will*."],
+ ["Ich weiß: Ich muss mehr Deutsch sprechen.","dass","Ich weiß, dass ich mehr Deutsch *sprechen muss*."],
+ ["Ich war gestern nicht im Büro. Ich musste zum Arzt gehen.","weil","Ich war gestern nicht im Büro, weil ich zum Arzt *gehen musste*."],
+ ["Ich war sehr müde. Ich konnte nicht schlafen.","weil","Ich war sehr müde, weil ich nicht *schlafen konnte*."],
+ ["Mein Sohn war traurig. Er durfte nicht in den Park gehen.","weil","Mein Sohn war traurig, weil er nicht in den Park *gehen durfte*."],
+ ["Wir waren spät. Wir mussten lange warten.","weil","Wir waren spät, weil wir lange *warten mussten*."],
+ ["Ich war im Supermarkt. Ich wollte Brot kaufen.","weil","Ich war im Supermarkt, weil ich Brot *kaufen wollte*."],
+ ["Meine Frau war sauer. Ich konnte nicht kommen.","weil","Meine Frau war sauer, weil ich nicht *kommen konnte*."],
+ ["Ich habe Englisch gesprochen. Mein Kunde wollte Englisch sprechen.","weil","Ich habe Englisch gesprochen, weil mein Kunde Englisch *sprechen wollte*."],
+ ["Mein Chef hat gesagt: Ich sollte die E-Mail schreiben.","dass","Mein Chef hat gesagt, dass ich die E-Mail *schreiben sollte*."],
+ ["Ich war froh. Ich konnte am Wochenende wandern.","weil","Ich war froh, weil ich am Wochenende *wandern konnte*."],
+ ["Die Kinder waren glücklich. Sie durften lange draußen spielen.","weil","Die Kinder waren glücklich, weil sie lange draußen *spielen durften*."]];
+
+const tTrenn=[
+ ["Ich bin müde. Ich stehe jeden Tag um 6 Uhr auf.","weil","Ich bin müde, weil ich jeden Tag um 6 Uhr *aufstehe*."],
+ ["Ich trinke viel Kaffee. Ich wache oft in der Nacht auf.","weil","Ich trinke viel Kaffee, weil ich oft in der Nacht *aufwache*."],
+ ["Ich bin froh. Meine Mutter kommt morgen an.","weil","Ich bin froh, weil meine Mutter morgen *ankommt*."],
+ ["Ich bin nervös. Der Film fängt gleich an.","weil","Ich bin nervös, weil der Film gleich *anfängt*."],
+ ["Wir packen Kisten. Wir ziehen bald um.","weil","Wir packen Kisten, weil wir bald *umziehen*."],
+ ["Ich bin glücklich. Mein Sohn schläft schnell ein.","weil","Ich bin glücklich, weil mein Sohn schnell *einschläft*."],
+ ["Ich gehe nicht spazieren. Es sieht nach Regen aus.","weil","Ich gehe nicht spazieren, weil es nach Regen *aussieht*."],
+ ["Wir bleiben zu Hause. Unsere Freunde kommen heute vorbei.","weil","Wir bleiben zu Hause, weil unsere Freunde heute *vorbeikommen*."],
+ ["Ich gehe in den Supermarkt. Ich kaufe für das Wochenende ein.","weil","Ich gehe in den Supermarkt, weil ich für das Wochenende *einkaufe*."],
+ ["Meine Frau ist sauer. Ich räume die Küche nie auf.","weil","Meine Frau ist sauer, weil ich die Küche nie *aufräume*."],
+ ["Ich esse schnell. Mein Meeting fängt um 13 Uhr an.","weil","Ich esse schnell, weil mein Meeting um 13 Uhr *anfängt*."],
+ ["Ich nehme ein Taxi. Ich komme spät am Flughafen an.","weil","Ich nehme ein Taxi, weil ich spät am Flughafen *ankomme*."],
+ ["Ich schreibe dir. Ich rufe dich heute nicht an.","weil","Ich schreibe dir, weil ich dich heute nicht *anrufe*."],
+ ["Ich bin froh. Mein Kollege bringt Kuchen mit.","weil","Ich bin froh, weil mein Kollege Kuchen *mitbringt*."],
+ ["Wir sind traurig. Unsere Nachbarn ziehen aus.","weil","Wir sind traurig, weil unsere Nachbarn *ausziehen*."],
+ ["Ich trinke Tee. Ich sehe abends fern.","wenn","Ich trinke Tee, wenn ich abends *fernsehe*."],
+ ["Ich lese ein Buch. Die Kinder schlafen ein.","wenn","Ich lese ein Buch, wenn die Kinder *einschlafen*."],
+ ["Ich trinke einen Kaffee. Ich stehe auf.","wenn","Ich trinke einen Kaffee, wenn ich *aufstehe*."],
+ ["Ich nehme eine Jacke mit. Ich gehe am Abend aus.","wenn","Ich nehme eine Jacke mit, wenn ich am Abend *ausgehe*."],
+ ["Mein Sohn lacht. Ich komme nach Hause zurück.","wenn","Mein Sohn lacht, wenn ich nach Hause *zurückkomme*."],
+ ["Ich rufe meine Eltern an. Ich komme in Barcelona an.","wenn","Ich rufe meine Eltern an, wenn ich in Barcelona *ankomme*."],
+ ["Ich bin müde. Ich wache früh auf.","wenn","Ich bin müde, wenn ich früh *aufwache*."],
+ ["Ich höre Musik. Ich räume die Wohnung auf.","wenn","Ich höre Musik, wenn ich die Wohnung *aufräume*."],
+ ["Ich bin nervös. Das Flugzeug fliegt ab.","wenn","Ich bin nervös, wenn das Flugzeug *abfliegt*."],
+ ["Wir essen zusammen. Mein Sohn kommt aus der Kita zurück.","wenn","Wir essen zusammen, wenn mein Sohn aus der Kita *zurückkommt*."],
+ ["Ich schreibe eine Liste. Ich kaufe ein.","wenn","Ich schreibe eine Liste, wenn ich *einkaufe*."],
+ ["Ich bin froh. Der Bus fährt pünktlich ab.","wenn","Ich bin froh, wenn der Bus pünktlich *abfährt*."],
+ ["Ich trinke Wasser. Ich wache in der Nacht auf.","wenn","Ich trinke Wasser, wenn ich in der Nacht *aufwache*."],
+ ["Ich glaube: Der Zug kommt um 8 Uhr an.","dass","Ich glaube, dass der Zug um 8 Uhr *ankommt*."],
+ ["Ich hoffe: Du kommst am Samstag mit.","dass","Ich hoffe, dass du am Samstag *mitkommst*."],
+ ["Meine Frau sagt: Der Film fängt um 20 Uhr an.","dass","Meine Frau sagt, dass der Film um 20 Uhr *anfängt*."],
+ ["Ich weiß: Du stehst nicht gern früh auf.","dass","Ich weiß, dass du nicht gern früh *aufstehst*."],
+ ["Mein Chef sagt: Er ruft den Kunden heute an.","dass","Mein Chef sagt, dass er den Kunden heute *anruft*."],
+ ["Ich denke: Mein Kollege zieht nach Zürich um.","dass","Ich denke, dass mein Kollege nach Zürich *umzieht*."],
+ ["Ich hoffe: Der Kleine schläft heute schnell ein.","dass","Ich hoffe, dass der Kleine heute schnell *einschläft*."],
+ ["Ich glaube: Unsere Freunde kommen heute Abend vorbei.","dass","Ich glaube, dass unsere Freunde heute Abend *vorbeikommen*."],
+ ["Ich weiß: Mein Sohn räumt sein Zimmer nicht gern auf.","dass","Ich weiß, dass mein Sohn sein Zimmer nicht gern *aufräumt*."],
+ ["Meine Mutter sagt: Sie bringt einen Kuchen mit.","dass","Meine Mutter sagt, dass sie einen Kuchen *mitbringt*."],
+ ["Ich hoffe: Das Flugzeug fliegt pünktlich ab.","dass","Ich hoffe, dass das Flugzeug pünktlich *abfliegt*."],
+ ["Ich denke: Wir kaufen am Samstag ein.","dass","Ich denke, dass wir am Samstag *einkaufen*."]];
+
+const tPerf=[
+ ["Ich bin müde. Ich habe schlecht geschlafen.","weil","Ich bin müde, weil ich schlecht *geschlafen habe*."],
+ ["Ich bin glücklich. Ich habe ein Haus gekauft.","weil","Ich bin glücklich, weil ich ein Haus *gekauft habe*."],
+ ["Mein Sohn ist müde. Er hat viel gespielt.","weil","Mein Sohn ist müde, weil er viel *gespielt hat*."],
+ ["Ich habe keinen Hunger. Ich habe viel gegessen.","weil","Ich habe keinen Hunger, weil ich viel *gegessen habe*."],
+ ["Wir sind spät. Wir haben den Bus verpasst.","weil","Wir sind spät, weil wir den Bus *verpasst haben*."],
+ ["Ich bin sauer. Mein Kollege hat nicht angerufen.","weil","Ich bin sauer, weil mein Kollege nicht *angerufen hat*."],
+ ["Ich bin froh. Ferrari hat das Rennen gewonnen.","weil","Ich bin froh, weil Ferrari das Rennen *gewonnen hat*."],
+ ["Ich habe Kopfschmerzen. Ich habe zu wenig getrunken.","weil","Ich habe Kopfschmerzen, weil ich zu wenig *getrunken habe*."],
+ ["Meine Frau lacht. Ich habe einen Witz erzählt.","weil","Meine Frau lacht, weil ich einen Witz *erzählt habe*."],
+ ["Ich bin stolz. Mein Sohn hat ein Bild gemalt.","weil","Ich bin stolz, weil mein Sohn ein Bild *gemalt hat*."],
+ ["Ich bin müde. Ich bin früh aufgestanden.","weil","Ich bin müde, weil ich früh *aufgestanden bin*."],
+ ["Meine Beine tun weh. Ich bin 10 Kilometer gelaufen.","weil","Meine Beine tun weh, weil ich 10 Kilometer *gelaufen bin*."],
+ ["Ich bin nicht im Büro. Ich bin nach Paris geflogen.","weil","Ich bin nicht im Büro, weil ich nach Paris *geflogen bin*."],
+ ["Wir sind glücklich. Wir sind in die Berge gefahren.","weil","Wir sind glücklich, weil wir in die Berge *gefahren sind*."],
+ ["Mein Sohn ist nass. Er ist im See geschwommen.","weil","Mein Sohn ist nass, weil er im See *geschwommen ist*."],
+ ["Ich bin spät. Ich bin zu Fuß gegangen.","weil","Ich bin spät, weil ich zu Fuß *gegangen bin*."],
+ ["Meine Frau ist froh. Ihre Mutter ist gekommen.","weil","Meine Frau ist froh, weil ihre Mutter *gekommen ist*."],
+ ["Ich bin sehr müde. Ich bin spät eingeschlafen.","weil","Ich bin sehr müde, weil ich spät *eingeschlafen bin*."],
+ ["Wir sind zu Hause. Wir sind nicht in den Urlaub gefahren.","weil","Wir sind zu Hause, weil wir nicht in den Urlaub *gefahren sind*."],
+ ["Ich habe Sonnenbrand. Ich bin lange am Strand geblieben.","weil","Ich habe Sonnenbrand, weil ich lange am Strand *geblieben bin*."],
+ ["Ich weiß: Du hast viel gearbeitet.","dass","Ich weiß, dass du viel *gearbeitet hast*."],
+ ["Ich glaube: Der Zug ist schon abgefahren.","dass","Ich glaube, dass der Zug schon *abgefahren ist*."],
+ ["Meine Frau sagt: Die Kinder haben gut geschlafen.","dass","Meine Frau sagt, dass die Kinder gut *geschlafen haben*."],
+ ["Ich hoffe: Du hast die E-Mail gelesen.","dass","Ich hoffe, dass du die E-Mail *gelesen hast*."],
+ ["Mein Chef sagt: Der Kunde hat angerufen.","dass","Mein Chef sagt, dass der Kunde *angerufen hat*."],
+ ["Ich denke: Mein Sohn ist gewachsen.","dass","Ich denke, dass mein Sohn *gewachsen ist*."],
+ ["Ich weiß: Wir haben viel Glück gehabt.","dass","Ich weiß, dass wir viel Glück *gehabt haben*."],
+ ["Ich glaube: Mein Kollege ist nach Hause gegangen.","dass","Ich glaube, dass mein Kollege nach Hause *gegangen ist*."],
+ ["Ich hoffe: Meine Eltern sind gut angekommen.","dass","Ich hoffe, dass meine Eltern gut *angekommen sind*."],
+ ["Ich weiß: Ich habe einen Fehler gemacht.","dass","Ich weiß, dass ich einen Fehler *gemacht habe*."],
+ ["Mein Sohn sagt: Er hat in der Kita gesungen.","dass","Mein Sohn sagt, dass er in der Kita *gesungen hat*."],
+ ["Ich denke: Das Wetter ist besser geworden.","dass","Ich denke, dass das Wetter besser *geworden ist*."],
+ ["Ich glaube: Du hast das Auto gewaschen.","dass","Ich glaube, dass du das Auto *gewaschen hast*."],
+ ["Meine Frau sagt: Sie ist in der Stadt gewesen.","dass","Meine Frau sagt, dass sie in der Stadt *gewesen ist*."],
+ ["Ich hoffe: Ihr habt Spaß gehabt.","dass","Ich hoffe, dass ihr Spaß *gehabt habt*."],
+ ["Ich weiß: Du bist gestern gejoggt.","dass","Ich weiß, dass du gestern *gejoggt bist*."],
+ ["Ich glaube: Die Kinder haben schon gegessen.","dass","Ich glaube, dass die Kinder schon *gegessen haben*."],
+ ["Mein Kollege sagt: Er ist im Urlaub gewesen.","dass","Mein Kollege sagt, dass er im Urlaub *gewesen ist*."],
+ ["Ich denke: Ich habe genug gelernt.","dass","Ich denke, dass ich genug *gelernt habe*."],
+ ["Ich hoffe: Das Paket ist angekommen.","dass","Ich hoffe, dass das Paket *angekommen ist*."]];
+
+/* ---------- Typed panels ---------- */
+const typed=[
+ ["p-weil",tWeil,"Zwei Sätze, ein Satz: weil","Mach aus zwei Sätzen einen Satz mit weil.",
+  'Ich gehe nicht joggen. Es regnet.<br>Ich gehe nicht joggen, <span class="k">weil</span> es <span class="v">regnet</span>.'],
+ ["p-wenn",tWenn,"wenn","Mach aus zwei Sätzen einen Satz mit wenn.",
+  'Ich esse Kürbissuppe. Es ist kalt.<br>Ich esse Kürbissuppe, <span class="k">wenn</span> es kalt <span class="v">ist</span>.'],
+ ["p-dass",tDass,"dass","Mach einen Satz mit dass.",
+  'Ich glaube: Das Wetter ist morgen schön.<br>Ich glaube, <span class="k">dass</span> das Wetter morgen schön <span class="v">ist</span>.'],
+ ["p-mix",tMix,"Gemischt: weil, wenn, dass, denn","Verbinde die Sätze mit dem Wort rechts. Achtung bei denn.",
+  'Ich bin müde. Ich arbeite viel. <span class="conj">denn</span><br>Ich bin müde, <span class="k">denn</span> ich <span class="v">arbeite</span> viel.'],
+ ["p-modal",tModal,"Nebensatz mit Modalverb","Das Modalverb steht ganz am Ende, das zweite Verb direkt davor.",
+  'Ich bleibe zu Hause. Ich muss arbeiten.<br>Ich bleibe zu Hause, <span class="k">weil</span> ich <span class="v">arbeiten muss</span>.'],
+ ["p-trenn",tTrenn,"Nebensatz mit trennbaren Verben","Im Nebensatz ist das Verb wieder ein Wort.",
+  'Ich stehe früh auf.<br>Ich bin müde, <span class="k">weil</span> ich früh <span class="v">aufstehe</span>.'],
+ ["p-perf",tPerf,"Nebensatz im Perfekt","haben oder sein steht ganz am Ende, das Partizip direkt davor.",
+  'Ich habe schlecht geschlafen.<br>Ich bin müde, <span class="k">weil</span> ich schlecht <span class="v">geschlafen habe</span>.']
+];
+
+function plain(s){return s.replace(/\*/g,"");}
+function hl(s){
+  return s.replace(/\*([^*]+)\*/g,'<span class="v">$1</span>')
+          .replace(/\b(weil|wenn|dass|denn)\b/g,'<span class="k">$1</span>');
+}
+function norm(s){
+  return s.trim().toLowerCase().replace(/\s+/g," ").replace(/\s*,\s*/g,", ").replace(/[.!?]+$/,"").trim();
+}
+
+typed.forEach(([id,data,title,sub,example])=>{
+  const p=document.getElementById(id);
+  p.innerHTML=`<div class="card"><h2>${title}</h2><p class="sub">${sub}</p>
+    <div class="merke">${example}</div></div>
+    <div class="card"><div class="list"></div>
+    <div class="bar"><button class="btn main">Prüfen</button><span class="score"></span></div></div>`;
+  const list=p.querySelector(".list");
+  data.forEach((d,i)=>{
+    const r=document.createElement("div");r.className="row";
+    r.innerHTML=`<span class="num">${i+1}.</span>${d[0]} <span class="conj">${d[1]}</span>
+      <input class="gap" autocomplete="off" spellcheck="false"><div class="fix"></div>`;
+    r.querySelector("input").dataset.a=d[2];
+    list.appendChild(r);
+  });
+  p.querySelector(".btn.main").onclick=()=>checkTyped(p);
+});
+
+function checkTyped(p){
+  let ok=0;const ins=p.querySelectorAll("input.gap");
+  ins.forEach(inp=>{
+    const want=plain(inp.dataset.a);
+    const good=norm(inp.value)===norm(want);
+    inp.classList.toggle("ok",good);inp.classList.toggle("bad",!good);
+    const f=inp.parentElement.querySelector(".fix");
+    if(good){ok++;f.classList.remove("show");}
+    else{
+      const noComma=norm(inp.value).replace(/,/g,"")===norm(want).replace(/,/g,"");
+      f.innerHTML=(noComma?'<span class="lbl">Komma!</span>':'')+hl(inp.dataset.a);
+      f.classList.add("show");
+    }
+  });
+  score(p,ok,ins.length);
+}
+
+/* ---------- denn oder weil ---------- */
+const dwl=document.querySelector("#p-dw .list");
+dw.forEach((d,i)=>{
+  const r=document.createElement("div");r.className="row";r.dataset.a=d[1];
+  r.innerHTML=`<span class="num">${i+1}.</span>${d[0].replace("___",'<span class="slot">&nbsp;</span>')}
+    <div class="choice"><button class="btn">denn</button><button class="btn">weil</button></div>`;
+  r.querySelectorAll(".choice .btn").forEach(b=>b.onclick=()=>{
+    r.querySelectorAll(".choice .btn").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+    const s=r.querySelector(".slot");s.textContent=b.textContent;s.classList.remove("ok","bad");r.dataset.c=b.textContent;
+  });
+  dwl.appendChild(r);
+});
+function checkDW(){
+  let ok=0;const rows=document.querySelectorAll("#p-dw .row");
+  rows.forEach(r=>{const s=r.querySelector(".slot");const good=r.dataset.c===r.dataset.a;
+    s.classList.toggle("ok",good);s.classList.toggle("bad",!good);
+    if(!good)s.textContent=r.dataset.a;if(good)ok++;});
+  score(document.getElementById("p-dw"),ok,rows.length);
+}
+
+/* ---------- Satzbau ---------- */
+const ol=document.querySelector("#p-order .list");
+order.forEach((s,i)=>{
+  const words=plain(s).replace(/[.?]$/,"").split(" ").map(w=>w.replace(/,$/,"")).map(w=>w==="weil"?", weil":w);
+  const shuffled=[...words].sort(()=>Math.random()-.5);
+  const box=document.createElement("div");box.className="row";box.dataset.a=s;
+  box.innerHTML=`<span class="num">${i+1}.</span><div class="chips">${shuffled.map(w=>`<button class="chip">${w}</button>`).join("")}</div>
+   <div class="answer"></div><button class="btn">Zurück</button><div class="fix"></div>`;
+  box.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+    const a=box.querySelector(".answer");a.classList.remove("ok","bad");
+    a.textContent=(a.textContent?a.textContent+" ":"")+c.textContent;c.classList.add("used");
+  });
+  box.querySelector(".btn").onclick=()=>{const a=box.querySelector(".answer");a.textContent="";a.classList.remove("ok","bad");
+    box.querySelector(".fix").classList.remove("show");box.querySelectorAll(".chip").forEach(c=>c.classList.remove("used"));};
+  ol.appendChild(box);
+});
+function checkOrder(){
+  let ok=0;const boxes=document.querySelectorAll("#p-order .row");
+  const n=s=>norm(s).replace(/,/g,"").replace(/\s+/g," ");
+  boxes.forEach(box=>{
+    const a=box.querySelector(".answer");const good=n(a.textContent)===n(plain(box.dataset.a));
+    a.classList.toggle("ok",good);a.classList.toggle("bad",!good);
+    const f=box.querySelector(".fix");
+    if(good){ok++;a.textContent=plain(box.dataset.a);f.classList.remove("show");}
+    else{f.innerHTML=hl(box.dataset.a);f.classList.add("show");}
+  });
+  score(document.getElementById("p-order"),ok,boxes.length);
+}
+
+/* ---------- Übersicht ---------- */
+function sw(b){
+  document.querySelectorAll(".switch .btn").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  document.getElementById("swOut").innerHTML=b.dataset.s==="denn"
+    ?'Ich bleibe zu Hause, <span class="k">denn</span> ich <span class="v">bin</span> müde. <span style="color:var(--muted)">(Position 2)</span>'
+    :'Ich bleibe zu Hause, <span class="k">weil</span> ich müde <span class="v">bin</span>. <span style="color:var(--muted)">(Ende)</span>';
+}
+sw(document.querySelector(".switch .btn"));
+
+/* ---------- Allgemein ---------- */
+function score(p,ok,n){
+  const s=p.querySelector(".score");s.textContent=`${ok} / ${n} richtig`;
+  s.style.color=ok===n?"var(--green)":"var(--muted)";
+  const i=panels.indexOf(p);if(ok===n)document.querySelectorAll(".tab")[i].classList.add("done");
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.matches("input.gap")){
+    const all=[...e.target.closest(".panel").querySelectorAll("input.gap")];
+    const i=all.indexOf(e.target);if(all[i+1])all[i+1].focus();
+  }
+});
+const panels=[...document.querySelectorAll(".panel")];const tabs=document.getElementById("tabs");
+panels.forEach((p,i)=>{
+  const b=document.createElement("button");b.className="tab";b.textContent=p.dataset.title;
+  b.onclick=()=>show(i);tabs.appendChild(b);
+});
+function show(i){panels.forEach((p,j)=>p.classList.toggle("active",i===j));
+  document.querySelectorAll(".tab").forEach((t,j)=>t.classList.toggle("active",i===j));window.scrollTo(0,0);}
+show(0);
+</script>
+</body>
+</html>
